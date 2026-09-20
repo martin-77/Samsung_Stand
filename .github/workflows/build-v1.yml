@@ -1,0 +1,175 @@
+name: Build Samsung Stand v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/geometry_model.py"
+      - "scripts/validate_v1_design.py"
+      - "scripts/build_v1.py"
+      - "scripts/validate_meshes_v1.py"
+      - "scripts/preview_v1.scad"
+      - "tests/test_geometry.py"
+      - ".github/workflows/build-v1.yml"
+
+concurrency:
+  group: samsung-stand-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-v1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate design parameters before CAD
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_layout.py > layout-validation.json
+          python3 scripts/validate_v1_design.py > v1-design-validation.json
+          python3 -m unittest discover -s tests -v
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openscad libfuse2 xvfb python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-conda-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+          "$FREECADCMD" -c 'import FreeCAD,Part,Mesh,MeshPart; print(FreeCAD.Version()); assert Part.makeBox(1,1,1).isValid()'
+
+      - name: Compile builders and validators
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/geometry_model.py \
+            scripts/validate_layout.py \
+            scripts/validate_v1_design.py \
+            scripts/build_v1.py \
+            scripts/validate_meshes_v1.py
+
+      - name: Build v1 CAD
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0, 'scripts'); import build_v1" 2>&1 | tee build_v1.log
+          test -s build_v1/VALIDATION_v1_source.json
+          test -s build_v1/samsung_stand_v1_base_center.stl
+          test -s build_v1/samsung_stand_v1_base_left.stl
+          test -s build_v1/samsung_stand_v1_base_right.stl
+          test -s build_v1/samsung_stand_v1_rotor.stl
+          test -s build_v1/samsung_stand_v1_joint_retainer.stl
+          test -s build_v1/samsung_stand_v1_pivot_clip.stl
+
+      - name: Validate final meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_meshes_v1.py
+          test -s build_v1/MESH_VALIDATION_v1.json
+
+      - name: Render installed assembly preview
+        run: |
+          set -euo pipefail
+          xvfb-run -a openscad \
+            --imgsize=1600,1000 \
+            --projection=ortho \
+            --viewall \
+            --autocenter \
+            --camera=0,0,0,62,0,28,780 \
+            -o build_v1/samsung_stand_v1_preview.png \
+            scripts/preview_v1.scad
+          test -s build_v1/samsung_stand_v1_preview.png
+
+      - name: Publish validated v1 outputs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/v1/FCStd cad/v1/STEP cad/v1/STL cad/v1/assembly cad/v1/validation
+
+          rm -f cad/v1/FCStd/samsung_stand_v1_*.FCStd
+          rm -f cad/v1/STEP/samsung_stand_v1_*.step
+          rm -f cad/v1/STL/samsung_stand_v1_*.stl
+
+          cp build_v1/samsung_stand_v1_*.FCStd cad/v1/FCStd/
+          cp build_v1/samsung_stand_v1_*.step cad/v1/STEP/
+          cp build_v1/samsung_stand_v1_*.stl cad/v1/STL/
+          cp build_v1/samsung_stand_v1_preview.png cad/v1/assembly/
+          cp build_v1/VALIDATION_v1_source.json cad/v1/validation/
+          cp build_v1/MESH_VALIDATION_v1.json cad/v1/validation/
+          cp layout-validation.json cad/v1/validation/LAYOUT_VALIDATION.json
+          cp v1-design-validation.json cad/v1/validation/DESIGN_VALIDATION_v1.json
+
+          cat > cad/v1/README.md <<'EOF'
+          # Samsung Stand v1
+
+          First validated structural CAD increment.
+
+          Included:
+          - three-piece 680 × 295 mm fixed base;
+          - two support-friendly 50 mm roof-key joints per side;
+          - replaceable PETG snap retainer pin;
+          - Ø150 / Ø80 mm annular swivel load path;
+          - central guide pilot plus removable PETG C-clip;
+          - rotor core prepared for later left/right saddle carriers.
+
+          Not included yet:
+          - final Samsung arm cross-section;
+          - INNER_LEFT / INNER_RIGHT saddle carriers;
+          - OUTER_GUIDE_LEFT / OUTER_GUIDE_RIGHT;
+          - final detent and ±15° stop mechanism.
+
+          The original Samsung stand outline in the preview is reconstructed reference geometry only, not manufacturing truth.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/v1
+          if git diff --cached --quiet; then
+            echo "Validated v1 outputs already current"
+          else
+            git commit -m "Publish validated Samsung Stand v1 CAD"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload complete v1 proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-v1-complete
+          path: |
+            build_v1/
+            build_v1.log
+            layout-validation.json
+            v1-design-validation.json
