@@ -43,17 +43,24 @@ See `docs/DESIGN_BASELINE.md` and the geometry validation scripts before changin
 
 ## Current status
 
-The repository has progressed to **v5**, a validated geometry candidate:
+The repository has progressed to **v5** as the validated structural geometry candidate, plus a validated **v6 contact-generation pipeline**:
 
 - v1: modular three-piece fixed base and central annular swivel bearing;
 - v2: dual-load-path INNER_ARM with rotor root landing and side glide tracks;
 - v3: modular OUTER_GUIDE rails, intentionally non-load-bearing vertically;
 - v4: calibrated positive mechanical +/-15 degree end stops plus complete carrier sweep clearance;
-- v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants.
+- v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants;
+- v6 contact pipeline: strict physical-measurement model plus side-specific saddle inserts and outer-guide liners generated only from validated real measurements.
 
 For v5 the parameter gates, FreeCAD build, watertight-mesh checks and installed
-OCC collision/contact checks are green.  The +/-15 degree end stops remain
+OCC collision/contact checks are green. The +/-15 degree end stops remain
 structural; the center detent is positional only.
+
+The v6 measurement-to-CAD path is also green against a synthetic CI fixture:
+measurement validation, FreeCAD generation, watertight-mesh gates and installed
+contact-part checks against the real v5 structural STEP geometry all pass.
+Production v6 contact parts remain intentionally unpublished until
+`measurements/stand_measurements.json` contains complete physical measurements.
 
 This is **not yet a physical structural release for mounting the TV**.  The
 Samsung arm contact geometry is still based partly on reconstruction and must be
@@ -63,6 +70,6 @@ sequence and non-fragile proof-load test are required before TV use.
 See:
 
 - `cad/v5/` for the newest validated CAD candidate;
-- `cad/fit_coupons/` for structural joint clearance coupons once its workflow is published;
-- `docs/REQUIRED_MEASUREMENTS.md` for the remaining physical dimensions;
+- `cad/fit_coupons/` for published structural joint clearance coupons;
+- `measurements/` and `docs/REQUIRED_MEASUREMENTS.md` for the remaining physical dimensions and profile capture;
 - `docs/PHYSICAL_RELEASE_GATES.md` for the required fit and proof tests.
