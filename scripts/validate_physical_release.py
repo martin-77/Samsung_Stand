@@ -77,7 +77,17 @@ def main(path: str) -> dict[str,Any]:
         "criteria.proof_dwell_min_minutes_per_position",
         positive=True,
     )
-    creep_min=number(criteria.get("creep_load_min_n"),"criteria.creep_load_min_n",positive=True)
+    creep_min=number(
+        criteria.get("creep_load_min_n"),
+        "criteria.creep_load_min_n",
+        positive=True,
+    )
+    if creep_min + 1e-9 < G.SERVICE_VERTICAL_LOAD_N:
+        failures.append(
+            f"criteria.creep_load_min_n {creep_min:.1f} N is below "
+            f"verified static TV service load "
+            f"{G.SERVICE_VERTICAL_LOAD_N:.1f} N"
+        )
     creep_hours=number(criteria.get("creep_dwell_min_hours"),"criteria.creep_dwell_min_hours",positive=True)
     swivel_min=number(criteria.get("swivel_cycles_min"),"criteria.swivel_cycles_min",positive=True)
     stop_min=number(
@@ -181,6 +191,11 @@ def main(path: str) -> dict[str,Any]:
     report={
         "ok":not failures,
         "structural_version":"v8",
+        "verified_service_load":{
+            "tv_with_stand_mass_kg":G.TV_WITH_STAND_MASS_KG,
+            "static_vertical_load_n":round(G.SERVICE_VERTICAL_LOAD_N,3),
+            "source":"Samsung Quick Start Guide BN68-07177M-00, p.14",
+        },
         "declared_criteria":{
             "proof_load_min_n":proof_min,
             "proof_dwell_min_minutes_per_position":proof_dwell,
