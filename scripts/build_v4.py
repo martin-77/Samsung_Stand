@@ -50,6 +50,10 @@ def require_single(shape, label):
 
 def base_center_v4():
     base = load_step("samsung_stand_v3_base_center")
+    clearance = SG.stop_sweep_clearance_shape()
+    base = base.cut(clearance).removeSplitter()
+    require_single(base, "BASE_CENTER_V4_CLEARANCED")
+
     towers = SG.fixed_stop_pair_shape()
     sh = base.fuse(towers).removeSplitter()
     require_single(sh, "BASE_CENTER_V4")
