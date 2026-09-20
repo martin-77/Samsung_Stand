@@ -130,12 +130,15 @@ def detent_mount_holes_shape():
     return holes[0].fuse(holes[1])
 
 
-def detent_cassette_shape(thickness):
-    nose = Part.makeCylinder(
+def detent_nose_shape():
+    return Part.makeCylinder(
         P.DETENT_NOSE_RADIUS,
         P.DETENT_SPRING_HEIGHT,
         v(0, 0, 0),
     )
+
+
+def detent_cassette_body_shape(thickness):
     beam = Part.makeBox(
         thickness,
         P.DETENT_SPRING_LENGTH,
@@ -149,7 +152,7 @@ def detent_cassette_shape(thickness):
         v(P.DETENT_ANCHOR_X0, P.DETENT_ANCHOR_Y0, 0),
     )
 
-    sh = nose.fuse(beam).fuse(anchor)
+    sh = beam.fuse(anchor)
     for x in P.DETENT_PIN_LOCAL_X:
         hole = Part.makeBox(
             P.DETENT_PIN_HOLE_SIZE,
@@ -163,6 +166,11 @@ def detent_cassette_shape(thickness):
         )
         sh = sh.cut(hole)
     return sh.removeSplitter()
+
+
+def detent_cassette_shape(thickness):
+    body = detent_cassette_body_shape(thickness)
+    return body.fuse(detent_nose_shape()).removeSplitter()
 
 
 def detent_pin_shape():
