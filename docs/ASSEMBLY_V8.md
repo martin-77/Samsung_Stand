@@ -35,7 +35,7 @@ Core v8:
 - 2 × detent pins
 - 1 × selected detent cassette
 - 2 × measured saddle inserts
-- 2 × measured outer-guide liners
+- 4 × measured OUTER_GUIDE side rails (2 per guide)
 
 The legacy vertical base retainers, legacy pivot C-clip and legacy v2 arm lock
 pin are not part of the v8 assembly.
@@ -135,27 +135,34 @@ V8 intentionally re-opens this tunnel through the complete 58 mm saddle region.
 The earlier 50 mm tunnel was geometrically enclosed by the saddle and was not a
 satisfactory real insertion path.
 
-## 8. Install measured Samsung contact parts
+## 8. Install measured saddle contact parts
 
 Only use contact parts generated from validated physical measurements.
 
 1. place the left/right measured saddle inserts in the INNER_ARM pockets;
-2. install the measured left/right outer-guide liners;
-3. verify no contact insert rocks, sits proud or forces a structural part out of
-   its validated position.
+2. verify both inserts sit fully in their pockets without rocking or forcing an
+   INNER_ARM out of its validated position.
 
+Do **not** install the OUTER_GUIDE side rails yet. They are deliberately separate
+lateral-only rails and are installed around the real stand arm in the next step.
 Reconstructed stand dimensions are not a substitute for these measurements.
 
-## 9. Dry-fit the original Samsung stand without the TV
+## 9. Dry-fit the original Samsung stand and install lateral guide rails
 
 Before adding the television:
 
-1. place the original Samsung stand in the two saddle inserts;
-2. verify both outer arms enter the guide liners without force;
-3. rotate slowly from center to -15 degrees and +15 degrees;
-4. verify:
+1. place the original Samsung stand in the two measured saddle inserts;
+2. for each OUTER_GUIDE, slide the measured negative-Y and positive-Y side rail
+   down from above between the Samsung arm and the corresponding guide wall;
+3. verify all four side rails sit on the guide floor and remain on their own
+   side of the arm centerline;
+4. verify the arm is not vertically supported by any side rail. The validated
+   geometry retains approximately 9 mm clearance between the stand underside
+   datum and the structural OUTER_GUIDE floor;
+5. rotate slowly from center to -15 degrees and +15 degrees;
+6. verify:
    - vertical load remains on the inner supports;
-   - outer guides only guide laterally;
+   - outer guides and measured side rails only guide laterally;
    - positive mechanical end stops engage at +/-15 degrees;
    - the fixed base does not move on the Sounddeck;
    - no retainer walks out;
