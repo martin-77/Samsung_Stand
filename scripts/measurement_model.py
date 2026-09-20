@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date as Date
 import json
 import math
 from pathlib import Path
@@ -12,6 +13,11 @@ from typing import Any
 
 class MeasurementError(ValueError):
     pass
+
+
+TARGET_MODEL = "Samsung UE55J6250"
+ACCEPTED_STAND_PARTS = frozenset({"BN96-38964A"})
+MEASUREMENT_KINDS = frozenset({"physical", "synthetic"})
 
 
 @dataclass(frozen=True)
@@ -178,6 +184,12 @@ class Station:
 @dataclass(frozen=True)
 class MeasurementSet:
     raw: dict[str, Any]
+    measurement_kind: str
+    model: str
+    stand_part: str
+    measured_by: str
+    measurement_date: str
+    caliper_resolution_mm: float
     stand_width: float
     stand_depth: float
     pivot_to_rear: float
@@ -239,9 +251,81 @@ def _station(raw: Any, path: str) -> Station:
     return station
 
 
+def _require_text(v: Any, path: str) -> str:
+    if not isinstance(v, str) or not v.strip():
+        raise MeasurementError(f"{path}: expected non-empty text")
+    return v.strip()
+
+
+def _metadata(data: dict[str, Any]) -> dict[str, Any]:
+    meta = data.get("meta")
+    if not isinstance(meta, dict):
+        raise MeasurementError("meta: expected object")
+
+    measurement_kind = _require_text(
+        meta.get("measurement_kind"),
+        "meta.measurement_kind",
+    )
+    if measurement_kind not in MEASUREMENT_KINDS:
+        raise MeasurementError(
+            "meta.measurement_kind: expected 'physical' or 'synthetic'"
+        )
+
+    model = _require_text(meta.get("model"), "meta.model")
+    if model != TARGET_MODEL:
+        raise MeasurementError(
+            f"meta.model: expected {TARGET_MODEL!r}, got {model!r}"
+        )
+
+    stand_part = _require_text(
+        meta.get("stand_part"),
+        "meta.stand_part",
+    )
+    if stand_part not in ACCEPTED_STAND_PARTS:
+        raise MeasurementError(
+            f"meta.stand_part: unsupported {stand_part!r}; accepted "
+            f"{sorted(ACCEPTED_STAND_PARTS)!r}"
+        )
+
+    measured_by = _require_text(
+        meta.get("measured_by"),
+        "meta.measured_by",
+    )
+    measurement_date = _require_text(
+        meta.get("date"),
+        "meta.date",
+    )
+    try:
+        Date.fromisoformat(measurement_date)
+    except ValueError as exc:
+        raise MeasurementError(
+            "meta.date: expected ISO date YYYY-MM-DD"
+        ) from exc
+
+    caliper_resolution = _require_number(
+        meta.get("caliper_resolution_mm"),
+        "meta.caliper_resolution_mm",
+        positive=True,
+    )
+    if caliper_resolution > 0.2:
+        raise MeasurementError(
+            "meta.caliper_resolution_mm: expected <= 0.2 mm"
+        )
+
+    return {
+        "measurement_kind": measurement_kind,
+        "model": model,
+        "stand_part": stand_part,
+        "measured_by": measured_by,
+        "measurement_date": measurement_date,
+        "caliper_resolution_mm": caliper_resolution,
+    }
+
+
 def load_measurements(path: str | Path) -> MeasurementSet:
     p = Path(path)
     data = json.loads(p.read_text(encoding="utf-8"))
+    meta = _metadata(data)
 
     g = data.get("global")
     if not isinstance(g, dict):
@@ -296,6 +380,12 @@ def load_measurements(path: str | Path) -> MeasurementSet:
 
     ms = MeasurementSet(
         raw=data,
+        measurement_kind=meta["measurement_kind"],
+        model=meta["model"],
+        stand_part=meta["stand_part"],
+        measured_by=meta["measured_by"],
+        measurement_date=meta["measurement_date"],
+        caliper_resolution_mm=meta["caliper_resolution_mm"],
         stand_width=_require_number(g.get("stand_width_mm"), "global.stand_width_mm", positive=True),
         stand_depth=_require_number(g.get("stand_depth_mm"), "global.stand_depth_mm", positive=True),
         pivot_to_rear=_require_number(g.get("pivot_to_rear_mm"), "global.pivot_to_rear_mm", positive=True),
