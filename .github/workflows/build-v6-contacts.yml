@@ -1,0 +1,208 @@
+name: Build V6 Contact Parts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/measurement_model.py"
+      - "scripts/validate_measurements.py"
+      - "scripts/build_v6_contacts.py"
+      - "scripts/validate_v6_contact_meshes.py"
+      - "scripts/validate_v6_contact_assembly.py"
+      - "tests/test_measurement_model.py"
+      - "tests/fixtures/stand_measurements.synthetic.json"
+      - "measurements/**"
+      - "cad/v5/STEP/**"
+      - ".github/workflows/build-v6-contacts.yml"
+
+concurrency:
+  group: samsung-stand-v6-contacts-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-v6-contacts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate measurement parser and synthetic fixture
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -v
+          python3 scripts/validate_measurements.py \
+            tests/fixtures/stand_measurements.synthetic.json \
+            > synthetic-measurement-validation.json
+
+      - name: Verify validated v5 structure exists
+        run: |
+          set -euo pipefail
+          test -s cad/v5/STEP/samsung_stand_v5_inner_arm.step
+          test -s cad/v5/STEP/samsung_stand_v5_outer_guide.step
+          test -s cad/v5/validation/MESH_VALIDATION_v5.json
+          test -s cad/v5/validation/ASSEMBLY_VALIDATION_v5.json
+          python3 - <<'PY'
+          import json
+          for p in (
+              'cad/v5/validation/MESH_VALIDATION_v5.json',
+              'cad/v5/validation/ASSEMBLY_VALIDATION_v5.json',
+          ):
+              d=json.load(open(p, encoding='utf-8'))
+              assert not d.get('failed'), (p,d.get('failed'))
+          print('Validated v5 upstream is green')
+          PY
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+          "$FREECADCMD" -c 'import FreeCAD,Part,Import,Mesh,MeshPart; print(FreeCAD.Version()); assert Part.makeBox(1,1,1).isValid()'
+
+      - name: Compile v6 contact scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/measurement_model.py \
+            scripts/validate_measurements.py \
+            scripts/build_v6_contacts.py \
+            scripts/validate_v6_contact_meshes.py \
+            scripts/validate_v6_contact_assembly.py
+
+      - name: Build synthetic v6 contact proof
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_v6_contacts as B; B.main('tests/fixtures/stand_measurements.synthetic.json','build_v6_contacts_fixture')" \
+            2>&1 | tee build_v6_contacts_fixture.log
+          test -s build_v6_contacts_fixture/VALIDATION_v6_contacts_source.json
+
+      - name: Validate synthetic v6 contact meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_v6_contact_meshes.py \
+            --out build_v6_contacts_fixture
+          test -s build_v6_contacts_fixture/MESH_VALIDATION_v6_contacts.json
+
+      - name: Validate synthetic v6 contact assembly
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_fixture')"
+          test -s build_v6_contacts_fixture/ASSEMBLY_VALIDATION_v6_contacts.json
+
+      - name: Detect real measurement input
+        id: real
+        run: |
+          if test -s measurements/stand_measurements.json; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate real measurement input
+        if: steps.real.outputs.present == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_measurements.py measurements/stand_measurements.json \
+            > real-measurement-validation.json
+
+      - name: Build real v6 contact parts
+        if: steps.real.outputs.present == 'true'
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_v6_contacts as B; B.main('measurements/stand_measurements.json','build_v6_contacts_real')" \
+            2>&1 | tee build_v6_contacts_real.log
+          .venv/bin/python scripts/validate_v6_contact_meshes.py \
+            --out build_v6_contacts_real
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_real')"
+
+      - name: Publish real v6 contact parts
+        if: steps.real.outputs.present == 'true' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/v6_contacts/FCStd cad/v6_contacts/STEP cad/v6_contacts/STL cad/v6_contacts/validation
+
+          rm -f cad/v6_contacts/FCStd/*
+          rm -f cad/v6_contacts/STEP/*
+          rm -f cad/v6_contacts/STL/*
+
+          cp build_v6_contacts_real/samsung_stand_v6_*.FCStd cad/v6_contacts/FCStd/
+          cp build_v6_contacts_real/samsung_stand_v6_*.step cad/v6_contacts/STEP/
+          cp build_v6_contacts_real/samsung_stand_v6_*.stl cad/v6_contacts/STL/
+          cp build_v6_contacts_real/VALIDATION_v6_contacts_source.json cad/v6_contacts/validation/
+          cp build_v6_contacts_real/MESH_VALIDATION_v6_contacts.json cad/v6_contacts/validation/
+          cp build_v6_contacts_real/ASSEMBLY_VALIDATION_v6_contacts.json cad/v6_contacts/validation/
+          cp real-measurement-validation.json cad/v6_contacts/validation/MEASUREMENT_VALIDATION.json
+
+          cat > cad/v6_contacts/README.md <<'EOF'
+          # Samsung Stand v6 contact parts
+
+          These parts are generated from the committed physical Samsung stand measurements.
+
+          They modify only the measured contact interfaces:
+          - left/right inner saddle insert;
+          - left/right outer-guide liner.
+
+          The validated v5 structural assembly remains upstream and unchanged.
+
+          Do not treat these parts as structurally released until the physical fit coupons,
+          complete assembly proof load and swivel/end-stop cycling in PHYSICAL_RELEASE_GATES.md
+          have passed.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/v6_contacts
+          if git diff --cached --quiet; then
+            echo "Real v6 contact outputs already current"
+          else
+            git commit -m "Publish measured Samsung Stand v6 contact parts"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload v6 contact proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-v6-contact-proof
+          path: |
+            build_v6_contacts_fixture/
+            build_v6_contacts_fixture.log
+            synthetic-measurement-validation.json
+            build_v6_contacts_real/
+            build_v6_contacts_real.log
+            real-measurement-validation.json
+          if-no-files-found: warn
