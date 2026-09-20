@@ -142,6 +142,14 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertTrue(any("creep_dwell.duration_hours" in x for x in report["failed"]))
 
+    def test_creep_criterion_cannot_be_below_real_tv_service_load(self):
+        d=passing_record()
+        d["criteria"]["creep_load_min_n"]=150.0
+        d["creep_dwell"]["load_n"]=150.0
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("static TV service load" in x for x in report["failed"]))
+
     def test_cycle_counts_are_enforced(self):
         d=passing_record()
         d["cycling"]["swivel_cycles_completed"]=99
