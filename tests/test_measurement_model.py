@@ -174,7 +174,7 @@ class MeasurementModelTests(unittest.TestCase):
 
     def test_profile_must_straddle_local_arm_centerline(self):
         d = complete_measurements()
-        d["inner_saddle"]["left"]["profile_points_mm"] = [
+        d["inner_saddle"]["left"]["center"]["profile_points_mm"] = [
             [1.0, 0.0], [21.0, 0.0], [21.0, 8.0], [1.0, 8.0]
         ]
         with self.assertRaises(MeasurementError):
