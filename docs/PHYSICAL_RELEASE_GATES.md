@@ -157,7 +157,77 @@ Select the lowest spring force that reliably centers the stand without causing:
 - noisy stick-slip;
 - accelerated wear on the rotor cam.
 
-## 6. Sounddeck interface / anti-slip gate
+## 6. Static stability characterization and anti-tip restraint
+
+The UE55J6250 Quick Guide BN68-07177M-00 warns that pulling or pushing the TV can
+cause it to tip and describes a wall anti-fall restraint for added stability.
+This project adds a raised, rotating support underneath the complete original
+stand, so the physical release is intentionally stricter: an anti-tip restraint
+is required for the final installation.
+
+This is **not** a claim that Samsung specifies a numeric horizontal test force
+for this adapter. No such value is invented here.
+
+### Sounddeck flat-area measurement
+
+Before interpreting the 680 × 295 mm base as the real support polygon, measure
+the actually flat top surface of the Sounddeck:
+
+- usable flat width;
+- usable flat front-to-rear depth;
+- whether every point of the printed base is supported by the flat region;
+- whether any base edge sits on a radius, chamfer or rounded cabinet edge.
+
+The current 20 mm nominal top-edge margin is a project assumption, not a Magnat
+load-rating requirement. These measurements determine whether a future deeper
+base is physically possible.
+
+### Fore/aft centre-of-gravity characterization
+
+Use two rigid transverse load-spreading bars or equivalent full-width reaction
+lines underneath the **complete final TV + adapter assembly** on a rigid test
+surface. Do not perform this measurement on two isolated point supports that can
+twist the base.
+
+Record the Y position of the rear and front reaction lines relative to base
+centre, then record rear/front reaction force at:
+
+1. -15°;
+2. 0°;
+3. +15°.
+
+Also record the vertical reference height at which an idealized horizontal force
+is to be characterized. The validator calculates:
+
+- total measured reaction;
+- projected Y centre of gravity;
+- static distance to rear and front base edges;
+- idealized horizontal force at the chosen height that would balance the static
+  gravity moment about each edge.
+
+The last values are **characterization only**. They are not a certified tipping
+load and do not create an acceptance threshold. The validator does require
+positive reactions, a centre-of-gravity projection inside the base, and less
+than 5% change in total measured reaction between swivel positions so gross
+measurement/setup errors are caught.
+
+### Anti-tip restraint
+
+Use the anti-fall concept described in Samsung Quick Guide BN68-07177M-00 with
+hardware and wall anchorage appropriate to the actual wall. The release record
+requires confirmation that:
+
+- the restraint is installed;
+- wall anchorage is verified;
+- TV-side attachment is verified;
+- the complete -15° to +15° swivel range works without binding or forcing the
+  restraint;
+- the restraint is not loose, damaged or interfering with normal swivel.
+
+This is an additional safety layer; it does not compensate for a geometrically
+unstable base.
+
+## 7. Sounddeck interface / anti-slip gate
 
 The adapter is intentionally all-PETG at this stage. That means sufficient
 friction against the real Magnat top surface must be **measured**, not assumed.
@@ -184,7 +254,7 @@ increase detent force. The correction must reduce required swivel torque or add
 a separately justified locating / friction concept without concentrating the TV
 load onto small points.
 
-## 7. Creep / dwell gate
+## 8. Creep / dwell gate
 
 Short OCC/static checks do not validate long-term PETG creep.
 
@@ -203,11 +273,14 @@ Record initial and final heights / gaps at defined reference points and repeat
 the swivel test after unloading. Any progressive permanent set, growing joint
 play or whitening is a failed gate.
 
-## 8. Release criterion
+## 9. Release criterion
 
 A physically released version needs all of the following:
 
 - CAD design gates green;
+- measured Sounddeck flat area fully supports the fixed base;
+- final assembly stability characterized at -15° / 0° / +15°;
+- anti-tip restraint installed and verified through the full swivel range;
 - final STL mesh gates green;
 - installed OCC assembly gates green;
 - real stand geometry measured and final contact inserts generated;
