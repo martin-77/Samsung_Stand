@@ -53,6 +53,13 @@ OUTER_WALL_THICKNESS = 4.0
 OUTER_WALL_HEIGHT = 22.0
 OUTER_CHANNEL_PLACEHOLDER_WIDTH = OUTER_BODY_WIDTH - 2.0 * OUTER_WALL_THICKNESS
 
+# Cross-ties close the U-section near root/tip and also provide passive axial
+# capture for later measured side rails. They remain well below the Samsung
+# stand underside during normal use.
+OUTER_ROOT_TIE_LENGTH = 10.0
+OUTER_TIP_TIE_LENGTH = 8.0
+OUTER_TIE_HEIGHT = 8.0
+
 STAND_CONTACT_PLANE_GLOBAL_Z = (
     V2.TRACK_TOP_Z + V2.SADDLE_POCKET_FLOOR + V2.SADDLE_INSERT_HEIGHT
 )
