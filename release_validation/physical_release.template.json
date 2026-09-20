@@ -34,7 +34,8 @@
     "saddle_unexpected_hard_spot_detected": null,
     "outer_guide_lateral_fit_confirmed": false,
     "outer_guide_vertical_free_clearance_confirmed": false,
-    "outer_guide_floor_contact_detected": null
+    "outer_guide_floor_contact_detected": null,
+    "outer_liners_fully_seated": false
   },
   "fit_coupons": {
     "base_roof_key_clearance_mm": null,
@@ -114,7 +115,9 @@
     "plus_end_stop_contacts": null,
     "stop_damage": null,
     "detent_degraded": null,
-    "retainer_walkout": null
+    "retainer_walkout": null,
+    "outer_liner_unseated": null,
+    "outer_liner_axial_walkout": null
   },
   "evidence": {
     "photos_committed": false,
