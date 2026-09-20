@@ -156,11 +156,7 @@ def rotor_v2():
     cavities = []
     tunnels = []
 
-    cavity_z_bottom = (
-        (P.TRACK_TOP_Z - P.ROTOR_INSTALL_Z)
-        + P.ARM_KEY_BOTTOM_Z
-        - P.ARM_KEY_UNDERSIDE_CLEARANCE
-    )
+    cavity_z_bottom = P.ROTOR_KEY_CAVITY_BOTTOM_Z
     cavity_wall_top = (
         P.TRACK_TOP_Z + P.ARM_KEY_WALL_TOP_Z - G.BEARING_TOP_Z
         + P.ARM_KEY_CLEARANCE
