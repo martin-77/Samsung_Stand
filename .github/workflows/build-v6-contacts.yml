@@ -138,14 +138,16 @@ jobs:
         if: steps.real.outputs.present == 'true'
         run: |
           set -euo pipefail
-          python3 scripts/validate_measurements.py measurements/stand_measurements.json \
+          python3 scripts/validate_measurements.py \
+            --require-physical \
+            measurements/stand_measurements.json \
             > real-measurement-validation.json
 
       - name: Build real v6 contact parts
         if: steps.real.outputs.present == 'true'
         run: |
           set -euo pipefail
-          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_v6_contacts as B; B.main('measurements/stand_measurements.json','build_v6_contacts_real')" \
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_v6_contacts as B; B.main('measurements/stand_measurements.json','build_v6_contacts_real',require_physical=True)" \
             2>&1 | tee build_v6_contacts_real.log
           .venv/bin/python scripts/validate_v6_contact_meshes.py \
             --out build_v6_contacts_real
