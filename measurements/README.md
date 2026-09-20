@@ -8,9 +8,10 @@ Do **not** fill missing values by estimation.
 
 1. Copy `measurements/stand_measurements.template.json` to `measurements/stand_measurements.json`.
 2. Enter measured global dimensions.
-3. For each inner saddle station, record its `center_xy_mm`, its
-   `lowest_point_height_mm` above the common reference plane, and a 2D
-   cross-section polygon looking along the stand arm axis.
+3. For each side of the inner saddle, measure **three sections** across the
+   insert span: `root`, `center`, and `tip`. At every section record
+   `center_xy_mm`, `lowest_point_height_mm`, and a 2D cross-section polygon
+   looking along the stand arm axis.
 4. For each outer-guide station (root/mid/tip), record the same three things:
    `center_xy_mm`, `lowest_point_height_mm`, and the measured cross-section
    polygon.
@@ -72,7 +73,8 @@ Do not re-zero the height gauge separately at each station. Doing so would erase
 the longitudinal rise/fall of the real Samsung arm and could hide an unintended
 OUTER_GUIDE floor contact.
 
-The generator uses the mean of the two measured inner-saddle lowest-point
-heights as the vertical reference. Left/right saddle inserts preserve their
-measured relative height, and every outer-guide station is checked at its own
-measured relative Z position.
+The generator uses the mean of the two **center** saddle-section
+`lowest_point_height_mm` values as the vertical reference. The complete
+root/center/tip saddle loft preserves measured relative height, lateral offset
+and cross-section shape along the insert. Every outer-guide station is likewise
+checked at its own measured relative Z position.
