@@ -102,6 +102,14 @@ PIVOT_CLIP_OUTER_DIAMETER = 38.0
 PIVOT_CLIP_INNER_DIAMETER = 25.4
 PIVOT_CLIP_THICKNESS = 3.0
 
+# Samsung UE55J6250 with original stand: 16.7 kg.
+# Source: Samsung Quick Start Guide BN68-07177M-00, model table p. 14.
+# This is the real static service mass, distinct from the higher internal
+# engineering proof/development load below.
+STANDARD_GRAVITY_M_S2 = 9.80665
+TV_WITH_STAND_MASS_KG = 16.7
+SERVICE_VERTICAL_LOAD_N = TV_WITH_STAND_MASS_KG * STANDARD_GRAVITY_M_S2
+
 DESIGN_VERTICAL_LOAD_N = 500.0
 
 
