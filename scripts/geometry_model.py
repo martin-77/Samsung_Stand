@@ -186,13 +186,26 @@ def rect_contains_point(rect: Rect, p: Point2, margin: float = 0.0) -> bool:
     )
 
 
-def support_pad_inside_sounddeck(p: Point2) -> bool:
+def support_pad_inside_rect(rect: Rect, p: Point2) -> bool:
     return (
-        SOUNDDECK.xmin <= p.x - SADDLE_PAD_HALF_X
-        and p.x + SADDLE_PAD_HALF_X <= SOUNDDECK.xmax
-        and SOUNDDECK.ymin <= p.y - SADDLE_PAD_HALF_Y
-        and p.y + SADDLE_PAD_HALF_Y <= SOUNDDECK.ymax
+        rect.xmin <= p.x - SADDLE_PAD_HALF_X
+        and p.x + SADDLE_PAD_HALF_X <= rect.xmax
+        and rect.ymin <= p.y - SADDLE_PAD_HALF_Y
+        and p.y + SADDLE_PAD_HALF_Y <= rect.ymax
     )
+
+
+def support_pad_edge_margin(rect: Rect, p: Point2) -> float:
+    return min(
+        p.x - SADDLE_PAD_HALF_X - rect.xmin,
+        rect.xmax - (p.x + SADDLE_PAD_HALF_X),
+        p.y - SADDLE_PAD_HALF_Y - rect.ymin,
+        rect.ymax - (p.y + SADDLE_PAD_HALF_Y),
+    )
+
+
+def support_pad_inside_sounddeck(p: Point2) -> bool:
+    return support_pad_inside_rect(SOUNDDECK, p)
 
 
 def sweep_angles(step_deg: float = 1.0) -> Iterable[float]:
