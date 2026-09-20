@@ -158,14 +158,12 @@ def pivot_lock_pin():
 
 
 def pivot_post_extension():
+    overlap = 0.30
+    z0 = G.PIVOT_NECK_Z0 + G.PIVOT_NECK_HEIGHT - overlap
     return Part.makeCylinder(
         P.PIVOT_POST_DIAMETER/2.0,
-        P.PIVOT_POST_TOP_Z-G.PIVOT_NECK_Z0-G.PIVOT_NECK_HEIGHT,
-        v(
-            G.PIVOT.x,
-            G.PIVOT.y,
-            G.PIVOT_NECK_Z0+G.PIVOT_NECK_HEIGHT,
-        ),
+        P.PIVOT_POST_TOP_Z-z0,
+        v(G.PIVOT.x,G.PIVOT.y,z0),
     )
 
 
@@ -203,3 +201,60 @@ def base_lock_tunnel(x_center,y_center):
         P.BASE_LOCK_HOLE_WALL_TOP_Z,
         P.BASE_LOCK_HOLE_APEX_Z,
     )
+
+
+def outer_lock_tunnel(x_center):
+    return house_tunnel_y(
+        x_center,
+        0.0,
+        P.OUTER_LOCK_TUNNEL_LENGTH,
+        P.OUTER_LOCK_HOLE_WIDTH/2.0,
+        P.OUTER_LOCK_HOLE_BOTTOM_Z,
+        P.OUTER_LOCK_HOLE_WALL_TOP_Z,
+        P.OUTER_LOCK_HOLE_APEX_Z,
+    )
+
+
+def outer_lock_pin():
+    shaft=Part.makeBox(
+        P.OUTER_PIN_LENGTH,
+        P.OUTER_PIN_WIDTH,
+        P.OUTER_PIN_HEIGHT,
+        v(0,-P.OUTER_PIN_WIDTH/2.0,0),
+    )
+    split=Part.makeBox(
+        P.OUTER_PIN_SPLIT_LENGTH,
+        P.OUTER_PIN_SPLIT_WIDTH,
+        P.OUTER_PIN_HEIGHT+2.0,
+        v(
+            P.OUTER_PIN_LENGTH-P.OUTER_PIN_SPLIT_LENGTH,
+            -P.OUTER_PIN_SPLIT_WIDTH/2.0,
+            -1.0,
+        ),
+    )
+    shaft=shaft.cut(split)
+    head=Part.makeBox(
+        P.OUTER_PIN_HEAD_LENGTH,
+        P.OUTER_PIN_HEAD_WIDTH,
+        P.OUTER_PIN_HEAD_HEIGHT,
+        v(
+            -P.OUTER_PIN_HEAD_LENGTH,
+            -P.OUTER_PIN_HEAD_WIDTH/2.0,
+            0,
+        ),
+    )
+    barb0=P.OUTER_PIN_LENGTH-P.OUTER_PIN_SPLIT_LENGTH+1.0
+    barb1=P.OUTER_PIN_LENGTH-0.5
+    b1=_snap_barb(
+        barb0,barb1,P.OUTER_PIN_BARB_PEAK_X,
+        P.OUTER_PIN_WIDTH/2.0,
+        P.OUTER_PIN_BARB_HALF_WIDTH,
+        P.OUTER_PIN_HEIGHT,+1,
+    )
+    b2=_snap_barb(
+        barb0,barb1,P.OUTER_PIN_BARB_PEAK_X,
+        P.OUTER_PIN_WIDTH/2.0,
+        P.OUTER_PIN_BARB_HALF_WIDTH,
+        P.OUTER_PIN_HEIGHT,-1,
+    )
+    return fuse_all([shaft,head,b1,b2])
