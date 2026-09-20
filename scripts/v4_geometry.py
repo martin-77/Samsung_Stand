@@ -12,6 +12,7 @@ import FreeCAD as App
 import Part
 
 import geometry_model as G
+import v2_params as V2
 import v4_params as P
 
 
@@ -93,6 +94,24 @@ def stop_sweep_clearance_shape():
         P.ROTOR_STOP_HOME_ANGLE_DEG + P.STOP_CLEARANCE_HALF_ANGLE_DEG,
         P.STOP_CLEARANCE_Z0,
         P.STOP_CLEARANCE_HEIGHT,
+    )
+
+
+def arm_sweep_clearance_shape(side: str):
+    if side == "right":
+        a0, a1 = P.RIGHT_ARM_SWEEP_RANGE_DEG
+    elif side == "left":
+        a0, a1 = P.LEFT_ARM_SWEEP_RANGE_DEG
+    else:
+        raise ValueError(side)
+
+    return annular_sector(
+        P.ARM_SWEEP_CLEARANCE_R0,
+        P.ARM_SWEEP_CLEARANCE_R1,
+        a0,
+        a1,
+        P.ARM_SWEEP_CLEARANCE_Z0,
+        P.ARM_SWEEP_CLEARANCE_HEIGHT,
     )
 
 
