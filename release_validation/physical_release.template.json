@@ -28,7 +28,13 @@
   "measurement_gate": {
     "real_measurements_complete": false,
     "measured_contact_parts_generated": false,
-    "dry_fit_original_stand_passed": false
+    "dry_fit_original_stand_passed": false,
+    "saddle_root_center_tip_contact_confirmed": false,
+    "saddle_rocking_detected": null,
+    "saddle_unexpected_hard_spot_detected": null,
+    "outer_guide_lateral_fit_confirmed": false,
+    "outer_guide_vertical_free_clearance_confirmed": false,
+    "outer_guide_floor_contact_detected": null
   },
   "fit_coupons": {
     "base_roof_key_clearance_mm": null,
