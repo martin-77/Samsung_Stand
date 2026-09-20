@@ -13,6 +13,7 @@ from measurement_model import (
     MeasurementError,
     load_measurements,
     lower_envelope,
+    station_arm_frame,
     symmetry_report,
 )
 
@@ -173,6 +174,16 @@ class MeasurementModelTests(unittest.TestCase):
         self.assertAlmostEqual(env[-10.0], 0.0, places=9)
         self.assertAlmostEqual(env[0.0], 0.6, places=9)
         self.assertAlmostEqual(env[10.0], 0.0, places=9)
+
+    def test_station_projection_recovers_along_and_lateral_offsets(self):
+        ms = load_measurements(self.write_temp(complete_measurements()))
+        import v2_params as V2
+        left = station_arm_frame(ms.inner_left, V2.LEFT_ARM_ANGLE_DEG)
+        right = station_arm_frame(ms.inner_right, V2.RIGHT_ARM_ANGLE_DEG)
+        self.assertAlmostEqual(left[0], 279.0, places=3)
+        self.assertAlmostEqual(right[0], 279.5, places=3)
+        self.assertAlmostEqual(left[1], 0.0, places=3)
+        self.assertAlmostEqual(right[1], 0.0, places=3)
 
     def test_station_radius_must_match_center_xy(self):
         d = complete_measurements()
