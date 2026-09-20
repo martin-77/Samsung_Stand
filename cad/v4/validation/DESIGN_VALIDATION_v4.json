@@ -1,0 +1,91 @@
+{
+  "version": "v4",
+  "checks": {
+    "stop_target_matches_swivel_limit": true,
+    "rotor_stop_starts_on_print_bed": true,
+    "stop_clearance_starts_at_bearing_plane": true,
+    "stop_clearance_covers_radial_sweep": true,
+    "stop_clearance_covers_angular_sweep": true,
+    "stop_tab_connects_back_to_rotor": true,
+    "fixed_tower_has_large_contact_height": true,
+    "fixed_stop_towers_inside_center_module": true,
+    "arm_sweep_clearance_has_angular_width_margin": true,
+    "arm_sweep_clearance_stops_before_glide_track": true,
+    "arm_sweep_clearance_is_above_load_plane": true,
+    "arm_sweep_clearance_preserves_lower_buttress": true,
+    "tower_angles_are_symmetric": true
+  },
+  "details": {
+    "target_stop_deg": 15.0,
+    "tab_half_angle_deg": 3.5763,
+    "tower_half_angle_deg": 3.0665,
+    "stop_contact_calibration_deg": 0.576904,
+    "fixed_stop_angles_deg": [
+      67.7803,
+      112.2197
+    ],
+    "stop_clearance_radial_range_mm": [
+      68.0,
+      123.0
+    ],
+    "stop_sweep_radial_range_mm": [
+      70.0,
+      121.0
+    ],
+    "stop_clearance_half_angle_deg": 19.8263,
+    "stop_sweep_max_half_angle_deg": 18.5763,
+    "printability_note": "rotor stop spoke and tab both begin at Z=0",
+    "arm_sweep_clearance_radial_range_mm": [
+      180.0,
+      250.0
+    ],
+    "arm_sweep_clearance_angle_margin_deg": 8.0,
+    "arm_beam_half_angle_at_clearance_r0_deg": 6.9683,
+    "arm_sweep_clearance_z0_mm": 17.6,
+    "preserved_buttress_height_above_floor_mm": 13.6,
+    "tower_corner_samples": [
+      [
+        44.505,
+        29.082,
+        true
+      ],
+      [
+        33.396,
+        33.62,
+        true
+      ],
+      [
+        51.312,
+        45.746,
+        true
+      ],
+      [
+        40.203,
+        50.284,
+        true
+      ],
+      [
+        -33.396,
+        33.62,
+        true
+      ],
+      [
+        -44.505,
+        29.082,
+        true
+      ],
+      [
+        -40.203,
+        50.284,
+        true
+      ],
+      [
+        -51.312,
+        45.746,
+        true
+      ]
+    ],
+    "note": "Exact end-stop behavior is OCC-gated after CAD generation."
+  },
+  "failed": []
+}

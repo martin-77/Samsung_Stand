@@ -1,0 +1,90 @@
+{
+  "version": "v4",
+  "stop_behavior": {
+    "-15.5": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 55.713647
+    },
+    "-15.0": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.0
+    },
+    "-14.0": {
+      "distance_mm": 1.798699,
+      "common_volume_mm3": 0.0
+    },
+    "+0.0": {
+      "distance_mm": 26.938634,
+      "common_volume_mm3": 0.0
+    },
+    "+14.0": {
+      "distance_mm": 1.798699,
+      "common_volume_mm3": 0.0
+    },
+    "+15.0": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 0.0
+    },
+    "+15.5": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 55.713647
+    }
+  },
+  "full_rotor_pre_stop_common_volumes_mm3": {
+    "-14.0": 0.0,
+    "-7.5": 0.0,
+    "+0.0": 0.0,
+    "+7.5": 0.0,
+    "+14.0": 0.0
+  },
+  "rotating_carrier_sweep_common_volumes_mm3": {
+    "-15.0": {
+      "right_inner_vs_right_base": 0.0,
+      "left_inner_vs_left_base": 0.0,
+      "right_outer_vs_right_base": 0.0,
+      "left_outer_vs_left_base": 0.0,
+      "right_outer_vs_center": 0.0,
+      "left_outer_vs_center": 0.0
+    },
+    "-7.5": {
+      "right_inner_vs_right_base": 0.0,
+      "left_inner_vs_left_base": 0.0,
+      "right_outer_vs_right_base": 0.0,
+      "left_outer_vs_left_base": 0.0,
+      "right_outer_vs_center": 0.0,
+      "left_outer_vs_center": 0.0
+    },
+    "+0.0": {
+      "right_inner_vs_right_base": 0.0,
+      "left_inner_vs_left_base": 0.0,
+      "right_outer_vs_right_base": 0.0,
+      "left_outer_vs_left_base": 0.0,
+      "right_outer_vs_center": 0.0,
+      "left_outer_vs_center": 0.0
+    },
+    "+7.5": {
+      "right_inner_vs_right_base": 0.0,
+      "left_inner_vs_left_base": 0.0,
+      "right_outer_vs_right_base": 0.0,
+      "left_outer_vs_left_base": 0.0,
+      "right_outer_vs_center": 0.0,
+      "left_outer_vs_center": 0.0
+    },
+    "+15.0": {
+      "right_inner_vs_right_base": 0.0,
+      "left_inner_vs_left_base": 0.0,
+      "right_outer_vs_right_base": 0.0,
+      "left_outer_vs_left_base": 0.0,
+      "right_outer_vs_center": 0.0,
+      "left_outer_vs_center": 0.0
+    }
+  },
+  "stop_symmetry_relative_delta": 0.0,
+  "interpretation": {
+    "14_deg": "must be free",
+    "15_deg": "must be surface contact",
+    "15_5_deg": "must produce solid interference and therefore be mechanically blocked",
+    "detent": "not part of this gate; detent will not carry stop load"
+  },
+  "failed": []
+}
