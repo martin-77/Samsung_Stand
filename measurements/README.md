@@ -8,10 +8,12 @@ Do **not** fill missing values by estimation.
 
 1. Copy `measurements/stand_measurements.template.json` to `measurements/stand_measurements.json`.
 2. Enter measured global dimensions.
-3. For each inner saddle station, record its `center_xy_mm` relative to the
-   swivel pivot and enter a 2D cross-section polygon looking along the stand arm axis.
-4. For each outer-guide station (root/mid/tip), record the station
-   `center_xy_mm` and the measured cross-section polygon.
+3. For each inner saddle station, record its `center_xy_mm`, its
+   `lowest_point_height_mm` above the common reference plane, and a 2D
+   cross-section polygon looking along the stand arm axis.
+4. For each outer-guide station (root/mid/tip), record the same three things:
+   `center_xy_mm`, `lowest_point_height_mm`, and the measured cross-section
+   polygon.
 5. Run `python scripts/validate_measurements.py measurements/stand_measurements.json`.
 6. Only a complete, symmetric/plausible measurement set unlocks the v6 contact-part generator.
 
@@ -49,3 +51,28 @@ rejects a radius that disagrees with `center_xy_mm` by more than 1.5 mm.
 The generator projects these coordinates into the fixed v8 arm frames. Small
 real lateral deviations therefore modify only the replaceable saddle inserts
 and guide rails. They do **not** silently move the structural v8 arms.
+
+
+## Common vertical datum
+
+Every station requires `lowest_point_height_mm`.
+
+Use one **unchanged flat reference plane for the complete stand**. The value is
+the vertical distance from that plane to the lowest physical point of the
+cross-section at the measurement station.
+
+This is different from the local polygon coordinate:
+
+- `profile_points_mm[*][1]` uses local z with the lowest point of that
+  individual cross-section normalized to z = 0;
+- `lowest_point_height_mm` says where that local z = 0 actually lies relative
+  to the common reference plane.
+
+Do not re-zero the height gauge separately at each station. Doing so would erase
+the longitudinal rise/fall of the real Samsung arm and could hide an unintended
+OUTER_GUIDE floor contact.
+
+The generator uses the mean of the two measured inner-saddle lowest-point
+heights as the vertical reference. Left/right saddle inserts preserve their
+measured relative height, and every outer-guide station is checked at its own
+measured relative Z position.
