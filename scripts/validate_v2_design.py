@@ -37,6 +37,17 @@ def main() -> int:
     key_angle = math.degrees(math.atan2(key_rise, P.ARM_KEY_HALF_WIDTH))
     checks["arm_key_roof_support_friendly"] = key_angle >= 45.0
     checks["arm_key_clearance_reasonable"] = 0.30 <= P.ARM_KEY_CLEARANCE <= 0.55
+    lock_roof_rise = (
+        P.ARM_LOCK_HOLE_APEX_Z_ROTOR - P.ARM_LOCK_HOLE_WALL_TOP_Z_ROTOR
+    )
+    lock_roof_run = P.ARM_LOCK_HOLE_RADIAL_WIDTH / 2.0
+    lock_roof_angle = math.degrees(math.atan2(lock_roof_rise, lock_roof_run))
+    checks["arm_lock_tunnel_roof_support_friendly"] = lock_roof_angle >= 45.0
+    checks["arm_lock_pin_fits_tunnel"] = (
+        P.ARM_LOCK_PIN_RADIAL_WIDTH < P.ARM_LOCK_HOLE_RADIAL_WIDTH
+        and P.ARM_LOCK_PIN_HEIGHT
+        < P.ARM_LOCK_HOLE_WALL_TOP_Z_ROTOR - P.ARM_LOCK_HOLE_BOTTOM_Z_ROTOR
+    )
 
     receiver_roof_margin = P.ROTOR_RECEIVER_TOP_Z - (
         (P.ARM_KEY_APEX_Z + P.TRACK_TOP_Z - G.BEARING_TOP_Z)
@@ -145,6 +156,7 @@ def main() -> int:
         "inner_saddle_u_mm": round(P.SADDLE_U, 3),
         "minimum_40x40_pad_margin_on_fixed_base_mm": round(min_base_margin, 3),
         "arm_key_roof_angle_deg": round(key_angle, 3),
+        "arm_lock_tunnel_roof_angle_deg": round(lock_roof_angle, 3),
         "rotor_receiver_roof_margin_mm": round(receiver_roof_margin, 3),
         "contact_profile_status": "blank replaceable insert; physical Samsung arm section still required",
     }
