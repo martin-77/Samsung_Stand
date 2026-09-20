@@ -54,6 +54,12 @@ def passing_record():
             "real_measurements_complete":True,
             "measured_contact_parts_generated":True,
             "dry_fit_original_stand_passed":True,
+            "saddle_root_center_tip_contact_confirmed":True,
+            "saddle_rocking_detected":False,
+            "saddle_unexpected_hard_spot_detected":False,
+            "outer_guide_lateral_fit_confirmed":True,
+            "outer_guide_vertical_free_clearance_confirmed":True,
+            "outer_guide_floor_contact_detected":False,
         },
         "fit_coupons":{
             "base_roof_key_clearance_mm":0.4,
@@ -130,6 +136,27 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         d["meta"]["contact_parts_version"]=""
         with self.assertRaises(V.ReleaseError):
             V.main(self.write(d))
+
+    def test_saddle_rocking_fails_release(self):
+        d=passing_record()
+        d["measurement_gate"]["saddle_rocking_detected"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("saddle_rocking_detected" in x for x in report["failed"]))
+
+    def test_outer_guide_floor_contact_fails_release(self):
+        d=passing_record()
+        d["measurement_gate"]["outer_guide_floor_contact_detected"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("outer_guide_floor_contact_detected" in x for x in report["failed"]))
+
+    def test_missing_three_section_contact_confirmation_fails(self):
+        d=passing_record()
+        d["measurement_gate"]["saddle_root_center_tip_contact_confirmed"]=False
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("saddle_root_center_tip_contact_confirmed" in x for x in report["failed"]))
 
     def test_proof_criterion_cannot_be_below_500N(self):
         d=passing_record()
