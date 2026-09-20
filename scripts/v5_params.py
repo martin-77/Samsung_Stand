@@ -21,7 +21,7 @@ DETENT_TRACK_HEIGHT = 6.0
 # V-notch in the rotor track.  At 0 deg swivel the spring relaxes into this
 # notch.  At all other useful angles it rides on the constant-radius cam.
 DETENT_NOTCH_DEPTH = 1.20
-DETENT_NOTCH_HALF_ANGLE_DEG = 3.0
+DETENT_NOTCH_HALF_ANGLE_DEG = 5.0
 DETENT_NOTCH_ROOT_RADIUS = DETENT_TRACK_R_OUTER - DETENT_NOTCH_DEPTH
 
 # Replaceable in-plane PETG spring cassette.
