@@ -42,26 +42,52 @@ def complete_measurements():
         "inner_saddle": {
             "left": {
                 "station_radius_mm": 279.0,
+                "center_xy_mm": [-250.0196, 123.8192],
                 "profile_points_mm": rect_profile(26.0, 9.0),
                 "notes": "",
             },
             "right": {
                 "station_radius_mm": 279.5,
+                "center_xy_mm": [250.4677, 124.0411],
                 "profile_points_mm": rect_profile(26.2, 9.1),
                 "notes": "",
             },
         },
         "outer_guide": {
             "left": {
-                "root": {"station_radius_mm": 320.0, "profile_points_mm": rect_profile(24.0, 8.5)},
-                "mid": {"station_radius_mm": 390.0, "profile_points_mm": rect_profile(22.0, 8.0)},
-                "tip": {"station_radius_mm": 455.0, "profile_points_mm": rect_profile(20.0, 7.5)},
+                "root": {
+                    "station_radius_mm": 320.0,
+                    "center_xy_mm": [-286.7608, 142.0149],
+                    "profile_points_mm": rect_profile(24.0, 8.5),
+                },
+                "mid": {
+                    "station_radius_mm": 390.0,
+                    "center_xy_mm": [-349.4898, 173.0806],
+                    "profile_points_mm": rect_profile(22.0, 8.0),
+                },
+                "tip": {
+                    "station_radius_mm": 455.0,
+                    "center_xy_mm": [-407.7381, 201.9274],
+                    "profile_points_mm": rect_profile(20.0, 7.5),
+                },
                 "notes": "",
             },
             "right": {
-                "root": {"station_radius_mm": 320.5, "profile_points_mm": rect_profile(24.2, 8.6)},
-                "mid": {"station_radius_mm": 390.5, "profile_points_mm": rect_profile(22.1, 8.1)},
-                "tip": {"station_radius_mm": 455.5, "profile_points_mm": rect_profile(20.1, 7.6)},
+                "root": {
+                    "station_radius_mm": 320.5,
+                    "center_xy_mm": [287.2089, 142.2368],
+                    "profile_points_mm": rect_profile(24.2, 8.6),
+                },
+                "mid": {
+                    "station_radius_mm": 390.5,
+                    "center_xy_mm": [349.9378, 173.3025],
+                    "profile_points_mm": rect_profile(22.1, 8.1),
+                },
+                "tip": {
+                    "station_radius_mm": 455.5,
+                    "center_xy_mm": [408.1861, 202.1493],
+                    "profile_points_mm": rect_profile(20.1, 7.6),
+                },
                 "notes": "",
             },
         },
@@ -147,6 +173,18 @@ class MeasurementModelTests(unittest.TestCase):
         self.assertAlmostEqual(env[-10.0], 0.0, places=9)
         self.assertAlmostEqual(env[0.0], 0.6, places=9)
         self.assertAlmostEqual(env[10.0], 0.0, places=9)
+
+    def test_station_radius_must_match_center_xy(self):
+        d = complete_measurements()
+        d["inner_saddle"]["right"]["center_xy_mm"] = [240.0, 100.0]
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_station_center_xy_uses_correct_side_quadrant(self):
+        d = complete_measurements()
+        d["outer_guide"]["left"]["mid"]["center_xy_mm"] = [349.4898, 173.0806]
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
 
     def test_outer_station_radii_must_increase(self):
         d = complete_measurements()
