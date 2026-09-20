@@ -120,6 +120,25 @@ def house_tunnel_y(x_center, y_length, x_half, z_bottom, z_wall_top, z_apex):
     return Part.Face(wire).extrude(v(0, y_length, 0))
 
 
+def center_v2():
+    """Trim all fixed ribs above the bearing plane out of the rotating envelope."""
+    sh = load_step("samsung_stand_v1_base_center")
+    outer = Part.makeCylinder(
+        P.ROTATING_CLEARANCE_RADIUS,
+        P.ROTATING_CLEARANCE_HEIGHT,
+        v(G.PIVOT.x, G.PIVOT.y, P.ROTATING_CLEARANCE_Z0),
+    )
+    inner = Part.makeCylinder(
+        P.ROTATING_CLEARANCE_INNER_RADIUS,
+        P.ROTATING_CLEARANCE_HEIGHT + 2.0,
+        v(G.PIVOT.x, G.PIVOT.y, P.ROTATING_CLEARANCE_Z0 - 1.0),
+    )
+    rotating_clearance = outer.cut(inner)
+    sh = sh.cut(rotating_clearance).removeSplitter()
+    require_single(sh, "BASE_CENTER_V2")
+    return sh
+
+
 def side_with_track(side):
     if side == "right":
         upstream = load_step("samsung_stand_v1_base_right")
@@ -398,7 +417,7 @@ def export_shape(name, shape):
 
 
 parts = {
-    "samsung_stand_v2_base_center": load_step("samsung_stand_v1_base_center"),
+    "samsung_stand_v2_base_center": center_v2(),
     "samsung_stand_v2_base_left": side_with_track("left"),
     "samsung_stand_v2_base_right": side_with_track("right"),
     "samsung_stand_v2_rotor": rotor_v2(),
