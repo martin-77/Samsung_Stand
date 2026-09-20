@@ -1,0 +1,154 @@
+name: Build Detent Coupon
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/v5_params.py"
+      - "scripts/v5_geometry.py"
+      - "scripts/build_detent_coupon.py"
+      - "scripts/validate_detent_coupon_meshes.py"
+      - "scripts/validate_detent_coupon_assembly.py"
+      - ".github/workflows/build-detent-coupon.yml"
+
+concurrency:
+  group: samsung-stand-detent-coupon-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-detent-coupon:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+
+      - name: Compile detent coupon scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/build_detent_coupon.py \
+            scripts/validate_detent_coupon_meshes.py \
+            scripts/validate_detent_coupon_assembly.py
+
+      - name: Build detent coupon
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_detent_coupon" \
+            2>&1 | tee build_detent_coupon.log
+          test -s build_detent_coupon/DETENT_COUPON_REPORT.json
+
+      - name: Validate detent coupon meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_detent_coupon_meshes.py
+          test -s build_detent_coupon/DETENT_COUPON_MESH_VALIDATION.json
+
+      - name: Validate detent coupon assembly
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_detent_coupon_assembly as V; V.main()"
+          test -s build_detent_coupon/DETENT_COUPON_ASSEMBLY_VALIDATION.json
+
+      - name: Publish detent coupon
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/detent_coupon/FCStd cad/detent_coupon/STEP cad/detent_coupon/STL cad/detent_coupon/validation
+
+          rm -f cad/detent_coupon/FCStd/*
+          rm -f cad/detent_coupon/STEP/*
+          rm -f cad/detent_coupon/STL/*
+
+          cp build_detent_coupon/detent_coupon_*.FCStd cad/detent_coupon/FCStd/
+          cp build_detent_coupon/detent_coupon_*.step cad/detent_coupon/STEP/
+          cp build_detent_coupon/detent_coupon_*.stl cad/detent_coupon/STL/
+          cp build_detent_coupon/DETENT_COUPON_REPORT.json cad/detent_coupon/validation/
+          cp build_detent_coupon/DETENT_COUPON_MESH_VALIDATION.json cad/detent_coupon/validation/
+          cp build_detent_coupon/DETENT_COUPON_ASSEMBLY_VALIDATION.json cad/detent_coupon/validation/
+
+          cat > cad/detent_coupon/README.md <<'EOF'
+          # Zero-detent calibration rig
+
+          Compact rig using the exact v5 cam track and replaceable detent cassette geometry.
+
+          Print:
+          - 1x detent_coupon_base
+          - 1x detent_coupon_cam
+          - 2x detent_coupon_pin
+          - initially 1x detent_coupon_cassette_t18
+
+          If t18 does not reliably re-center, try t22, then t26.
+
+          Reject a variant if it shows whitening, excessive breakaway torque,
+          permanent set, rough stick-slip, or rapid wear.
+
+          This rig calibrates detent feel only. It is not a structural proof-load fixture.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/detent_coupon
+          if git diff --cached --quiet; then
+            echo "Detent coupon already current"
+          else
+            git commit -m "Publish zero-detent calibration rig"
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Concurrent main update during publish; retrying ($attempt/4)"
+              sleep 2
+            done
+            test "$pushed" = true
+          fi
+
+      - name: Upload detent coupon proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-detent-coupon
+          path: |
+            build_detent_coupon/
+            build_detent_coupon.log
