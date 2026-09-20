@@ -97,6 +97,17 @@ def main(path: str) -> dict[str,Any]:
     )
     nonempty(criteria.get("rationale"),"criteria.rationale")
 
+    proof_setup=data.get("proof_setup",{})
+    if proof_setup.get("support_surface")!="rigid_surrogate":
+        failures.append(
+            "proof_setup.support_surface must be rigid_surrogate"
+        )
+    if proof_setup.get("sounddeck_used") is not False:
+        failures.append(
+            "proof_setup.sounddeck_used must be false; 500 N structural "
+            "proof is not permitted on the real Sounddeck"
+        )
+
     measurement=data.get("measurement_gate",{})
     for key in (
         "real_measurements_complete",
@@ -144,6 +155,22 @@ def main(path: str) -> dict[str,Any]:
             require_false(row.get(key),f"proof_load.{position}.{key}",failures)
 
     interface=data.get("sounddeck_interface",{})
+    sounddeck_test_load=number(
+        interface.get("test_load_n"),
+        "sounddeck_interface.test_load_n",
+        positive=True,
+    )
+    if sounddeck_test_load + 1e-9 < G.SERVICE_VERTICAL_LOAD_N:
+        failures.append(
+            f"sounddeck_interface.test_load_n {sounddeck_test_load:.1f} N "
+            f"is below real TV service load {G.SERVICE_VERTICAL_LOAD_N:.1f} N"
+        )
+    if sounddeck_test_load > G.SERVICE_VERTICAL_LOAD_N * 1.10:
+        failures.append(
+            f"sounddeck_interface.test_load_n {sounddeck_test_load:.1f} N "
+            "exceeds the allowed 110% service-load interface-test ceiling; "
+            "do not use the Sounddeck as the 500 N structural proof fixture"
+        )
     for key in (
         "unloaded_base_movement_detected",
         "loaded_base_movement_detected",
@@ -191,6 +218,11 @@ def main(path: str) -> dict[str,Any]:
     report={
         "ok":not failures,
         "structural_version":"v8",
+        "proof_setup":{
+            "support_surface":proof_setup.get("support_surface"),
+            "sounddeck_used":proof_setup.get("sounddeck_used"),
+        },
+        "sounddeck_interface_test_load_n":sounddeck_test_load,
         "verified_service_load":{
             "tv_with_stand_mass_kg":G.TV_WITH_STAND_MASS_KG,
             "static_vertical_load_n":round(G.SERVICE_VERTICAL_LOAD_N,3),
