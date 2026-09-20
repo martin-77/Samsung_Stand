@@ -30,20 +30,7 @@ def main() -> int:
             "left_tip_xy_mm": ms.left_tip_xy,
             "right_tip_xy_mm": ms.right_tip_xy,
         },
-        "inner_saddle": {
-            "left": {
-                "radius_mm": ms.inner_left.radius,
-                "profile_width_mm": round(ms.inner_left.profile.width, 4),
-                "profile_height_mm": round(ms.inner_left.profile.height, 4),
-                "profile_area_mm2": round(ms.inner_left.profile.area, 4),
-            },
-            "right": {
-                "radius_mm": ms.inner_right.radius,
-                "profile_width_mm": round(ms.inner_right.profile.width, 4),
-                "profile_height_mm": round(ms.inner_right.profile.height, 4),
-                "profile_area_mm2": round(ms.inner_right.profile.area, 4),
-            },
-        },
+        "inner_saddle": {},
         "outer_guide": {},
         "contact_pad": {
             "used": ms.pad_used,
@@ -57,6 +44,21 @@ def main() -> int:
         ),
     }
 
+    for side, stations in (("left", ms.inner_left), ("right", ms.inner_right)):
+        report["inner_saddle"][side] = []
+        for name, st in zip(("root", "center", "tip"), stations):
+            report["inner_saddle"][side].append(
+                {
+                    "station": name,
+                    "radius_mm": st.radius,
+                    "center_xy_mm": st.center_xy,
+                    "lowest_point_height_mm": st.lowest_point_height_mm,
+                    "profile_width_mm": round(st.profile.width, 4),
+                    "profile_height_mm": round(st.profile.height, 4),
+                    "profile_area_mm2": round(st.profile.area, 4),
+                }
+            )
+
     for side, stations in (("left", ms.outer_left), ("right", ms.outer_right)):
         report["outer_guide"][side] = []
         for name, st in zip(("root", "mid", "tip"), stations):
@@ -64,6 +66,8 @@ def main() -> int:
                 {
                     "station": name,
                     "radius_mm": st.radius,
+                    "center_xy_mm": st.center_xy,
+                    "lowest_point_height_mm": st.lowest_point_height_mm,
                     "profile_width_mm": round(st.profile.width, 4),
                     "profile_height_mm": round(st.profile.height, 4),
                     "profile_area_mm2": round(st.profile.area, 4),
