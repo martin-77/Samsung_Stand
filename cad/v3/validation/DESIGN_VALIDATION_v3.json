@@ -1,0 +1,35 @@
+{
+  "version": "v3",
+  "checks": {
+    "outer_guide_reaches_beyond_reconstructed_tip": true,
+    "outer_guide_print_length_under_295": true,
+    "outer_guide_print_width_under_295": true,
+    "outer_body_starts_beyond_fixed_glide_track": true,
+    "normal_vertical_clearance_is_large": true,
+    "outer_key_roof_support_friendly": true,
+    "outer_key_not_flat_bridge": true,
+    "outer_key_clearance_reasonable": true,
+    "outer_receiver_keeps_floor": true,
+    "outer_receiver_keeps_roof": true,
+    "outer_key_has_deliberate_underside_clearance": true,
+    "outer_lock_tunnel_support_friendly": true,
+    "placeholder_channel_explicitly_oversized": true,
+    "outer_guide_is_not_declared_vertical_support": true
+  },
+  "details": {
+    "reconstructed_samsung_tip_radius_mm": 468.683,
+    "outer_guide_start_radius_mm": 310.0,
+    "outer_guide_tip_radius_mm": 480.0,
+    "tip_coverage_beyond_reconstruction_mm": 11.317,
+    "track_outer_radius_mm": 304.978,
+    "body_radial_gap_to_track_mm": 5.022,
+    "stand_contact_plane_global_z_mm": 32.0,
+    "outer_floor_top_global_z_mm": 23.0,
+    "normal_vertical_clearance_mm": 9.0,
+    "outer_key_roof_angle_deg": 45.0,
+    "outer_lock_roof_angle_deg": 45.0,
+    "placeholder_channel_inside_width_mm": 60.0,
+    "contact_status": "structural U-guide only; final side-contact/shim geometry requires physical Samsung arm cross-section measurements"
+  },
+  "failed": []
+}

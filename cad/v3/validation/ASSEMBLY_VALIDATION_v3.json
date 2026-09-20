@@ -1,0 +1,24 @@
+{
+  "version": "v3",
+  "common_volumes_mm3": {
+    "right_outer_vs_right_inner": 0.0,
+    "left_outer_vs_left_inner": 0.0,
+    "right_outer_vs_right_base": 0.0,
+    "left_outer_vs_left_base": 0.0,
+    "right_outer_vs_center": 0.0,
+    "left_outer_vs_center": 0.0,
+    "right_outer_vs_rotor": 0.0,
+    "left_outer_vs_rotor": 0.0,
+    "right_outer_vs_left_outer": 0.0
+  },
+  "joint_contact_distances_mm": {
+    "right_outer_to_inner": 0.0,
+    "left_outer_to_inner": 0.0
+  },
+  "outer_to_fixed_base_clearances_mm": {
+    "right_outer_to_fixed_base": 2.6,
+    "left_outer_to_fixed_base": 2.6
+  },
+  "load_path_note": "OUTER_GUIDE is connected only to the rotating INNER_ARM and has positive clearance to the fixed base; it is lateral guidance, not a normal vertical support.",
+  "failed": []
+}
