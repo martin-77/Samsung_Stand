@@ -96,11 +96,20 @@ def installed_outer(side, swivel_deg=0.0):
 
 def installed_base_pin(x_center, y_center):
     sh = load_step("samsung_stand_v8_joint_lock_pin")
-    sh.rotate(v(0, 0, 0), v(0, 0, 1), 90.0)
+    if y_center < 0:
+        angle = 90.0
+        y0 = y_center + P.BASE_LOCK_PIN_AXIS_START
+    else:
+        # Mirror the front pin rather than repeating the rear insertion
+        # direction. This keeps both head/barb ends out of the asymmetric
+        # center-base rib field.
+        angle = -90.0
+        y0 = y_center - P.BASE_LOCK_PIN_AXIS_START
+    sh.rotate(v(0, 0, 0), v(0, 0, 1), angle)
     sh.translate(
         v(
             x_center,
-            y_center + P.BASE_LOCK_PIN_AXIS_START,
+            y0,
             P.BASE_LOCK_PIN_INSTALL_Z,
         )
     )
