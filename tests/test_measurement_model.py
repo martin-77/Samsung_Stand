@@ -12,8 +12,10 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from measurement_model import (
     MeasurementError,
     load_measurements,
+    inner_vertical_reference_mm,
     lower_envelope,
     station_arm_frame,
+    station_vertical_offset_mm,
     symmetry_report,
 )
 
@@ -44,12 +46,14 @@ def complete_measurements():
             "left": {
                 "station_radius_mm": 279.0,
                 "center_xy_mm": [-250.0196, 123.8192],
+                "lowest_point_height_mm": 6.0,
                 "profile_points_mm": rect_profile(26.0, 9.0),
                 "notes": "",
             },
             "right": {
                 "station_radius_mm": 279.5,
                 "center_xy_mm": [250.4677, 124.0411],
+                "lowest_point_height_mm": 6.4,
                 "profile_points_mm": rect_profile(26.2, 9.1),
                 "notes": "",
             },
@@ -59,16 +63,19 @@ def complete_measurements():
                 "root": {
                     "station_radius_mm": 320.0,
                     "center_xy_mm": [-286.7608, 142.0149],
+                    "lowest_point_height_mm": 5.0,
                     "profile_points_mm": rect_profile(24.0, 8.5),
                 },
                 "mid": {
                     "station_radius_mm": 390.0,
                     "center_xy_mm": [-349.4898, 173.0806],
+                    "lowest_point_height_mm": 6.0,
                     "profile_points_mm": rect_profile(22.0, 8.0),
                 },
                 "tip": {
                     "station_radius_mm": 455.0,
                     "center_xy_mm": [-407.7381, 201.9274],
+                    "lowest_point_height_mm": 7.0,
                     "profile_points_mm": rect_profile(20.0, 7.5),
                 },
                 "notes": "",
@@ -77,16 +84,19 @@ def complete_measurements():
                 "root": {
                     "station_radius_mm": 320.5,
                     "center_xy_mm": [287.2089, 142.2368],
+                    "lowest_point_height_mm": 5.2,
                     "profile_points_mm": rect_profile(24.2, 8.6),
                 },
                 "mid": {
                     "station_radius_mm": 390.5,
                     "center_xy_mm": [349.9378, 173.3025],
+                    "lowest_point_height_mm": 6.2,
                     "profile_points_mm": rect_profile(22.1, 8.1),
                 },
                 "tip": {
                     "station_radius_mm": 455.5,
                     "center_xy_mm": [408.1861, 202.1493],
+                    "lowest_point_height_mm": 7.2,
                     "profile_points_mm": rect_profile(20.1, 7.6),
                 },
                 "notes": "",
@@ -184,6 +194,37 @@ class MeasurementModelTests(unittest.TestCase):
         self.assertAlmostEqual(right[0], 279.5, places=3)
         self.assertAlmostEqual(left[1], 0.0, places=3)
         self.assertAlmostEqual(right[1], 0.0, places=3)
+
+    def test_vertical_reference_preserves_measured_relative_heights(self):
+        ms = load_measurements(self.write_temp(complete_measurements()))
+        self.assertAlmostEqual(inner_vertical_reference_mm(ms), 6.2, places=9)
+        self.assertAlmostEqual(
+            station_vertical_offset_mm(ms.inner_left, ms),
+            -0.2,
+            places=9,
+        )
+        self.assertAlmostEqual(
+            station_vertical_offset_mm(ms.inner_right, ms),
+            0.2,
+            places=9,
+        )
+        self.assertAlmostEqual(
+            station_vertical_offset_mm(ms.outer_left[0], ms),
+            -1.2,
+            places=9,
+        )
+
+    def test_station_height_requires_common_datum_value(self):
+        d = complete_measurements()
+        d["outer_guide"]["left"]["root"]["lowest_point_height_mm"] = None
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_station_height_rejects_implausible_negative_value(self):
+        d = complete_measurements()
+        d["outer_guide"]["right"]["tip"]["lowest_point_height_mm"] = -0.1
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
 
     def test_station_radius_must_match_center_xy(self):
         d = complete_measurements()
