@@ -1,0 +1,84 @@
+{
+  "version": "v7",
+  "checks": {
+    "wear_thickness_printable": true,
+    "center_insert_top_preserves_v5_plane": true,
+    "track_insert_top_preserves_v5_plane": true,
+    "center_bearing_keeps_structural_depth": true,
+    "side_track_keeps_structural_depth": true,
+    "center_insert_clearance_reasonable": true,
+    "track_insert_clearance_reasonable": true,
+    "track_recess_overbreak_small": true,
+    "track_insert_covers_full_swivel_with_margin": true,
+    "track_insert_stays_inside_recess": true,
+    "center_insert_area_large": true,
+    "center_pressure_low_at_500N": true,
+    "side_insert_area_large": true,
+    "side_pressure_low_at_250N": true,
+    "track_recess_overbreak_stays_inside_side_modules": true
+  },
+  "details": {
+    "wear_thickness_mm": 1.2,
+    "center_residual_bearing_depth_mm": 4.8,
+    "track_residual_depth_mm": 12.8,
+    "center_insert_area_mm2": 12392.01,
+    "center_pressure_mpa_at_500N": 0.04035,
+    "track_insert_area_mm2": 8623.74,
+    "track_pressure_mpa_at_250N": 0.02899,
+    "track_insert_angular_margin_beyond_swivel_deg": 1.9,
+    "track_recess_overbreak_mm": 0.6,
+    "track_recess_overbreak_deg": 0.4,
+    "track_recess_boundary_samples": [
+      [
+        "right",
+        249.308,
+        -24.753,
+        true
+      ],
+      [
+        "right",
+        182.32,
+        110.511,
+        true
+      ],
+      [
+        "right",
+        301.861,
+        -16.48,
+        true
+      ],
+      [
+        "right",
+        220.752,
+        147.297,
+        true
+      ],
+      [
+        "left",
+        -182.32,
+        110.511,
+        true
+      ],
+      [
+        "left",
+        -249.308,
+        -24.753,
+        true
+      ],
+      [
+        "left",
+        -220.752,
+        147.297,
+        true
+      ],
+      [
+        "left",
+        -301.861,
+        -16.48,
+        true
+      ]
+    ],
+    "service_note": "Wear pieces are fully supported in shallow recesses and restore the exact v5 bearing/glide top planes."
+  },
+  "failed": []
+}

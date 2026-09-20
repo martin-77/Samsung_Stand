@@ -1,0 +1,95 @@
+{
+  "version": "v7",
+  "wear_insert_seating": {
+    "center_ring": {
+      "common_volume_mm3": 0.0,
+      "distance_to_recess_mm": 0.0
+    },
+    "left_track_arc": {
+      "common_volume_mm3": 0.0,
+      "distance_to_recess_mm": 0.0
+    },
+    "right_track_arc": {
+      "common_volume_mm3": 0.0,
+      "distance_to_recess_mm": 0.0
+    }
+  },
+  "center_bearing_sweep": {
+    "-15.0": {
+      "rotor_ring_common_volume_mm3": 0.0,
+      "rotor_ring_distance_mm": 0.0,
+      "rotor_base_common_volume_mm3": 0.0,
+      "rotor_base_distance_mm": 0.0
+    },
+    "+0.0": {
+      "rotor_ring_common_volume_mm3": 0.0,
+      "rotor_ring_distance_mm": 0.0,
+      "rotor_base_common_volume_mm3": 0.0,
+      "rotor_base_distance_mm": 0.0
+    },
+    "+15.0": {
+      "rotor_ring_common_volume_mm3": 0.0,
+      "rotor_ring_distance_mm": 0.0,
+      "rotor_base_common_volume_mm3": 0.0,
+      "rotor_base_distance_mm": 0.0
+    }
+  },
+  "side_track_sweep": {
+    "left": {
+      "-15.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 0.4
+      },
+      "+0.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 1.2
+      },
+      "+15.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 1.2
+      }
+    },
+    "right": {
+      "-15.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 1.2
+      },
+      "+0.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 1.2
+      },
+      "+15.0": {
+        "arm_wear_common_volume_mm3": 0.0,
+        "arm_wear_distance_mm": 0.0,
+        "arm_base_common_volume_mm3": 0.0,
+        "arm_base_distance_mm": 0.4
+      }
+    }
+  },
+  "positive_stop_recheck_common_volumes_mm3": {
+    "-15.5": 55.713647,
+    "-15.0": 0.0,
+    "-14.0": 0.0,
+    "+0.0": 0.0,
+    "+14.0": 0.0,
+    "+15.0": 0.0,
+    "+15.5": 55.713647
+  },
+  "top_plane_contract": {
+    "center_top_z_mm": 10.0,
+    "expected_center_top_z_mm": 10.0,
+    "track_top_z_mm": 18.0,
+    "expected_track_top_z_mm": 18.0
+  },
+  "failed": []
+}
