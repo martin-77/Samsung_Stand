@@ -7,16 +7,19 @@ Do **not** fill missing values by estimation.
 ## Workflow
 
 1. Copy `measurements/stand_measurements.template.json` to `measurements/stand_measurements.json`.
-2. Enter measured global dimensions.
-3. For each side of the inner saddle, measure **three sections** across the
+2. Keep `meta.measurement_kind = "physical"` and fill in the real measurer,
+   ISO date and caliper resolution. Synthetic fixtures are rejected by the
+   production workflow.
+3. Enter measured global dimensions.
+4. For each side of the inner saddle, measure **three sections** across the
    insert span: `root`, `center`, and `tip`. At every section record
    `center_xy_mm`, `lowest_point_height_mm`, and a 2D cross-section polygon
    looking along the stand arm axis.
-4. For each outer-guide station (root/mid/tip), record the same three things:
+5. For each outer-guide station (root/mid/tip), record the same three things:
    `center_xy_mm`, `lowest_point_height_mm`, and the measured cross-section
    polygon.
-5. Run `python scripts/validate_measurements.py measurements/stand_measurements.json`.
-6. Only a complete, symmetric/plausible measurement set unlocks the v6 contact-part generator.
+6. Run `python scripts/validate_measurements.py --require-physical measurements/stand_measurements.json`.
+7. Only a complete, plausible **physical** measurement set unlocks the production v6 contact-part generator.
 
 ## Cross-section coordinates
 
@@ -78,3 +81,30 @@ The generator uses the mean of the two **center** saddle-section
 root/center/tip saddle loft preserves measured relative height, lateral offset
 and cross-section shape along the insert. Every outer-guide station is likewise
 checked at its own measured relative Z position.
+
+
+## Provenance gate
+
+The metadata is part of the manufacturing input, not documentation only.
+
+Required fields include:
+
+- `measurement_kind`: `physical` for production or `synthetic` for CI only;
+- `model`: exactly `Samsung UE55J6250`;
+- `stand_part`: currently accepted `BN96-38964A`;
+- `measured_by`: non-empty;
+- `date`: ISO `YYYY-MM-DD`;
+- `caliper_resolution_mm`: positive and no worse than 0.2 mm.
+
+A synthetic file can still exercise the CAD pipeline, but it cannot pass the
+production provenance gate or the production builder.
+
+## Saddle sampling density
+
+For the load-bearing saddle, root/center/tip are not merely labels. After
+projection into the structural arm frame, adjacent measured sections may be no
+more than **25 mm apart**, and the nearest root/tip section may be no more than
+**8 mm** from the corresponding insert end.
+
+These gates limit how much of the load-bearing insert is based on interpolation.
+They do not replace the physical dry-fit check between stations.
