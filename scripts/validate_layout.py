@@ -17,6 +17,16 @@ def main() -> int:
     checks["base_fits_sounddeck_width"] = G.BASE.width <= G.SOUNDDECK.width
     checks["base_fits_sounddeck_depth"] = G.BASE.depth <= G.SOUNDDECK.depth
 
+    base_side_margin = (G.SOUNDDECK.width - G.BASE.width) / 2.0
+    base_front_rear_margin = (G.SOUNDDECK.depth - G.BASE.depth) / 2.0
+    checks["base_keeps_min_20mm_front_rear_top_edge_margin"] = (
+        base_front_rear_margin >= 20.0
+    )
+    details["base_side_top_edge_margin_mm"] = round(base_side_margin, 3)
+    details["base_front_rear_top_edge_margin_mm"] = round(
+        base_front_rear_margin, 3
+    )
+
     checks["stand_width_exceeds_sounddeck_as_expected"] = G.STAND_WIDTH > G.SOUNDDECK.width
     details["stand_side_overhang_zero_deg_mm"] = (
         G.STAND_WIDTH - G.SOUNDDECK.width
