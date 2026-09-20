@@ -38,6 +38,7 @@ def passing_record():
         "criteria":{
             "proof_load_min_n":500.0,
             "proof_dwell_min_minutes_per_position":10.0,
+            "single_saddle_proof_load_min_n":250.0,
             "creep_load_min_n":164.0,
             "creep_dwell_min_hours":24.0,
             "swivel_cycles_min":100,
@@ -68,6 +69,8 @@ def passing_record():
             "center":proof(),
             "minus_15":proof(),
             "plus_15":proof(),
+            "left_saddle_only":{**proof(),"load_n":250.0},
+            "right_saddle_only":{**proof(),"load_n":250.0},
         },
         "sounddeck_interface":{
             "test_load_n":164.0,
@@ -119,6 +122,15 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         report=V.main(self.write(d))
         self.assertFalse(report["ok"])
         self.assertTrue(any("development load" in x for x in report["failed"]))
+
+    def test_single_saddle_branch_load_floor_is_enforced(self):
+        d=passing_record()
+        d["criteria"]["single_saddle_proof_load_min_n"]=249.0
+        d["proof_load"]["left_saddle_only"]["load_n"]=249.0
+        d["proof_load"]["right_saddle_only"]["load_n"]=249.0
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("one-side development branch load" in x for x in report["failed"]))
 
     def test_declared_proof_dwell_is_enforced(self):
         d=passing_record()
