@@ -53,7 +53,7 @@ The repository has progressed to **v8** as the validated structural geometry can
 - v7: replaceable 1.2 mm PETG center-bearing and side-track wear surfaces while preserving the validated z=10 / z=18 support planes;
 - v8: fully assembled transverse PETG retention: four above-base module pins, two ROTOR/INNER pins, two externally accessible INNER/OUTER pins and one positive pivot cross-pin in a top-open rotor chamber;
 - measured-contact pipeline: strict physical-measurement model plus side-specific saddle inserts and four independent lateral-only OUTER_GUIDE side rails generated only from validated real measurements;
-- proof-load tooling: two flat saddle-pocket inserts that apply substitute load at the validated real support stations without using the television;
+- proof-load tooling: two flat saddle-pocket inserts that apply the 500 N structural substitute load at the validated support stations on a rigid surrogate support, not on the Sounddeck;
 - release-validation pipeline: a machine-checkable physical test record that verifies the user-declared proof, creep, cycling, fit-coupon and Sounddeck-interface criteria.
 
 For v8 the parameter gates, FreeCAD build, watertight-mesh checks and installed
