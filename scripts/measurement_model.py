@@ -283,3 +283,46 @@ def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
         "outer_mid_width_delta_mm": abs(ms.outer_left[1].profile.width - ms.outer_right[1].profile.width),
         "outer_tip_width_delta_mm": abs(ms.outer_left[2].profile.width - ms.outer_right[2].profile.width),
     }
+
+
+def lower_envelope(profile: Profile, samples: int = 31) -> tuple[tuple[float, float], ...]:
+    """Sample the lower Z boundary of a closed profile at evenly spaced Y."""
+    if samples < 3:
+        raise ValueError("samples must be >= 3")
+
+    ys = [
+        profile.ymin + (profile.ymax - profile.ymin) * i / (samples - 1)
+        for i in range(samples)
+    ]
+    out = []
+    pts = profile.points
+    n = len(pts)
+
+    for y in ys:
+        zs = []
+        for i in range(n):
+            y1, z1 = pts[i]
+            y2, z2 = pts[(i + 1) % n]
+
+            if abs(y2 - y1) < 1e-12:
+                if abs(y - y1) < 1e-9:
+                    zs.extend((z1, z2))
+                continue
+
+            lo = min(y1, y2)
+            hi = max(y1, y2)
+            if y < lo - 1e-9 or y > hi + 1e-9:
+                continue
+
+            t = (y - y1) / (y2 - y1)
+            if -1e-9 <= t <= 1.0 + 1e-9:
+                zs.append(z1 + t * (z2 - z1))
+
+        if not zs:
+            raise MeasurementError(
+                f"cannot derive lower envelope at y={y:.6f} from profile"
+            )
+        out.append((y, min(zs)))
+
+    z0 = min(z for _, z in out)
+    return tuple((y, z - z0) for y, z in out)
