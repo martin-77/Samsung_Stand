@@ -16,6 +16,23 @@ class GeometryBaselineTests(unittest.TestCase):
         self.assertLessEqual(G.BASE.width, G.SOUNDDECK.width)
         self.assertLessEqual(G.BASE.depth, G.SOUNDDECK.depth)
 
+    def test_verified_samsung_tv_with_stand_envelope(self):
+        self.assertAlmostEqual(G.TV_WITH_STAND_WIDTH_MM, 1230.6)
+        self.assertAlmostEqual(G.TV_WITH_STAND_HEIGHT_MM, 770.6)
+        self.assertAlmostEqual(G.TV_WITH_STAND_DEPTH_MM, 310.5)
+        self.assertAlmostEqual(G.TV_BODY_DEPTH_MM, 64.0)
+        self.assertAlmostEqual(G.OEM_STAND_SWIVEL_DEG, 0.0)
+        self.assertGreater(
+            G.TV_WITH_STAND_DEPTH_MM,
+            G.STAND_WORKING_DEPTH_MM,
+        )
+
+    def test_verified_envelope_is_not_used_as_stand_only_depth(self):
+        self.assertNotEqual(
+            G.TV_WITH_STAND_DEPTH_MM,
+            G.STAND_WORKING_DEPTH_MM,
+        )
+
     def test_expected_zero_degree_stand_overhang(self):
         self.assertAlmostEqual(
             (G.STAND_WIDTH - G.SOUNDDECK.width) / 2.0,
