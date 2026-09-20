@@ -424,3 +424,28 @@ def lower_envelope(
     # Normalize against the actual measured minimum, not the sampled minimum.
     # This preserves the physical datum even if a uniform sample would miss it.
     return tuple((y, z - profile.zmin) for y, z in out)
+
+
+def project_xy_to_arm_frame(
+    xy: tuple[float, float],
+    arm_angle_deg: float,
+) -> tuple[float, float]:
+    """Project global stand-local XY into a structural arm frame.
+
+    local +X: from pivot outward along the structural arm centerline.
+    local +Y: 90 degrees counter-clockwise from local +X.
+    """
+    a = math.radians(arm_angle_deg)
+    ux, uy = math.cos(a), math.sin(a)
+    nx, ny = -uy, ux
+    x, y = xy
+    along = x * ux + y * uy
+    lateral = x * nx + y * ny
+    return along, lateral
+
+
+def station_arm_frame(
+    station: Station,
+    arm_angle_deg: float,
+) -> tuple[float, float]:
+    return project_xy_to_arm_frame(station.center_xy, arm_angle_deg)
