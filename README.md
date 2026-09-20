@@ -52,7 +52,7 @@ The repository has progressed to **v8** as the validated structural geometry can
 - v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants;
 - v7: replaceable 1.2 mm PETG center-bearing and side-track wear surfaces while preserving the validated z=10 / z=18 support planes;
 - v8: fully assembled transverse PETG retention: four above-base module pins, two ROTOR/INNER pins, two externally accessible INNER/OUTER pins and one positive pivot cross-pin in a top-open rotor chamber;
-- measured-contact pipeline: strict physical-measurement model plus side-specific saddle inserts and four independent lateral-only OUTER_GUIDE side rails generated only from validated real measurements;
+- measured-contact pipeline: provenance-gated physical measurement model, three-section root/center/tip saddle lofts per side, and four independent lateral-only OUTER_GUIDE side rails;
 - proof-load tooling: two flat saddle-pocket inserts that apply the 500 N structural substitute load at the validated support stations on a rigid surrogate support, not on the Sounddeck;
 - release-validation pipeline: a machine-checkable physical test record that verifies the user-declared proof, creep, cycling, fit-coupon and Sounddeck-interface criteria.
 
@@ -66,14 +66,19 @@ positional only.
 The v6 measurement-to-CAD path is also green against a synthetic CI fixture:
 measurement validation, FreeCAD generation, watertight-mesh gates and installed
 contact-part checks against the current v8 structural STEP geometry all pass.
-The measured saddle profiles are checked for exact surface contact without solid
-penetration; OUTER_GUIDE root/mid/tip profiles are checked at 0.5 mm nominal
+All six measured saddle sections (left/right root/center/tip) are checked at
+their exact YZ station for surface contact with **0 mm² section penetration**;
+the load-bearing loft is limited to 25 mm maximum measured-section spacing and
+8 mm maximum endpoint extrapolation. OUTER_GUIDE root/mid/tip profiles are
+checked at 0.5 mm nominal
 lateral clearance and at their measured common-datum vertical positions. The
 minimum real guide-floor clearance is therefore derived from measurements rather
 than assumed to be 9 mm. The outer contact parts
 are four independent side rails with no generated floor bridge.
 Production v6 contact parts remain intentionally unpublished until
-`measurements/stand_measurements.json` contains complete physical measurements.
+`measurements/stand_measurements.json` contains complete measurements marked
+`measurement_kind: physical`; synthetic CI data are hard-rejected by the
+production validator and builder.
 
 This is **not yet a physical structural release for mounting the TV**.  The
 Samsung arm contact geometry is still based partly on reconstruction and must be
