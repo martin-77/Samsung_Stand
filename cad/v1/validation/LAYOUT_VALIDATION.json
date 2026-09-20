@@ -26,6 +26,7 @@
   "checks": {
     "base_fits_sounddeck_width": true,
     "base_fits_sounddeck_depth": true,
+    "base_keeps_min_20mm_front_rear_top_edge_margin": true,
     "stand_width_exceeds_sounddeck_as_expected": true,
     "saddle_radius_matches_geometry": true,
     "saddle_centers_inside_sounddeck_full_sweep": true,
@@ -33,6 +34,8 @@
     "all_declared_modules_fit_printer": true
   },
   "details": {
+    "base_side_top_edge_margin_mm": 10.0,
+    "base_front_rear_top_edge_margin_mm": 22.5,
     "stand_side_overhang_zero_deg_mm": 70.0
   },
   "modules": {
