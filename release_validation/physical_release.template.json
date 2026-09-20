@@ -17,7 +17,8 @@
     "creep_dwell_min_hours": null,
     "swivel_cycles_min": null,
     "end_stop_contacts_each_side_min": null,
-    "rationale": "Set proof/dwell/cycle criteria before physical testing. Creep load must not be below the verified 16.7 kg TV+stand static load (~163.8 N)."
+    "rationale": "Set proof/dwell/cycle criteria before physical testing. Creep load must not be below the verified 16.7 kg TV+stand static load (~163.8 N).",
+    "single_saddle_proof_load_min_n": 250
   },
   "proof_setup": {
     "support_surface": "rigid_surrogate",
@@ -59,6 +60,24 @@
       "wear_insert_unseated": null
     },
     "plus_15": {
+      "load_n": null,
+      "duration_minutes": null,
+      "permanent_deformation_detected": null,
+      "crack_or_layer_separation": null,
+      "whitening": null,
+      "retainer_loosened": null,
+      "wear_insert_unseated": null
+    },
+    "left_saddle_only": {
+      "load_n": null,
+      "duration_minutes": null,
+      "permanent_deformation_detected": null,
+      "crack_or_layer_separation": null,
+      "whitening": null,
+      "retainer_loosened": null,
+      "wear_insert_unseated": null
+    },
+    "right_saddle_only": {
       "load_n": null,
       "duration_minutes": null,
       "permanent_deformation_detected": null,
