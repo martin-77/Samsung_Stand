@@ -5,7 +5,7 @@
     "measured_by": "synthetic-ci",
     "date": "2026-09-20",
     "caliper_resolution_mm": 0.01,
-    "notes": "Synthetic validation fixture with deliberate lateral centerline and longitudinal Z-height variation. Never use as physical manufacturing data."
+    "notes": "Synthetic validation fixture with deliberate saddle loft variation, lateral centerline offsets, and longitudinal Z-height variation. Never use as physical manufacturing data."
   },
   "global": {
     "stand_width_mm": 840,
@@ -22,82 +22,238 @@
   },
   "inner_saddle": {
     "left": {
-      "station_radius_mm": 279,
-      "profile_points_mm": [
-        [
-          -13,
-          1
+      "root": {
+        "station_radius_mm": 260,
+        "center_xy_mm": [
+          -232.7269,
+          115.9248
         ],
-        [
-          -10,
-          0
-        ],
-        [
-          0,
-          0.6
-        ],
-        [
-          10,
-          0
-        ],
-        [
-          13,
-          1
-        ],
-        [
-          13,
-          8.8
-        ],
-        [
-          -13,
-          8.8
+        "lowest_point_height_mm": 5.8,
+        "profile_points_mm": [
+          [
+            -13.3,
+            0.8
+          ],
+          [
+            -10.2,
+            0
+          ],
+          [
+            0,
+            0.4
+          ],
+          [
+            10.2,
+            0
+          ],
+          [
+            13.3,
+            0.8
+          ],
+          [
+            13.3,
+            8.6
+          ],
+          [
+            -13.3,
+            8.6
+          ]
         ]
-      ],
-      "notes": "synthetic",
-      "center_xy_mm": [
-        -250.5522,
-        122.7439
-      ],
-      "lowest_point_height_mm": 6
+      },
+      "center": {
+        "station_radius_mm": 279,
+        "center_xy_mm": [
+          -249.487,
+          124.8946
+        ],
+        "lowest_point_height_mm": 6,
+        "profile_points_mm": [
+          [
+            -13,
+            1
+          ],
+          [
+            -10,
+            0
+          ],
+          [
+            0,
+            0.6
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            13,
+            1
+          ],
+          [
+            13,
+            8.8
+          ],
+          [
+            -13,
+            8.8
+          ]
+        ]
+      },
+      "tip": {
+        "station_radius_mm": 298,
+        "center_xy_mm": [
+          -266.3359,
+          133.6852
+        ],
+        "lowest_point_height_mm": 6.3,
+        "profile_points_mm": [
+          [
+            -12.7,
+            0.9
+          ],
+          [
+            -9.8,
+            0
+          ],
+          [
+            0,
+            0.5
+          ],
+          [
+            9.8,
+            0
+          ],
+          [
+            12.7,
+            0.9
+          ],
+          [
+            12.7,
+            8.5
+          ],
+          [
+            -12.7,
+            8.5
+          ]
+        ]
+      },
+      "notes": "synthetic three-section saddle"
     },
     "right": {
-      "station_radius_mm": 279.5,
-      "profile_points_mm": [
-        [
-          -13.1,
-          1.1
+      "root": {
+        "station_radius_mm": 260.5,
+        "center_xy_mm": [
+          233.1306,
+          116.2363
         ],
-        [
-          -10.1,
-          0
-        ],
-        [
-          0,
-          0.7
-        ],
-        [
-          10.1,
-          0
-        ],
-        [
-          13.1,
-          1.1
-        ],
-        [
-          13.1,
-          8.9
-        ],
-        [
-          -13.1,
-          8.9
+        "lowest_point_height_mm": 6.1,
+        "profile_points_mm": [
+          [
+            -13.4,
+            0.9
+          ],
+          [
+            -10.3,
+            0
+          ],
+          [
+            0,
+            0.5
+          ],
+          [
+            10.3,
+            0
+          ],
+          [
+            13.4,
+            0.9
+          ],
+          [
+            13.4,
+            8.7
+          ],
+          [
+            -13.4,
+            8.7
+          ]
         ]
-      ],
-      "notes": "synthetic",
-      "center_xy_mm": [
-        250.8671,
-        123.2346
-      ],
-      "lowest_point_height_mm": 6.4
+      },
+      "center": {
+        "station_radius_mm": 279.5,
+        "center_xy_mm": [
+          249.9795,
+          125.0269
+        ],
+        "lowest_point_height_mm": 6.4,
+        "profile_points_mm": [
+          [
+            -13.1,
+            1.1
+          ],
+          [
+            -10.1,
+            0
+          ],
+          [
+            0,
+            0.7
+          ],
+          [
+            10.1,
+            0
+          ],
+          [
+            13.1,
+            1.1
+          ],
+          [
+            13.1,
+            8.9
+          ],
+          [
+            -13.1,
+            8.9
+          ]
+        ]
+      },
+      "tip": {
+        "station_radius_mm": 298.5,
+        "center_xy_mm": [
+          266.6953,
+          134.0863
+        ],
+        "lowest_point_height_mm": 6.7,
+        "profile_points_mm": [
+          [
+            -12.8,
+            1
+          ],
+          [
+            -9.9,
+            0
+          ],
+          [
+            0,
+            0.6
+          ],
+          [
+            9.9,
+            0
+          ],
+          [
+            12.8,
+            1
+          ],
+          [
+            12.8,
+            8.6
+          ],
+          [
+            -12.8,
+            8.6
+          ]
+        ]
+      },
+      "notes": "synthetic three-section saddle"
     }
   },
   "outer_guide": {
