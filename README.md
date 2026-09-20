@@ -52,7 +52,9 @@ The repository has progressed to **v8** as the validated structural geometry can
 - v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants;
 - v7: replaceable 1.2 mm PETG center-bearing and side-track wear surfaces while preserving the validated z=10 / z=18 support planes;
 - v8: fully assembled transverse PETG retention: four above-base module pins, two ROTOR/INNER pins, two externally accessible INNER/OUTER pins and one positive pivot cross-pin in a top-open rotor chamber;
-- measured-contact pipeline: strict physical-measurement model plus side-specific saddle inserts and outer-guide liners generated only from validated real measurements.
+- measured-contact pipeline: strict physical-measurement model plus side-specific saddle inserts and outer-guide liners generated only from validated real measurements;
+- proof-load tooling: two flat saddle-pocket inserts that apply substitute load at the validated real support stations without using the television;
+- release-validation pipeline: a machine-checkable physical test record that verifies the user-declared proof, creep, cycling, fit-coupon and Sounddeck-interface criteria.
 
 For v8 the parameter gates, FreeCAD build, watertight-mesh checks and installed
 OCC collision/contact checks are green. All replacement retainers are checked in
@@ -78,6 +80,8 @@ See:
 - `cad/fit_coupons/` for roof-key clearance coupons;
 - `cad/retainer_coupons/` for v8 snap-pin / pivot-pin fit coupons;
 - `cad/detent_coupon/` for the zero-detent calibration rig;
+- `cad/proof_load_fixture/` for the validated substitute-load saddle pads;
 - `docs/ASSEMBLY_V8.md` for the practical v8 assembly order;
 - `measurements/` and `docs/REQUIRED_MEASUREMENTS.md` for the remaining physical dimensions and profile capture;
-- `docs/PHYSICAL_RELEASE_GATES.md` for fit, anti-slip, creep and proof-load release gates.
+- `docs/PHYSICAL_RELEASE_GATES.md` for fit, anti-slip, creep and proof-load release gates;
+- `release_validation/physical_release.template.json` plus `scripts/validate_physical_release.py` for the recorded final physical gate.
