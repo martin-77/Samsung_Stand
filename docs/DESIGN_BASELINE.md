@@ -10,14 +10,19 @@ The design must be printable on a Prusa CORE One L and assembled from multiple P
 
 ### Verified / high confidence
 
-- Samsung UE55J6250 weight with stand: about 16.7 kg.
+- Samsung UE55J6250 weight with stand: 16.7 kg.
+- Samsung UE55J6250 complete envelope with stand: 1230.6 × 770.6 × 310.5 mm.
+- Samsung UE55J6250 body depth without stand: 64.0 mm.
+- Samsung's specified stand swivel: 0°.
 - Magnat Sounddeck 150 footprint: 700 × 340 mm.
 - Samsung stand family/base width used as working source dimension: 840 mm.
 - Prusa CORE One L build volume: 300 × 300 × 330 mm.
 
 ### Reconstructed / must be physically verified before final release
 
-- Pure stand depth: approximately 288–290 mm.
+- Pure stand-only depth: approximately 288–290 mm as a reconstruction only.
+  Samsung's verified 310.5 mm value is the **complete TV+stand depth**, so it
+  cannot be substituted for this stand-only measurement.
 - Stand-arm planform and arm centerline.
 - Pivot-to-rear stand contour: approximately 80 mm.
 - Pivot-to-front stand tip: approximately 208 mm in Y with ±420 mm X tip coordinates.
@@ -92,6 +97,26 @@ Primary vertical load path:
 The outer rails primarily provide lateral guidance and anti-twist support.
 
 They must **not** be treated as long primary vertical-load cantilevers.
+
+## Samsung envelope versus reconstructed stand planform
+
+Samsung's model-specific Quick Guide BN68-07177M-00 specifies the complete
+UE55J6250 assembly with stand at **1230.6 × 770.6 × 310.5 mm** and lists
+**Stand Swivel (Left / Right): 0°**. The TV body itself is only 64.0 mm deep.
+
+Consequences:
+
+- 310.5 mm is a hard external-envelope reference for the original assembled TV;
+- it is **not** a direct measurement of the stand-only footprint;
+- the current ~288 mm stand-only reconstruction therefore remains an assumption
+  until the real stand is measured;
+- our ±15° mechanism rotates the complete TV + original stand together beneath
+  the OEM stand, so it does not twist Samsung's non-swivelling TV-to-stand
+  connection.
+
+Primary source: Samsung Quick Start Guide BN68-07177M-00
+(`UJ6250-ZG_BN68-07177M-00L04-0331.pdf`), UE55J6250 / UE55J6270
+specification table.
 
 ## Reconstructed stand planform
 
