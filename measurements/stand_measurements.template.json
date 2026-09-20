@@ -1,0 +1,48 @@
+{
+  "meta": {
+    "model": "Samsung UE55J6250",
+    "stand_part": "BN96-38964A",
+    "measured_by": null,
+    "date": null,
+    "caliper_resolution_mm": null,
+    "notes": ""
+  },
+  "global": {
+    "stand_width_mm": null,
+    "stand_depth_mm": null,
+    "pivot_to_rear_mm": null,
+    "left_tip_xy_mm": [null, null],
+    "right_tip_xy_mm": [null, null]
+  },
+  "inner_saddle": {
+    "left": {
+      "station_radius_mm": null,
+      "profile_points_mm": null,
+      "notes": ""
+    },
+    "right": {
+      "station_radius_mm": null,
+      "profile_points_mm": null,
+      "notes": ""
+    }
+  },
+  "outer_guide": {
+    "left": {
+      "root": {"station_radius_mm": null, "profile_points_mm": null},
+      "mid": {"station_radius_mm": null, "profile_points_mm": null},
+      "tip": {"station_radius_mm": null, "profile_points_mm": null},
+      "notes": ""
+    },
+    "right": {
+      "root": {"station_radius_mm": null, "profile_points_mm": null},
+      "mid": {"station_radius_mm": null, "profile_points_mm": null},
+      "tip": {"station_radius_mm": null, "profile_points_mm": null},
+      "notes": ""
+    }
+  },
+  "contact_pad": {
+    "used": false,
+    "compressed_thickness_mm": 0.0,
+    "notes": ""
+  }
+}
