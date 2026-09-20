@@ -86,7 +86,19 @@ silently adding another material.
 
 ## E. Values to return to CAD
 
-A measurement set is complete when it can fill a record equivalent to:
+Use **only** the canonical template:
+
+`measurements/stand_measurements.template.json`
+
+Copy it to:
+
+`measurements/stand_measurements.json`
+
+The current generator does **not** accept width/height-only approximations for
+the Samsung contact geometry. Each relevant cross-section must be represented by
+`profile_points_mm` as an ordered polygon of `[y,z]` points.
+
+Minimal structural form:
 
 ```json
 {
@@ -99,45 +111,40 @@ A measurement set is complete when it can fill a record equivalent to:
   },
   "inner_saddle": {
     "left": {
-      "width_mm": null,
-      "height_mm": null,
-      "corner_radius_mm": null,
-      "notes": ""
+      "station_radius_mm": null,
+      "profile_points_mm": null
     },
     "right": {
-      "width_mm": null,
-      "height_mm": null,
-      "corner_radius_mm": null,
-      "notes": ""
+      "station_radius_mm": null,
+      "profile_points_mm": null
     }
   },
   "outer_guide": {
     "left": {
-      "root_width_mm": null,
-      "mid_width_mm": null,
-      "tip_width_mm": null,
-      "root_height_mm": null,
-      "mid_height_mm": null,
-      "tip_height_mm": null,
-      "notes": ""
+      "root": {"station_radius_mm": null, "profile_points_mm": null},
+      "mid":  {"station_radius_mm": null, "profile_points_mm": null},
+      "tip":  {"station_radius_mm": null, "profile_points_mm": null}
     },
     "right": {
-      "root_width_mm": null,
-      "mid_width_mm": null,
-      "tip_width_mm": null,
-      "root_height_mm": null,
-      "mid_height_mm": null,
-      "tip_height_mm": null,
-      "notes": ""
+      "root": {"station_radius_mm": null, "profile_points_mm": null},
+      "mid":  {"station_radius_mm": null, "profile_points_mm": null},
+      "tip":  {"station_radius_mm": null, "profile_points_mm": null}
     }
   },
   "contact_pad": {
     "used": false,
-    "compressed_thickness_mm": 0.0,
-    "notes": "PETG-only project constraint"
+    "compressed_thickness_mm": 0.0
   }
 }
 ```
 
-Do not enter guessed values to make the record complete.  Missing physical
-measurements should remain null until measured.
+Coordinate convention for every profile:
+
+- `y = 0` is the local arm centerline;
+- `z = 0` is the lowest physical point of that measured cross-section;
+- points run around the complete outer contour;
+- real kinks/chamfers/radii that affect fit must be represented rather than
+  smoothed away.
+
+The validator rejects incomplete, self-intersecting, off-center or implausible
+profiles. Do not enter guessed values simply to make the record complete.
