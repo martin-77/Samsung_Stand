@@ -119,7 +119,7 @@ jobs:
       - name: Validate synthetic v6 contact assembly
         run: |
           set -euo pipefail
-          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_fixture')"
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_fixture','tests/fixtures/stand_measurements.synthetic.json')"
           test -s build_v6_contacts_fixture/ASSEMBLY_VALIDATION_v6_contacts.json
 
       - name: Detect real measurement input
@@ -146,7 +146,7 @@ jobs:
             2>&1 | tee build_v6_contacts_real.log
           .venv/bin/python scripts/validate_v6_contact_meshes.py \
             --out build_v6_contacts_real
-          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_real')"
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v6_contact_assembly as V; V.main('build_v6_contacts_real','measurements/stand_measurements.json')"
 
       - name: Publish real v6 contact parts
         if: steps.real.outputs.present == 'true' && github.ref == 'refs/heads/main'
