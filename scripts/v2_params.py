@@ -27,7 +27,7 @@ INNER_MALE_OVERLAP = 50.0
 INNER_MALE_EMBED = 8.0
 INNER_BEAM_WIDTH = 44.0
 INNER_FLOOR_THICKNESS = 5.0
-INNER_TOTAL_HEIGHT = 14.0
+INNER_TOTAL_HEIGHT = 15.0
 
 SADDLE_U = G.SADDLE_RADIUS - INNER_R0
 SADDLE_PLATFORM_LENGTH = 56.0
@@ -40,6 +40,8 @@ SADDLE_INSERT_HEIGHT = 7.0
 
 # Dedicated smaller form-locking arm connector.
 ARM_KEY_HALF_WIDTH = 10.0
+ARM_KEY_BOTTOM_Z = 0.40
+ARM_KEY_UNDERSIDE_CLEARANCE = 0.20
 ARM_KEY_WALL_TOP_Z = 5.0
 ARM_KEY_APEX_Z = 15.0
 ARM_KEY_CLEARANCE = 0.40
@@ -49,8 +51,19 @@ ARM_KEY_CLEARANCE = 0.40
 ROTOR_RECEIVER_R_INNER = 31.0
 ROTOR_RECEIVER_R_OUTER = INNER_R0
 ROTOR_RECEIVER_WIDTH = 40.0
-ROTOR_RECEIVER_Z0 = G.ROTOR_THICKNESS
+ROTOR_INSTALL_Z = G.BEARING_TOP_Z
+ROTOR_RECEIVER_Z0 = 7.80
 ROTOR_RECEIVER_TOP_Z = 27.0
+
+# Flat root landing: top is rotor-local z=8, therefore global z=18 after
+# installation. That is exactly coplanar with TRACK_TOP_Z. The key tongue starts
+# 0.4 mm above the arm underside and keeps 0.2 mm free space over the receiver
+# floor, so guidance and vertical support are intentionally separated.
+ROOT_LANDING_R0 = 83.0
+ROOT_LANDING_R1 = 97.0
+ROOT_LANDING_WIDTH = 36.0
+ROOT_LANDING_Z0 = 5.80
+ROOT_LANDING_TOP_Z = G.ROTOR_THICKNESS
 ARM_RETAINER_RADIUS = 60.0
 
 # Replaceable transverse snap pin: slides tangentially through rotor receiver and
