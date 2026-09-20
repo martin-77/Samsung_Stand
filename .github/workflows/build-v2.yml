@@ -10,6 +10,7 @@ on:
       - "scripts/validate_v2_design.py"
       - "scripts/build_v2.py"
       - "scripts/validate_meshes_v2.py"
+      - "scripts/validate_v2_assembly.py"
       - "scripts/preview_v2.scad"
       - "cad/v1/STEP/**"
       - ".github/workflows/build-v2.yml"
@@ -96,7 +97,8 @@ jobs:
             scripts/v2_params.py \
             scripts/validate_v2_design.py \
             scripts/build_v2.py \
-            scripts/validate_meshes_v2.py
+            scripts/validate_meshes_v2.py \
+            scripts/validate_v2_assembly.py
 
       - name: Build v2 CAD
         run: |
@@ -116,6 +118,12 @@ jobs:
           set -euo pipefail
           .venv/bin/python scripts/validate_meshes_v2.py
           test -s build_v2/MESH_VALIDATION_v2.json
+
+      - name: Validate installed v2 OCC assembly
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" scripts/validate_v2_assembly.py
+          test -s build_v2/ASSEMBLY_VALIDATION_v2.json
 
       - name: Render installed v2 preview
         run: |
@@ -146,6 +154,7 @@ jobs:
           cp build_v2/samsung_stand_v2_preview.png cad/v2/assembly/
           cp build_v2/VALIDATION_v2_source.json cad/v2/validation/
           cp build_v2/MESH_VALIDATION_v2.json cad/v2/validation/
+          cp build_v2/ASSEMBLY_VALIDATION_v2.json cad/v2/validation/
           cp v2-design-validation.json cad/v2/validation/DESIGN_VALIDATION_v2.json
 
           cat > cad/v2/README.md <<'EOF'
