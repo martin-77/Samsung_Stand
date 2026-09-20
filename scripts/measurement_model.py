@@ -142,6 +142,10 @@ def parse_profile(raw: Any, path: str) -> Profile:
     profile = Profile(tuple(pts))
     if profile.width < 3.0:
         raise MeasurementError(f"{path}: implausible profile width {profile.width:.3f} mm")
+    if not (profile.ymin < 0.0 < profile.ymax):
+        raise MeasurementError(
+            f"{path}: profile must straddle y=0 local arm centerline"
+        )
     if profile.height < 2.0:
         raise MeasurementError(f"{path}: implausible profile height {profile.height:.3f} mm")
     if profile.area < 10.0:
