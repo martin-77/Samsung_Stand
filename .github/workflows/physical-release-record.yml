@@ -1,0 +1,46 @@
+name: Physical Release Record
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/validate_physical_release.py"
+      - "tests/test_physical_release.py"
+      - "release_validation/**"
+      - ".github/workflows/physical-release-record.yml"
+
+jobs:
+  validate-release-record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run release validator tests
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s tests -v
+
+      - name: Detect real physical release record
+        id: record
+        run: |
+          if test -s release_validation/physical_release.json; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate real physical release record
+        if: steps.record.outputs.present == 'true'
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_physical_release.py \
+            release_validation/physical_release.json \
+            | tee release-validation-result.json
+
+      - name: Upload validation result
+        if: always() && steps.record.outputs.present == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-physical-release-validation
+          path: release-validation-result.json
