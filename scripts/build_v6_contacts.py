@@ -38,7 +38,7 @@ GUIDE_LINER_X1 = V3.OUTER_VISIBLE_LENGTH - 12.0
 GUIDE_LINER_Z0_IN_GUIDE = V3.OUTER_FLOOR_THICKNESS
 GUIDE_LINER_HEIGHT = V3.OUTER_WALL_HEIGHT - GUIDE_LINER_Z0_IN_GUIDE
 GUIDE_CHANNEL_HALF_WIDTH = V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH / 2.0
-GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM = 5.0
+GUIDE_ENDPOINT_DISTANCE_MAX_MM = 15.0
 
 
 def v(x, y, z):
@@ -171,17 +171,19 @@ def _loft_side_rail(
 
     first_x = measured[0][0]
     last_x = measured[-1][0]
-    if first_x < GUIDE_LINER_X0 - GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:
+    first_endpoint_delta = abs(first_x - GUIDE_LINER_X0)
+    last_endpoint_delta = abs(last_x - GUIDE_LINER_X1)
+    if first_endpoint_delta > GUIDE_ENDPOINT_DISTANCE_MAX_MM:
         raise RuntimeError(
-            f"first outer station projected x={first_x:.3f} mm is more than "
-            f"{GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:.1f} mm before liner start "
-            f"x={GUIDE_LINER_X0:.3f} mm"
+            f"first outer station projected x={first_x:.3f} mm is "
+            f"{first_endpoint_delta:.3f} mm from liner start; max allowed "
+            f"is {GUIDE_ENDPOINT_DISTANCE_MAX_MM:.1f} mm"
         )
-    if last_x > GUIDE_LINER_X1 + GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:
+    if last_endpoint_delta > GUIDE_ENDPOINT_DISTANCE_MAX_MM:
         raise RuntimeError(
-            f"last outer station projected x={last_x:.3f} mm is more than "
-            f"{GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:.1f} mm beyond liner end "
-            f"x={GUIDE_LINER_X1:.3f} mm"
+            f"last outer station projected x={last_x:.3f} mm is "
+            f"{last_endpoint_delta:.3f} mm from liner end; max allowed "
+            f"is {GUIDE_ENDPOINT_DISTANCE_MAX_MM:.1f} mm"
         )
 
     # Keep only physically sampled sections that lie inside the printable rail
@@ -401,8 +403,8 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         },
         "design_clearances": {
             "outer_lateral_each_side_mm": GUIDE_LATERAL_CLEARANCE,
-            "outer_endpoint_extrapolation_max_mm": (
-                GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM
+            "outer_endpoint_distance_max_mm": (
+                GUIDE_ENDPOINT_DISTANCE_MAX_MM
             ),
             "contact_pad_compressed_mm": pad,
             "saddle_lowest_printed_contact_z_mm": (
