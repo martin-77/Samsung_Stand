@@ -26,8 +26,20 @@ def main():
     checks["stop_target_matches_swivel_limit"] = abs(
         P.STOP_TARGET_DEG - G.SWIVEL_LIMIT_DEG
     ) < 1e-9
-    checks["rotating_stop_clears_normal_fixed_ribs_vertically"] = (
-        P.ROTATING_STOP_UNDERSIDE_GAP >= 1.5
+    checks["rotor_stop_starts_on_print_bed"] = (
+        P.ROTOR_STOP_TAB_Z0 == 0.0
+        and P.ROTOR_STOP_SPOKE_Z0 == 0.0
+    )
+    checks["stop_clearance_starts_at_bearing_plane"] = abs(
+        P.STOP_CLEARANCE_Z0 - V2.ROTOR_INSTALL_Z
+    ) < 1e-9
+    checks["stop_clearance_covers_radial_sweep"] = (
+        P.STOP_CLEARANCE_R0 <= P.STOP_SWEEP_MIN_RADIUS - 1.0
+        and P.STOP_CLEARANCE_R1 >= P.STOP_SWEEP_MAX_RADIUS + 1.0
+    )
+    checks["stop_clearance_covers_angular_sweep"] = (
+        P.STOP_CLEARANCE_HALF_ANGLE_DEG
+        >= P.STOP_SWEEP_MAX_HALF_ANGLE_DEG + 1.0
     )
     checks["stop_tab_connects_back_to_rotor"] = (
         P.ROTOR_STOP_SPOKE_R0 <= G.BEARING_OUTER_DIAMETER / 2.0
@@ -72,9 +84,20 @@ def main():
             round(P.FIXED_STOP_ANGLE_NEG_DEG,4),
             round(P.FIXED_STOP_ANGLE_POS_DEG,4),
         ],
-        "rotating_stop_underside_gap_to_normal_ribs_mm":round(
-            P.ROTATING_STOP_UNDERSIDE_GAP,3
+        "stop_clearance_radial_range_mm":[
+            P.STOP_CLEARANCE_R0,P.STOP_CLEARANCE_R1
+        ],
+        "stop_sweep_radial_range_mm":[
+            round(P.STOP_SWEEP_MIN_RADIUS,3),
+            round(P.STOP_SWEEP_MAX_RADIUS,3),
+        ],
+        "stop_clearance_half_angle_deg":round(
+            P.STOP_CLEARANCE_HALF_ANGLE_DEG,4
         ),
+        "stop_sweep_max_half_angle_deg":round(
+            P.STOP_SWEEP_MAX_HALF_ANGLE_DEG,4
+        ),
+        "printability_note":"rotor stop spoke and tab both begin at Z=0",
         "tower_corner_samples":tower_points,
         "note":"Exact end-stop behavior is OCC-gated after CAD generation.",
     }
