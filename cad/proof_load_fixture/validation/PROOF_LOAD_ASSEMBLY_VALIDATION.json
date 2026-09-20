@@ -1,0 +1,16 @@
+{
+  "version": "proof-load-fixture",
+  "pad_inner_arm_common_volume_mm3": 0.0,
+  "pad_inner_arm_distance_mm": 0.0,
+  "installed_pad_bbox_mm": [
+    169.278,
+    218.678,
+    -23.7,
+    23.7,
+    7.0,
+    18.0
+  ],
+  "inner_arm_top_z_mm": 15.0,
+  "proud_height_mm": 3.0,
+  "failed": []
+}

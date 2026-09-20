@@ -1,0 +1,24 @@
+{
+  "version": "proof-load-fixture",
+  "watertight": true,
+  "winding_consistent": true,
+  "volume_mm3": 25038.457562288546,
+  "extents_mm": [
+    49.4,
+    47.4,
+    11.0
+  ],
+  "bounds_mm": [
+    [
+      -24.7,
+      -23.7,
+      0.0
+    ],
+    [
+      24.7,
+      23.7,
+      11.0
+    ]
+  ],
+  "failed": []
+}

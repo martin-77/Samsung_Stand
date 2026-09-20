@@ -1,0 +1,25 @@
+{
+  "purpose": "physical proof-load fixture at validated saddle stations",
+  "quantity": 2,
+  "fit_clearance_each_side_mm": 0.3,
+  "pad_size_mm": [
+    49.4,
+    47.4,
+    11.0
+  ],
+  "installed_proud_height_above_inner_arm_mm": 3.0,
+  "load_application": {
+    "recommended": "Use two pads, one per INNER_ARM. Place a rigid, flat spreader board across both pads and place a non-fragile test load on the board. Do not let the board contact OUTER_GUIDE, rotor, or fixed base.",
+    "do_not_use_tv": true,
+    "target_load_source": "PHYSICAL_RELEASE_GATES.md"
+  },
+  "part": {
+    "volume_mm3": 25038.456,
+    "size_mm": [
+      49.4,
+      47.4,
+      11.0
+    ],
+    "facets": 28
+  }
+}
