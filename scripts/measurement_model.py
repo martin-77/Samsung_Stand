@@ -156,10 +156,22 @@ def parse_profile(raw: Any, path: str) -> Profile:
     return profile
 
 
+STATION_RADIUS_COORD_TOLERANCE_MM = 1.5
+
+
 @dataclass(frozen=True)
 class Station:
     radius: float
+    center_xy: tuple[float, float]
     profile: Profile
+
+    @property
+    def coordinate_radius(self) -> float:
+        return math.hypot(*self.center_xy)
+
+    @property
+    def coordinate_angle_deg(self) -> float:
+        return math.degrees(math.atan2(self.center_xy[1], self.center_xy[0]))
 
 
 @dataclass(frozen=True)
@@ -190,10 +202,30 @@ def _tip_xy(raw: Any, path: str) -> tuple[float, float]:
 def _station(raw: Any, path: str) -> Station:
     if not isinstance(raw, dict):
         raise MeasurementError(f"{path}: expected object")
-    return Station(
-        radius=_require_number(raw.get("station_radius_mm"), path + ".station_radius_mm", positive=True),
-        profile=parse_profile(raw.get("profile_points_mm"), path + ".profile_points_mm"),
+
+    center_xy = _tip_xy(raw.get("center_xy_mm"), path + ".center_xy_mm")
+    station = Station(
+        radius=_require_number(
+            raw.get("station_radius_mm"),
+            path + ".station_radius_mm",
+            positive=True,
+        ),
+        center_xy=center_xy,
+        profile=parse_profile(
+            raw.get("profile_points_mm"),
+            path + ".profile_points_mm",
+        ),
     )
+
+    radius_delta = abs(station.radius - station.coordinate_radius)
+    if radius_delta > STATION_RADIUS_COORD_TOLERANCE_MM:
+        raise MeasurementError(
+            f"{path}: station_radius_mm and center_xy_mm disagree by "
+            f"{radius_delta:.3f} mm (max "
+            f"{STATION_RADIUS_COORD_TOLERANCE_MM:.3f} mm)"
+        )
+
+    return station
 
 
 def load_measurements(path: str | Path) -> MeasurementSet:
@@ -271,14 +303,44 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
 
     for name, st in (("inner_left", ms.inner_left), ("inner_right", ms.inner_right)):
         if not 240.0 <= st.radius <= 310.0:
-            raise MeasurementError(f"{name}.station_radius_mm: implausible {st.radius:.3f}")
+            raise MeasurementError(
+                f"{name}.station_radius_mm: implausible {st.radius:.3f}"
+            )
 
     for side, stations in (("left", ms.outer_left), ("right", ms.outer_right)):
         radii = [x.radius for x in stations]
         if not all(300.0 <= r <= 500.0 for r in radii):
-            raise MeasurementError(f"outer_guide.{side}: station radius outside 300..500 mm")
+            raise MeasurementError(
+                f"outer_guide.{side}: station radius outside 300..500 mm"
+            )
         if not (radii[0] < radii[1] < radii[2]):
-            raise MeasurementError(f"outer_guide.{side}: radii must increase root < mid < tip")
+            raise MeasurementError(
+                f"outer_guide.{side}: radii must increase root < mid < tip"
+            )
+
+    # Global sign convention: left arm is -X, right arm is +X, both extend
+    # forward (+Y) from the pivot.
+    for name, st in (
+        ("inner_saddle.left", ms.inner_left),
+        ("outer_guide.left.root", ms.outer_left[0]),
+        ("outer_guide.left.mid", ms.outer_left[1]),
+        ("outer_guide.left.tip", ms.outer_left[2]),
+    ):
+        if not (st.center_xy[0] < 0.0 and st.center_xy[1] > 0.0):
+            raise MeasurementError(
+                f"{name}.center_xy_mm: expected left/front quadrant (-X,+Y)"
+            )
+
+    for name, st in (
+        ("inner_saddle.right", ms.inner_right),
+        ("outer_guide.right.root", ms.outer_right[0]),
+        ("outer_guide.right.mid", ms.outer_right[1]),
+        ("outer_guide.right.tip", ms.outer_right[2]),
+    ):
+        if not (st.center_xy[0] > 0.0 and st.center_xy[1] > 0.0):
+            raise MeasurementError(
+                f"{name}.center_xy_mm: expected right/front quadrant (+X,+Y)"
+            )
 
 
 def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
@@ -286,6 +348,10 @@ def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
         "tip_x_magnitude_delta_mm": abs(abs(ms.left_tip_xy[0]) - abs(ms.right_tip_xy[0])),
         "tip_y_delta_mm": abs(ms.left_tip_xy[1] - ms.right_tip_xy[1]),
         "inner_radius_delta_mm": abs(ms.inner_left.radius - ms.inner_right.radius),
+        "inner_centerline_angle_delta_deg": abs(
+            (180.0 - ms.inner_left.coordinate_angle_deg)
+            - ms.inner_right.coordinate_angle_deg
+        ),
         "inner_profile_width_delta_mm": abs(ms.inner_left.profile.width - ms.inner_right.profile.width),
         "inner_profile_height_delta_mm": abs(ms.inner_left.profile.height - ms.inner_right.profile.height),
         "outer_root_width_delta_mm": abs(ms.outer_left[0].profile.width - ms.outer_right[0].profile.width),
