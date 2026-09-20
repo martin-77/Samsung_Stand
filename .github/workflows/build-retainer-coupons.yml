@@ -1,0 +1,163 @@
+name: Build Retainer Coupons
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/v8_params.py"
+      - "scripts/v8_geometry.py"
+      - "scripts/build_retainer_coupons.py"
+      - "scripts/validate_retainer_coupons.py"
+      - "scripts/validate_retainer_coupon_meshes.py"
+      - ".github/workflows/build-retainer-coupons.yml"
+
+concurrency:
+  group: samsung-stand-retainer-coupons-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-retainer-coupons:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate v8 source parameters
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_v8_design.py > v8-design-validation.json
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+
+      - name: Compile coupon scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/build_retainer_coupons.py \
+            scripts/validate_retainer_coupons.py \
+            scripts/validate_retainer_coupon_meshes.py
+
+      - name: Build retainer coupons
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_retainer_coupons" \
+            2>&1 | tee build_retainer_coupons.log
+          test -s build_retainer_coupons/RETAINER_COUPON_REPORT.json
+
+      - name: Validate retainer coupon meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_retainer_coupon_meshes.py
+          test -s build_retainer_coupons/RETAINER_COUPON_MESH_VALIDATION.json
+
+      - name: Validate retainer coupon assemblies
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_retainer_coupons as V; V.main()"
+          test -s build_retainer_coupons/RETAINER_COUPON_ASSEMBLY_VALIDATION.json
+
+      - name: Publish retainer coupons
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/retainer_coupons/FCStd cad/retainer_coupons/STEP cad/retainer_coupons/STL cad/retainer_coupons/validation
+
+          rm -f cad/retainer_coupons/FCStd/*
+          rm -f cad/retainer_coupons/STEP/*
+          rm -f cad/retainer_coupons/STL/*
+
+          cp build_retainer_coupons/retainer_coupon_*.FCStd cad/retainer_coupons/FCStd/
+          cp build_retainer_coupons/retainer_coupon_*.step cad/retainer_coupons/STEP/
+          cp build_retainer_coupons/retainer_coupon_*.stl cad/retainer_coupons/STL/
+          cp build_retainer_coupons/RETAINER_COUPON_REPORT.json cad/retainer_coupons/validation/
+          cp build_retainer_coupons/RETAINER_COUPON_MESH_VALIDATION.json cad/retainer_coupons/validation/
+          cp build_retainer_coupons/RETAINER_COUPON_ASSEMBLY_VALIDATION.json cad/retainer_coupons/validation/
+          cp v8-design-validation.json cad/retainer_coupons/validation/V8_DESIGN_VALIDATION.json
+
+          cat > cad/retainer_coupons/README.md <<'EOF'
+          # V8 retainer fit coupons
+
+          Print these before the large v8 modules.
+
+          Three exact geometry families are included:
+          - base receiver + compact joint pin;
+          - 58 mm outer/saddle receiver + long outer pin;
+          - Ø25 mm pivot post + pivot cross-pin.
+
+          Acceptance:
+          - insert by hand without hammering;
+          - no crack or visible PETG whitening;
+          - barb snaps fully beyond the far wall;
+          - light manual pull does not release it;
+          - split legs can be compressed for non-destructive removal;
+          - no obvious permanent set after several insertion/removal cycles.
+
+          These coupons calibrate printed retention fit only. They do not replace the full assembly proof-load and cycling gates.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/retainer_coupons
+          if git diff --cached --quiet; then
+            echo "Retainer coupons already current"
+          else
+            git commit -m "Publish v8 retainer fit coupons"
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Concurrent main update during publish; retrying ($attempt/4)"
+              sleep 2
+            done
+            test "$pushed" = true
+          fi
+
+      - name: Upload coupon proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-retainer-coupons
+          path: |
+            build_retainer_coupons/
+            build_retainer_coupons.log
+            v8-design-validation.json
