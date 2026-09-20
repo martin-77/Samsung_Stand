@@ -140,6 +140,7 @@ def main(path: str) -> dict[str,Any]:
         "saddle_root_center_tip_contact_confirmed",
         "outer_guide_lateral_fit_confirmed",
         "outer_guide_vertical_free_clearance_confirmed",
+        "outer_liners_fully_seated",
     ):
         require_true(measurement.get(key),f"measurement_gate.{key}",failures)
 
@@ -247,7 +248,13 @@ def main(path: str) -> dict[str,Any]:
         failures.append("cycling.minus_end_stop_contacts below declared criterion")
     if pos+1e-9<stop_min:
         failures.append("cycling.plus_end_stop_contacts below declared criterion")
-    for key in ("stop_damage","detent_degraded","retainer_walkout"):
+    for key in (
+        "stop_damage",
+        "detent_degraded",
+        "retainer_walkout",
+        "outer_liner_unseated",
+        "outer_liner_axial_walkout",
+    ):
         require_false(cycling.get(key),f"cycling.{key}",failures)
 
     evidence=data.get("evidence",{})
