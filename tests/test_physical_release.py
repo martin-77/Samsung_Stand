@@ -116,6 +116,21 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         self.assertTrue(report["ok"])
         self.assertEqual(report["failed"],[])
 
+    def test_release_is_bound_to_petg_and_target_printer(self):
+        d=passing_record()
+        d["meta"]["material"]="PLA"
+        d["meta"]["printer"]="Other Printer"
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("meta.printer must be" in x for x in report["failed"]))
+        self.assertTrue(any("meta.material must be" in x for x in report["failed"]))
+
+    def test_contact_parts_version_is_required(self):
+        d=passing_record()
+        d["meta"]["contact_parts_version"]=""
+        with self.assertRaises(V.ReleaseError):
+            V.main(self.write(d))
+
     def test_proof_criterion_cannot_be_below_500N(self):
         d=passing_record()
         d["criteria"]["proof_load_min_n"]=499.0
