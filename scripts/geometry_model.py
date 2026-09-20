@@ -46,8 +46,23 @@ PRINTER_Y = 300.0
 PRINTER_Z = 330.0
 PREFERRED_PART_XY = 295.0
 
+# Manufacturer-verified complete TV envelope with the original stand.
+# Samsung Quick Start Guide BN68-07177M-00, UE55J6250 / UE55J6270 table.
+# These are dimensions of the complete TV+stand assembly, NOT a stand-only
+# footprint and must not be substituted for physical stand measurements.
+TV_WITH_STAND_WIDTH_MM = 1230.6
+TV_WITH_STAND_HEIGHT_MM = 770.6
+TV_WITH_STAND_DEPTH_MM = 310.5
+TV_BODY_DEPTH_MM = 64.0
+OEM_STAND_SWIVEL_DEG = 0.0
+
+# Working stand-only planform values from reconstruction / stand references.
+# Width remains a working stand-family dimension; depth is intentionally not
+# declared as manufacturer truth because Samsung's 310.5 mm value is for the
+# complete TV+stand assembly.
 STAND_WIDTH = 840.0
 STAND_HALF_WIDTH = STAND_WIDTH / 2.0
+STAND_WORKING_DEPTH_MM = 288.0
 
 # Reconstructed working geometry, not yet physical manufacturing truth.
 STAND_TIP_Y = 208.0
