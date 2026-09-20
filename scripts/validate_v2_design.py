@@ -26,6 +26,21 @@ def main() -> int:
     checks = {}
     details = {}
 
+    rotating_receiver_radius = math.hypot(
+        P.ROOT_LANDING_R1, P.ROOT_LANDING_WIDTH / 2.0
+    )
+    checks["rotating_clearance_covers_v2_receiver_envelope"] = (
+        P.ROTATING_CLEARANCE_RADIUS >= rotating_receiver_radius + 2.0
+    )
+    checks["rotating_clearance_preserves_pilot"] = (
+        P.ROTATING_CLEARANCE_INNER_RADIUS
+        >= G.PIVOT_STEM_DIAMETER / 2.0 + 0.4
+    )
+    checks["rotating_clearance_stays_inside_rotor_bore"] = (
+        P.ROTATING_CLEARANCE_INNER_RADIUS
+        <= G.PIVOT_BORE_DIAMETER / 2.0 - 0.2
+    )
+
     checks["support_plane_matches_rotor_top"] = abs(
         P.TRACK_TOP_Z - (G.BEARING_TOP_Z + G.ROTOR_THICKNESS)
     ) < 1e-9
@@ -157,6 +172,9 @@ def main() -> int:
     )
 
     details = {
+        "rotating_receiver_envelope_radius_mm": round(rotating_receiver_radius, 3),
+        "rotating_clearance_radius_mm": P.ROTATING_CLEARANCE_RADIUS,
+        "rotating_clearance_inner_radius_mm": P.ROTATING_CLEARANCE_INNER_RADIUS,
         "track_top_z_mm": P.TRACK_TOP_Z,
         "root_landing_global_top_z_mm": root_landing_global_top,
         "key_bottom_rotor_local_z_mm": P.ARM_KEY_INSTALLED_BOTTOM_ROTOR_Z,
