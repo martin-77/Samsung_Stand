@@ -138,7 +138,7 @@ def pivot_lock_pin():
         ),
     )
 
-    barb0=P.PIVOT_PIN_LENGTH-P.PIVOT_PIN_SPLIT_LENGTH+1.0
+    barb0=P.PIVOT_PIN_BARB_START_X
     barb1=P.PIVOT_PIN_LENGTH-0.5
     b1=_snap_barb(
         barb0,barb1,P.PIVOT_PIN_BARB_PEAK_X,
