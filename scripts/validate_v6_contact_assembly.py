@@ -113,11 +113,11 @@ def main(
     }
 
     # ------------------------------------------------------------------
-    # Inner saddle inserts: structural seating + measured underside contact.
+    # Inner saddle inserts: structural seating + all three measured sections.
     # ------------------------------------------------------------------
-    inner_profiles = {
-        "left": ms.inner_left.profile,
-        "right": ms.inner_right.profile,
+    inner_sets = {
+        "left": ms.inner_left,
+        "right": ms.inner_right,
     }
     stand_low_z_inner_nominal = (
         V2.SADDLE_POCKET_FLOOR + V2.SADDLE_INSERT_HEIGHT
@@ -137,7 +137,7 @@ def main(
         gap = distance(saddle, inner)
         bb = saddle.BoundBox
 
-        row = {
+        result["saddles"][side] = {
             "common_volume_mm3": round(vol, 6),
             "distance_to_inner_arm_mm": round(gap, 6),
             "installed_bbox_mm": [
@@ -146,7 +146,6 @@ def main(
                 round(bb.ZMin, 3), round(bb.ZMax, 3),
             ],
         }
-        result["saddles"][side] = row
 
         if vol > 0.05:
             failures.append(
@@ -158,72 +157,83 @@ def main(
                 f"{gap:.6f} mm"
             )
 
-        inner_station = (
-            ms.inner_left if side == "left" else ms.inner_right
-        )
-        inner_along, inner_lateral = station_frame(
-            inner_station,
-            side,
-        )
-        inner_vertical_offset = M.station_vertical_offset_mm(
-            inner_station,
-            ms,
-        )
-        stand_low_z_inner = (
-            stand_low_z_inner_nominal + inner_vertical_offset
-        )
-        stand = profile_prism(
-            inner_profiles[side],
-            inner_along - V2.INNER_R0,
-            min(20.0, V2.SADDLE_INSERT_LENGTH - 2.0),
-            stand_low_z_inner,
-            lateral_offset=inner_lateral,
-        )
-        stand_saddle_vol = common_volume(stand, saddle)
-        stand_saddle_gap = distance(stand, saddle)
-        stand_inner_vol = common_volume(stand, inner)
+        result["measured_profile_fit"]["saddles"][side] = {}
+        for station_name, station in zip(
+            ("root", "center", "tip"),
+            inner_sets[side],
+        ):
+            inner_along, inner_lateral = station_frame(
+                station,
+                side,
+            )
+            vertical_offset = M.station_vertical_offset_mm(
+                station,
+                ms,
+            )
+            stand_low_z_inner = (
+                stand_low_z_inner_nominal + vertical_offset
+            )
+            stand = profile_prism(
+                station.profile,
+                inner_along - V2.INNER_R0,
+                0.8,
+                stand_low_z_inner,
+                lateral_offset=inner_lateral,
+            )
+            stand_saddle_vol = common_volume(stand, saddle)
+            stand_saddle_gap = distance(stand, saddle)
+            stand_inner_vol = common_volume(stand, inner)
 
-        result["measured_profile_fit"]["saddles"][side] = {
-            "stand_saddle_common_volume_mm3": round(
-                stand_saddle_vol, 6
-            ),
-            "stand_saddle_distance_mm": round(stand_saddle_gap, 6),
-            "stand_inner_structure_common_volume_mm3": round(
-                stand_inner_vol, 6
-            ),
-            "measured_lowest_point_height_mm": round(
-                inner_station.lowest_point_height_mm, 6
-            ),
-            "vertical_reference_height_mm": round(
-                vertical_reference, 6
-            ),
-            "relative_vertical_offset_mm": round(
-                inner_vertical_offset, 6
-            ),
-            "installed_lowest_point_z_mm": round(
-                stand_low_z_inner, 6
-            ),
-            "expected": (
-                "surface contact to saddle insert; no penetration into "
-                "insert or structural INNER_ARM"
-            ),
-        }
+            result["measured_profile_fit"]["saddles"][side][
+                station_name
+            ] = {
+                "stand_saddle_common_volume_mm3": round(
+                    stand_saddle_vol, 6
+                ),
+                "stand_saddle_distance_mm": round(
+                    stand_saddle_gap, 6
+                ),
+                "stand_inner_structure_common_volume_mm3": round(
+                    stand_inner_vol, 6
+                ),
+                "measured_lateral_offset_mm": round(
+                    inner_lateral, 6
+                ),
+                "measured_lowest_point_height_mm": round(
+                    station.lowest_point_height_mm, 6
+                ),
+                "vertical_reference_height_mm": round(
+                    vertical_reference, 6
+                ),
+                "relative_vertical_offset_mm": round(
+                    vertical_offset, 6
+                ),
+                "installed_lowest_point_z_mm": round(
+                    stand_low_z_inner, 6
+                ),
+                "expected": (
+                    "surface contact to lofted saddle insert; no "
+                    "penetration into insert or structural INNER_ARM"
+                ),
+            }
 
-        if stand_saddle_vol > 0.05:
-            failures.append(
-                f"{side} measured saddle profile penetrates insert: "
-                f"{stand_saddle_vol:.6f} mm3"
-            )
-        if stand_saddle_gap > 0.05:
-            failures.append(
-                f"{side} measured saddle profile is not supported by insert: "
-                f"gap {stand_saddle_gap:.6f} mm"
-            )
-        if stand_inner_vol > 0.05:
-            failures.append(
-                f"{side} measured saddle profile penetrates structural "
-                f"INNER_ARM: {stand_inner_vol:.6f} mm3"
-            )
+            if stand_saddle_vol > 0.05:
+                failures.append(
+                    f"{side}/{station_name} measured saddle profile "
+                    f"penetrates insert: {stand_saddle_vol:.6f} mm3"
+                )
+            if stand_saddle_gap > 0.05:
+                failures.append(
+                    f"{side}/{station_name} measured saddle profile is "
+                    f"not supported by insert: gap "
+                    f"{stand_saddle_gap:.6f} mm"
+                )
+            if stand_inner_vol > 0.05:
+                failures.append(
+                    f"{side}/{station_name} measured saddle profile "
+                    f"penetrates structural INNER_ARM: "
+                    f"{stand_inner_vol:.6f} mm3"
+                )
 
     # ------------------------------------------------------------------
     # Outer guides: lateral-only rails + measured 0.5 mm side clearance.
