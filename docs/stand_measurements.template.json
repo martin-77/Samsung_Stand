@@ -1,0 +1,48 @@
+{
+  "global": {
+    "stand_width_mm": null,
+    "stand_depth_mm": null,
+    "pivot_to_rear_mm": null,
+    "left_tip_xy_mm": [null, null],
+    "right_tip_xy_mm": [null, null]
+  },
+  "inner_saddle": {
+    "left": {
+      "width_mm": null,
+      "height_mm": null,
+      "corner_radius_mm": null,
+      "notes": ""
+    },
+    "right": {
+      "width_mm": null,
+      "height_mm": null,
+      "corner_radius_mm": null,
+      "notes": ""
+    }
+  },
+  "outer_guide": {
+    "left": {
+      "root_width_mm": null,
+      "mid_width_mm": null,
+      "tip_width_mm": null,
+      "root_height_mm": null,
+      "mid_height_mm": null,
+      "tip_height_mm": null,
+      "notes": ""
+    },
+    "right": {
+      "root_width_mm": null,
+      "mid_width_mm": null,
+      "tip_width_mm": null,
+      "root_height_mm": null,
+      "mid_height_mm": null,
+      "tip_height_mm": null,
+      "notes": ""
+    }
+  },
+  "contact_pad": {
+    "used": null,
+    "compressed_thickness_mm": null,
+    "notes": ""
+  }
+}
