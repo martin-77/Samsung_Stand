@@ -60,10 +60,19 @@ def distance(a, b):
     return float(a.distToShape(b)[0])
 
 
-def profile_prism(profile: M.Profile, x_center: float, length: float, z0: float):
-    """Extrude a measured YZ cross-section along local X."""
+def profile_prism(
+    profile: M.Profile,
+    x_center: float,
+    length: float,
+    z0: float,
+    lateral_offset: float = 0.0,
+):
+    """Extrude a measured YZ cross-section along local structural-arm X."""
     x0 = x_center - length / 2.0
-    pts = [v(x0, y, z0 + z) for y, z in profile.points]
+    pts = [
+        v(x0, y + lateral_offset, z0 + z)
+        for y, z in profile.points
+    ]
     wire = Part.makePolygon(pts + [pts[0]])
     face = Part.Face(wire)
     sh = face.extrude(v(length, 0, 0)).removeSplitter()
@@ -72,8 +81,13 @@ def profile_prism(profile: M.Profile, x_center: float, length: float, z0: float)
     return sh
 
 
-def liner_station_x(station: M.Station) -> float:
-    raw = station.radius - V3.OUTER_R0
+def station_frame(station: M.Station, side: str) -> tuple[float, float]:
+    return B.station_frame(station, side)
+
+
+def liner_station_x(station: M.Station, side: str) -> float:
+    along, _lateral = station_frame(station, side)
+    raw = along - V3.OUTER_R0
     return min(max(raw, B.GUIDE_LINER_X0), B.GUIDE_LINER_X1)
 
 
@@ -143,11 +157,19 @@ def main(
                 f"{gap:.6f} mm"
             )
 
+        inner_station = (
+            ms.inner_left if side == "left" else ms.inner_right
+        )
+        inner_along, inner_lateral = station_frame(
+            inner_station,
+            side,
+        )
         stand = profile_prism(
             inner_profiles[side],
-            V2.SADDLE_U,
+            inner_along - V2.INNER_R0,
             min(20.0, V2.SADDLE_INSERT_LENGTH - 2.0),
             stand_low_z_inner,
+            lateral_offset=inner_lateral,
         )
         stand_saddle_vol = common_volume(stand, saddle)
         stand_saddle_gap = distance(stand, saddle)
@@ -261,12 +283,14 @@ def main(
             ("root", "mid", "tip"),
             outer_sets[side],
         ):
-            x = liner_station_x(station)
+            x = liner_station_x(station, side)
+            _along, lateral = station_frame(station, side)
             stand = profile_prism(
                 station.profile,
                 x,
                 0.8,
                 stand_low_z_outer,
+                lateral_offset=lateral,
             )
 
             neg = installed_rails["neg_y"]
@@ -280,6 +304,7 @@ def main(
 
             row = {
                 "liner_x_mm": round(x, 4),
+                "measured_lateral_offset_mm": round(lateral, 6),
                 "neg_y_clearance_mm": round(neg_gap, 6),
                 "pos_y_clearance_mm": round(pos_gap, 6),
                 "neg_y_common_volume_mm3": round(neg_vol, 6),
