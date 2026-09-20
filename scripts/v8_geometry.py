@@ -258,3 +258,16 @@ def outer_lock_pin():
         P.OUTER_PIN_HEIGHT,-1,
     )
     return fuse_all([shaft,head,b1,b2])
+
+
+def front_base_barb_relief(x_center):
+    return Part.makeBox(
+        2.0 * P.FRONT_BASE_BARB_RELIEF_HALF_X,
+        P.FRONT_BASE_BARB_RELIEF_Y1 - P.FRONT_BASE_BARB_RELIEF_Y0,
+        P.FRONT_BASE_BARB_RELIEF_Z1 - P.FRONT_BASE_BARB_RELIEF_Z0,
+        v(
+            x_center - P.FRONT_BASE_BARB_RELIEF_HALF_X,
+            P.FRONT_BASE_BARB_RELIEF_Y0,
+            P.FRONT_BASE_BARB_RELIEF_Z0,
+        ),
+    )
