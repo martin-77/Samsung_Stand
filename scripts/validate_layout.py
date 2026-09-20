@@ -82,8 +82,22 @@ def main() -> int:
     report = {
         "sounddeck_mm": [G.SOUNDDECK.width, G.SOUNDDECK.depth],
         "fixed_base_mm": [G.BASE.width, G.BASE.depth],
-        "stand_width_mm": G.STAND_WIDTH,
-        "stand_depth_status": "reconstructed; not yet physical manufacturing truth",
+        "working_stand_width_mm": G.STAND_WIDTH,
+        "working_stand_depth_mm": G.STAND_WORKING_DEPTH_MM,
+        "stand_planform_status": (
+            "reconstructed stand-only planform; must be physically measured"
+        ),
+        "verified_tv_with_stand_envelope_mm": [
+            G.TV_WITH_STAND_WIDTH_MM,
+            G.TV_WITH_STAND_HEIGHT_MM,
+            G.TV_WITH_STAND_DEPTH_MM,
+        ],
+        "verified_tv_body_depth_mm": G.TV_BODY_DEPTH_MM,
+        "oem_stand_swivel_deg": G.OEM_STAND_SWIVEL_DEG,
+        "envelope_note": (
+            "Samsung's 310.5 mm depth is the complete TV+stand envelope, "
+            "not a stand-only footprint."
+        ),
         "pivot_sounddeck_xy_mm": [G.PIVOT.x, G.PIVOT.y],
         "swivel_limit_deg": G.SWIVEL_LIMIT_DEG,
         "saddle_local_xy_mm": [G.SADDLE_LOCAL_X, G.SADDLE_LOCAL_Y],
