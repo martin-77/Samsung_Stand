@@ -61,9 +61,11 @@ For each left/right saddle insert:
 
 For each OUTER_GUIDE:
 
-1. confirm the side rails guide the real arm without binding;
-2. confirm visible/free vertical clearance below the arm;
-3. specifically verify that the arm does **not** touch the structural guide
+1. confirm all four side rails sit fully down on the guide floor before the
+   original stand is inserted;
+2. confirm the side rails guide the real arm without binding;
+3. confirm visible/free vertical clearance below the arm;
+4. specifically verify that the arm does **not** touch the structural guide
    floor anywhere through the guide span.
 
 These observations are separate fields in the physical release record. A generic
@@ -121,7 +123,10 @@ Record:
 - change in detent feel;
 - any base movement on the Sounddeck;
 - visible marking / indentation of the Sounddeck top surface;
-- whether the replaceable wear inserts remain seated.
+- whether the replaceable wear inserts remain seated;
+- whether any V6 OUTER_GUIDE side rail has lifted from its seat;
+- whether any V6 OUTER_GUIDE side rail has moved axially past its intended
+  root/tip capture position.
 
 The eventual proof-load magnitude and duration must be chosen deliberately
 before calling the design structurally released. The current CAD repository does
