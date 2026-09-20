@@ -191,8 +191,17 @@ jobs:
             echo "Validated v4 outputs already current"
           else
             git commit -m "Publish validated Samsung Stand v4 CAD"
-            git pull --rebase origin main
-            git push
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Concurrent main update during publish; retrying ($attempt/4)"
+              sleep 2
+            done
+            test "$pushed" = true
           fi
 
       - name: Upload complete v4 proof
