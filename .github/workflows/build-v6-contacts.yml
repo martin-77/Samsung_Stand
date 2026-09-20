@@ -173,7 +173,10 @@ jobs:
 
           They modify only the measured contact interfaces:
           - left/right inner saddle insert;
-          - left/right outer-guide liner.
+          - two independent lateral side rails per OUTER_GUIDE.
+
+          The outer rails intentionally have no floor bridge under the Samsung arm,
+          so measured guide inserts cannot become a normal vertical load path.
 
           The validated v8 structural assembly remains upstream and unchanged.
 
@@ -189,8 +192,17 @@ jobs:
             echo "Real v6 contact outputs already current"
           else
             git commit -m "Publish measured Samsung Stand v6 contact parts"
-            git pull --rebase origin main
-            git push
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Concurrent main update during publish; retrying ($attempt/4)"
+              sleep 2
+            done
+            test "$pushed" = true
           fi
 
       - name: Upload v6 contact proof
