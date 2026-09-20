@@ -59,18 +59,57 @@ def main(out_dir: str = "build_v6_contacts"):
         if e[0] > V2.SADDLE_INSERT_LENGTH + 0.1 or e[1] > V2.SADDLE_INSERT_WIDTH + 0.1:
             failed.append(name + ": exceeds saddle pocket XY envelope")
 
-        name = f"samsung_stand_v6_outer_liner_{side}.stl"
-        e = results[name]["extents_mm"]
-        if e[0] > V3.OUTER_VISIBLE_LENGTH + 0.1:
-            failed.append(name + ": exceeds outer guide length")
-        if e[1] > V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH + 0.1:
-            failed.append(name + ": exceeds outer guide channel width")
-        if e[2] > V3.OUTER_WALL_HEIGHT - V3.OUTER_FLOOR_THICKNESS + 0.1:
-            failed.append(name + ": exceeds available liner height")
+        for wall_side in ("neg_y", "pos_y"):
+            name = (
+                f"samsung_stand_v6_outer_liner_{side}_{wall_side}.stl"
+            )
+            if name not in results:
+                failed.append(name + ": missing")
+                continue
+
+            e = results[name]["extents_mm"]
+            bounds = results[name]["bounds_mm"]
+            if e[0] > V3.OUTER_VISIBLE_LENGTH + 0.1:
+                failed.append(name + ": exceeds outer guide length")
+            if e[1] > V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH + 0.1:
+                failed.append(name + ": exceeds outer guide channel width")
+            if e[2] > V3.OUTER_WALL_HEIGHT - V3.OUTER_FLOOR_THICKNESS + 0.1:
+                failed.append(name + ": exceeds available liner height")
+
+            # Hard load-path gate: no V6 guide-contact part may cross the
+            # local arm centerline. Therefore there is no generated bridge
+            # or floor surface underneath the Samsung arm.
+            ymin, ymax = bounds[0][1], bounds[1][1]
+            if wall_side == "neg_y" and ymax >= -0.5:
+                failed.append(name + ": reaches arm centerline")
+            if wall_side == "pos_y" and ymin <= 0.5:
+                failed.append(name + ": reaches arm centerline")
+
+    expected = {
+        "samsung_stand_v6_saddle_insert_left.stl",
+        "samsung_stand_v6_saddle_insert_right.stl",
+        "samsung_stand_v6_outer_liner_left_neg_y.stl",
+        "samsung_stand_v6_outer_liner_left_pos_y.stl",
+        "samsung_stand_v6_outer_liner_right_neg_y.stl",
+        "samsung_stand_v6_outer_liner_right_pos_y.stl",
+    }
+    missing = sorted(expected - set(results))
+    unexpected = sorted(set(results) - expected)
+    failed.extend(name + ": missing expected output" for name in missing)
+    failed.extend(name + ": unexpected output" for name in unexpected)
 
     report = {
         "version": "v6-contact-parts",
         "meshes": results,
+        "load_path_gate": {
+            "expected_parts": sorted(expected),
+            "no_centerline_crossing_required": True,
+            "interpretation": (
+                "Outer contact geometry consists only of independent side "
+                "rails; no generated V6 part may form a floor bridge under "
+                "the Samsung stand arm."
+            ),
+        },
         "failed": failed,
     }
 
