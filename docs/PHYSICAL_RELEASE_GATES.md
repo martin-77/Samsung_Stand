@@ -67,16 +67,22 @@ intended to carry a small-to-medium television but does not provide a numeric
 maximum load in the manual. The Sounddeck interface is tested separately at
 approximately the verified real TV service load.
 
-Minimum test sequence:
+Minimum test sequence on the rigid surrogate support:
 
 1. preload / settle the assembly;
-2. load center position;
-3. load at -15 degrees;
-4. load at +15 degrees;
-5. hold each test position long enough to reveal gross creep / seating;
-6. unload and inspect;
-7. repeat the swivel cycle and check that the zero detent and positive end stops
+2. apply the full 500 N load in center position;
+3. apply the full 500 N load at -15 degrees;
+4. apply the full 500 N load at +15 degrees;
+5. test the left saddle branch alone at at least 250 N;
+6. test the right saddle branch alone at at least 250 N;
+7. hold every test case for the declared minimum dwell time;
+8. unload and inspect after each case;
+9. repeat the swivel cycle and check that the zero detent and positive end stops
    still behave normally.
+
+The two one-side cases are intentional. They verify each nominal 250 N branch
+independently and can expose asymmetric print, seating or assembly defects that
+a symmetric spreader-board test could hide.
 
 Record:
 
