@@ -70,6 +70,20 @@ class GeometryBaselineTests(unittest.TestCase):
                 for p in G.saddle_centers(angle):
                     self.assertTrue(G.support_pad_inside_sounddeck(p))
 
+    def test_full_sweep_keeps_40mm_support_pads_on_fixed_base(self):
+        minimum_margin = float("inf")
+        for angle in G.sweep_angles(0.5):
+            with self.subTest(angle=angle):
+                for p in G.saddle_centers(angle):
+                    self.assertTrue(
+                        G.support_pad_inside_rect(G.BASE, p)
+                    )
+                    minimum_margin = min(
+                        minimum_margin,
+                        G.support_pad_edge_margin(G.BASE, p),
+                    )
+        self.assertAlmostEqual(minimum_margin, 7.204, places=3)
+
     def test_end_positions_are_mirrored(self):
         left_neg, right_neg = G.saddle_centers(-G.SWIVEL_LIMIT_DEG)
         left_pos, right_pos = G.saddle_centers(+G.SWIVEL_LIMIT_DEG)
