@@ -1,0 +1,77 @@
+{
+  "purpose": "physical calibration of v8 snap retainers before large prints",
+  "families": {
+    "base_joint": {
+      "receiver_width_mm": 50.0,
+      "pin": "retainer_coupon_joint_pin",
+      "receiver": "retainer_coupon_base_receiver"
+    },
+    "outer_joint": {
+      "receiver_width_mm": 58.0,
+      "pin": "retainer_coupon_outer_pin",
+      "receiver": "retainer_coupon_outer_receiver"
+    },
+    "pivot": {
+      "post_diameter_mm": 25.0,
+      "pin": "retainer_coupon_pivot_pin",
+      "receiver": "retainer_coupon_pivot_post"
+    }
+  },
+  "test_rule": "Pin must insert without cracking/whitening, snap positively after the far wall, resist light manual pullout, and remain removable by compressing the split-end legs. Reject any family that requires hammering or leaves permanent PETG set.",
+  "parts": {
+    "retainer_coupon_base_receiver": {
+      "volume_mm3": 19830.0,
+      "size_mm": [
+        22.0,
+        50.0,
+        20.0
+      ],
+      "facets": 36
+    },
+    "retainer_coupon_joint_pin": {
+      "volume_mm3": 1360.2,
+      "size_mm": [
+        61.0,
+        10.0,
+        6.0
+      ],
+      "facets": 68
+    },
+    "retainer_coupon_outer_receiver": {
+      "volume_mm3": 16622.8,
+      "size_mm": [
+        22.0,
+        58.0,
+        15.0
+      ],
+      "facets": 36
+    },
+    "retainer_coupon_outer_pin": {
+      "volume_mm3": 1612.2,
+      "size_mm": [
+        73.0,
+        10.0,
+        6.0
+      ],
+      "facets": 68
+    },
+    "retainer_coupon_pivot_post": {
+      "volume_mm3": 17850.985,
+      "size_mm": [
+        39.975,
+        39.988,
+        34.0
+      ],
+      "facets": 568
+    },
+    "retainer_coupon_pivot_pin": {
+      "volume_mm3": 1907.4,
+      "size_mm": [
+        39.0,
+        12.0,
+        8.0
+      ],
+      "facets": 68
+    }
+  }
+}

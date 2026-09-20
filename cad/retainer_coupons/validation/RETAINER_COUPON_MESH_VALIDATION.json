@@ -1,0 +1,150 @@
+{
+  "version": "retainer-coupons",
+  "meshes": {
+    "retainer_coupon_base_receiver.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 19829.999899864197,
+      "extents_mm": [
+        22.0,
+        50.0,
+        20.0
+      ],
+      "bounds_mm": [
+        [
+          -11.0,
+          -25.0,
+          0.0
+        ],
+        [
+          11.0,
+          25.0,
+          20.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "retainer_coupon_joint_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1360.1999972462654,
+      "extents_mm": [
+        61.0,
+        10.0,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -3.0,
+          -5.0,
+          0.0
+        ],
+        [
+          58.0,
+          5.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "retainer_coupon_outer_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1612.1999972462654,
+      "extents_mm": [
+        73.0,
+        10.0,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -3.0,
+          -5.0,
+          0.0
+        ],
+        [
+          70.0,
+          5.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "retainer_coupon_outer_receiver.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 16622.800077438354,
+      "extents_mm": [
+        22.0,
+        58.0,
+        15.0
+      ],
+      "bounds_mm": [
+        [
+          -11.0,
+          -29.0,
+          0.0
+        ],
+        [
+          11.0,
+          29.0,
+          15.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "retainer_coupon_pivot_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1907.3999977111816,
+      "extents_mm": [
+        39.0,
+        12.0,
+        8.0
+      ],
+      "bounds_mm": [
+        [
+          -3.0,
+          -6.0,
+          0.0
+        ],
+        [
+          36.0,
+          6.0,
+          8.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "retainer_coupon_pivot_post.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 17819.864542302126,
+      "extents_mm": [
+        39.975,
+        39.988,
+        34.0
+      ],
+      "bounds_mm": [
+        [
+          -19.975,
+          -19.994,
+          0.0
+        ],
+        [
+          20.0,
+          19.994,
+          34.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    }
+  },
+  "failed": []
+}

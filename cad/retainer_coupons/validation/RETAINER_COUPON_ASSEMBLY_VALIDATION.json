@@ -1,0 +1,18 @@
+{
+  "version": "retainer-coupons",
+  "families": {
+    "base_joint": {
+      "common_volume_mm3": 0.0,
+      "distance_mm": 0.122986
+    },
+    "outer_joint": {
+      "common_volume_mm3": 0.0,
+      "distance_mm": 0.25
+    },
+    "pivot": {
+      "common_volume_mm3": 0.0,
+      "distance_mm": 0.29492
+    }
+  },
+  "failed": []
+}
