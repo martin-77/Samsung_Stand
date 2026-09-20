@@ -6,7 +6,7 @@ Parametric, test-driven CAD project for a modular PETG adapter that reuses the o
 
 - Reuse the original Samsung stand assembly.
 - Magnat Sounddeck 150 footprint: **700 × 340 mm**.
-- Working Samsung stand footprint: **840 mm width**; depth currently treated as a reconstructed/working value and must remain explicitly marked as such until physically verified.
+- Working Samsung stand-only footprint: **840 mm width** and ~**288 mm reconstructed depth**; both remain subject to physical stand measurement. Samsung separately specifies the complete UE55J6250 **TV+stand envelope** as 1230.6 × 770.6 × 310.5 mm, which must not be confused with the stand-only footprint.
 - Printer target: **Prusa CORE One L, 300 × 300 × 330 mm**.
 - Material target: PETG.
 - Modular printed construction with form-locking joints; snap tabs are retention only, never primary structural load paths.
@@ -33,7 +33,8 @@ Initial working geometry:
 - Sounddeck: 700 × 340 mm
 - Fixed base target: 680 × 295 mm
 - Samsung stand width: 840 mm
-- Samsung stand reconstructed depth: ~288 mm
+- Samsung stand-only reconstructed depth: ~288 mm (unverified)
+- Samsung complete TV+stand depth: 310.5 mm (manufacturer-verified envelope, not stand-only footprint)
 - Pivot offset: 64 mm rearward from Sounddeck center
 - Inner load/saddle stations: x ≈ ±250 mm along the reconstructed arm geometry
 - Saddle orbit radius: ~279 mm
