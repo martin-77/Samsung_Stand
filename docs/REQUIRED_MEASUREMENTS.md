@@ -42,9 +42,9 @@ At every root/center/tip section record:
 - relevant radii/chamfers, ribs, bosses or protrusions.
 
 The root and tip sections should be measured close enough to the insert ends
-that only a short bounded extrapolation remains. The generator currently rejects
-a nearest measured saddle section more than 8 mm from the corresponding insert
-end.
+that only a short bounded extrapolation remains. The generator rejects a nearest
+measured saddle section more than 8 mm from the corresponding insert end and
+rejects adjacent measured saddle sections more than 25 mm apart.
 
 Use photographs looking along the arm axis at all three sections where possible.
 The generated saddle insert is a loft through the measured sections; the
@@ -114,6 +114,14 @@ Minimal structural form:
 
 ```json
 {
+  "meta": {
+    "measurement_kind": "physical",
+    "model": "Samsung UE55J6250",
+    "stand_part": "BN96-38964A",
+    "measured_by": null,
+    "date": null,
+    "caliper_resolution_mm": null
+  },
   "global": {
     "stand_width_mm": null,
     "stand_depth_mm": null,
@@ -222,3 +230,15 @@ Coordinate convention for every profile:
 
 The validator rejects incomplete, self-intersecting, off-center or implausible
 profiles. Do not enter guessed values simply to make the record complete.
+
+
+## F. Provenance
+
+Production contact CAD is generated only from a file whose
+`meta.measurement_kind` is `physical`. The CI fixture is explicitly marked
+`synthetic` and is intentionally rejected when the validator is called with
+`--require-physical`.
+
+The model, accepted stand part, measurer, date and caliper resolution are also
+validated. This prevents a geometrically plausible test fixture or measurement
+set for a different stand from being silently published as manufacturing CAD.
