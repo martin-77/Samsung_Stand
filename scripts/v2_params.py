@@ -52,6 +52,13 @@ ROTOR_RECEIVER_R_INNER = 31.0
 ROTOR_RECEIVER_R_OUTER = INNER_R0
 ROTOR_RECEIVER_WIDTH = 40.0
 ROTOR_INSTALL_Z = G.BEARING_TOP_Z
+
+# Everything of the fixed center base above the bearing plane must clear the
+# complete rotating v2 envelope. Keep only the central pilot inside this zone.
+ROTATING_CLEARANCE_RADIUS = 102.0
+ROTATING_CLEARANCE_INNER_RADIUS = 15.8
+ROTATING_CLEARANCE_Z0 = G.BEARING_TOP_Z
+ROTATING_CLEARANCE_HEIGHT = 40.0
 ROTOR_RECEIVER_Z0 = 7.80
 ROTOR_RECEIVER_TOP_Z = 27.0
 
