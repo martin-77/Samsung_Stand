@@ -79,6 +79,29 @@ def passing_record():
             "left_saddle_only":{**proof(),"load_n":250.0},
             "right_saddle_only":{**proof(),"load_n":250.0},
         },
+        "sounddeck_geometry":{
+            "usable_flat_width_mm":690.0,
+            "usable_flat_depth_mm":320.0,
+            "base_fully_supported_on_flat_area":True,
+            "base_contacts_edge_roundover":False,
+        },
+        "stability_characterization":{
+            "rear_reaction_line_y_mm":-140.0,
+            "front_reaction_line_y_mm":140.0,
+            "reference_push_height_mm":800.0,
+            "minus_15":{"rear_reaction_n":120.0,"front_reaction_n":60.0},
+            "center":{"rear_reaction_n":120.0,"front_reaction_n":60.0},
+            "plus_15":{"rear_reaction_n":120.0,"front_reaction_n":60.0},
+        },
+        "anti_tip_restraint":{
+            "manual_reference":"BN68-07177M-00",
+            "restraint_installed":True,
+            "wall_anchor_verified":True,
+            "tv_attachment_verified":True,
+            "full_swivel_without_binding":True,
+            "restraint_loose_or_damaged":False,
+            "restraint_interferes_with_swivel":False,
+        },
         "sounddeck_interface":{
             "test_load_n":164.0,
             "unloaded_base_movement_detected":False,
@@ -199,6 +222,48 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertTrue(any("rigid_surrogate" in x for x in report["failed"]))
         self.assertTrue(any("500 N structural proof" in x for x in report["failed"]))
+
+    def test_stability_characterization_reports_cg_and_tip_force(self):
+        report=V.main(self.write(passing_record()))
+        row=report["stability_characterization"]["positions"]["center"]
+        self.assertAlmostEqual(row["cg_y_mm"],-46.667,places=3)
+        self.assertAlmostEqual(row["rear_static_margin_mm"],100.833,places=3)
+        self.assertAlmostEqual(
+            row["idealized_backward_tip_force_at_reference_height_n"],
+            22.688,
+            places=3,
+        )
+
+    def test_inconsistent_stability_reaction_totals_fail(self):
+        d=passing_record()
+        d["stability_characterization"]["plus_15"]={
+            "rear_reaction_n":80.0,
+            "front_reaction_n":40.0,
+        }
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("total reaction varies" in x for x in report["failed"]))
+
+    def test_sounddeck_flat_area_must_cover_base(self):
+        d=passing_record()
+        d["sounddeck_geometry"]["usable_flat_depth_mm"]=290.0
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("below base depth" in x for x in report["failed"]))
+
+    def test_anti_tip_restraint_is_required(self):
+        d=passing_record()
+        d["anti_tip_restraint"]["restraint_installed"]=False
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("restraint_installed" in x for x in report["failed"]))
+
+    def test_anti_tip_restraint_must_allow_full_swivel(self):
+        d=passing_record()
+        d["anti_tip_restraint"]["restraint_interferes_with_swivel"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("restraint_interferes_with_swivel" in x for x in report["failed"]))
 
     def test_sounddeck_interface_load_is_limited_to_near_service_load(self):
         d=passing_record()
