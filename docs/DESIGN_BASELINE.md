@@ -167,3 +167,24 @@ Rules:
 - assembled left/right geometry is mirrored correctly
 - no accidental load path through only snap tabs
 - guide rails have explicit clearance and do not unintentionally preload the original stand
+
+
+## Verified service load
+
+Samsung's Quick Start Guide BN68-07177M-00 lists the UE55J6250 at 16.7 kg with
+its original stand. Using standard gravity, the static service load is therefore
+approximately 163.8 N.
+
+The project's 500 N vertical design load is an internal adapter-development
+load, approximately 3.05 times the real static TV weight. It is **not** a
+certified safety factor and must not be interpreted as permission to place a
+500 N proof load on the Magnat Sounddeck itself.
+
+Physical release therefore separates:
+
+- adapter structural proof: 500 N on a rigid flat surrogate support;
+- real Sounddeck interface test: approximately the real 163.8 N TV service
+  load, with a validator ceiling of 110% for the interface test.
+
+Source: Samsung Quick Start Guide BN68-07177M-00, model table for
+UE55J6250 / UE55J6270.
