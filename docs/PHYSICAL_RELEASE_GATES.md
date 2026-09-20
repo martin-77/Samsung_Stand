@@ -45,18 +45,27 @@ Record printer, material, nozzle, layer height and actual measured clearances.
 
 ## 3. Static proof loading
 
-The geometry model uses a 500 N vertical engineering design load. This is an
-internal development target, not a certified load rating and not a substitute
-for a physical proof test.
+The geometry model uses a 500 N vertical engineering design load. The verified
+Samsung UE55J6250 mass with original stand is 16.7 kg, corresponding to about
+163.8 N static service load. Thus 500 N is roughly 3.05 times the real static
+TV load. This remains an internal development target, not a certified load
+rating or safety factor.
 
-Before mounting the TV, assemble the complete adapter on the real Sounddeck and
-apply a non-fragile substitute load at the real Samsung support locations.
+Before mounting the TV, assemble the complete adapter on a **rigid, flat
+surrogate support**, not on the Magnat Sounddeck, and apply a non-fragile
+substitute load at the real Samsung support locations.
 
 The repository provides `cad/proof_load_fixture/proof_load_saddle_pad`.
 Print two pads and place one in each INNER_ARM saddle pocket. A rigid flat
 spreader board may then bridge only those two pads so the substitute load enters
 at the validated saddle stations without using the television or the
 OUTER_GUIDE parts as load supports.
+
+Do **not** use the real Sounddeck as the 500 N proof fixture. The 500 N value is
+an adapter development load. Magnat's manual states that the Sounddeck is
+intended to carry a small-to-medium television but does not provide a numeric
+maximum load in the manual. The Sounddeck interface is tested separately at
+approximately the verified real TV service load.
 
 Minimum test sequence:
 
@@ -122,11 +131,16 @@ Before mounting the TV:
 2. mark its centered position;
 3. apply the expected hand torque needed to move through the detent and the
    complete +/-15 degree swivel range;
-4. repeat with the non-fragile proof load installed;
-5. verify that the rotating assembly moves while the fixed 680 x 295 mm base
+4. add a non-fragile substitute load of at least the verified TV service load
+   (16.7 kg with stand, approximately 163.8 N) but no more than 110% of that
+   load for this interface test;
+5. repeat the swivel / detent operation;
+6. verify that the rotating assembly moves while the fixed 680 x 295 mm base
    does not translate or yaw on the Sounddeck;
-6. inspect the Sounddeck finish for scratches, pressure marks or local
+7. inspect the Sounddeck finish for scratches, pressure marks or local
    indentation.
+
+The 500 N structural proof belongs on the rigid surrogate support, not here.
 
 If the fixed base moves, the all-PETG interface is not released. Do not simply
 increase detent force. The correction must reduce required swivel torque or add
