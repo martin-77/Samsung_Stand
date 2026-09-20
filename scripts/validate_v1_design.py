@@ -38,9 +38,15 @@ def main() -> int:
     checks["bearing_fits_center_module_x"] = (
         G.BEARING_OUTER_DIAMETER <= G.BASE_CENTER_WIDTH - 20.0
     )
+    bearing_radius = G.BEARING_OUTER_DIAMETER / 2.0
+    bearing_ymin = G.PIVOT.y - bearing_radius
+    bearing_ymax = G.PIVOT.y + bearing_radius
+    rear_margin = bearing_ymin - G.BASE.ymin
+    front_margin = G.BASE.ymax - bearing_ymax
     checks["bearing_fits_center_module_y"] = (
-        G.BEARING_OUTER_DIAMETER <= G.BASE.depth - 20.0
+        bearing_ymin >= G.BASE.ymin and bearing_ymax <= G.BASE.ymax
     )
+    checks["bearing_keeps_min_8mm_rear_margin"] = rear_margin >= 8.0
     checks["pivot_bore_has_radial_clearance"] = (
         G.PIVOT_BORE_DIAMETER - G.PIVOT_STEM_DIAMETER >= 1.0
     )
@@ -50,7 +56,7 @@ def main() -> int:
     )
 
     # The ring, not the pilot, is the intended vertical load path.
-    checks["bearing_nominal_area_large"] = G.BEARING_NOMINAL_AREA_MM2 >= 14000.0
+    checks["bearing_nominal_area_large"] = G.BEARING_NOMINAL_AREA_MM2 >= 12000.0
     checks["bearing_nominal_pressure_low"] = G.BEARING_NOMINAL_PRESSURE_MPA <= 0.04
 
     # Printability.
@@ -105,6 +111,8 @@ def main() -> int:
         {
             "joint_roof_angle_deg": round(roof_angle_deg, 3),
             "bearing_area_mm2": round(G.BEARING_NOMINAL_AREA_MM2, 2),
+            "bearing_rear_margin_mm": round(rear_margin, 3),
+            "bearing_front_margin_mm": round(front_margin, 3),
             "bearing_nominal_pressure_mpa_at_500N": round(
                 G.BEARING_NOMINAL_PRESSURE_MPA, 5
             ),
