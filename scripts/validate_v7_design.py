@@ -33,6 +33,10 @@ def main() -> int:
     checks["track_insert_clearance_reasonable"] = (
         0.20 <= P.TRACK_INSERT_RADIAL_CLEARANCE <= 0.60
     )
+    checks["track_recess_overbreak_small"] = (
+        0.30 <= P.TRACK_RECESS_OVERBREAK_MM <= 1.00
+        and 0.20 <= P.TRACK_RECESS_OVERBREAK_DEG <= 0.80
+    )
 
     angular_margin = P.TRACK_INSERT_HALF_ANGLE_DEG - G.SWIVEL_LIMIT_DEG
     checks["track_insert_covers_full_swivel_with_margin"] = angular_margin >= 1.0
@@ -47,6 +51,34 @@ def main() -> int:
     checks["side_insert_area_large"] = P.TRACK_INSERT_AREA_MM2 >= 7500.0
     checks["side_pressure_low_at_250N"] = P.TRACK_PRESSURE_MPA_AT_250N <= 0.04
 
+    recess_samples=[]
+    recess_inside=True
+    import math
+    for side,center in (
+        ("right",V2.RIGHT_ARM_ANGLE_DEG),
+        ("left",V2.LEFT_ARM_ANGLE_DEG),
+    ):
+        for radius in (P.TRACK_RECESS_R_INNER,P.TRACK_RECESS_R_OUTER):
+            for angle in (
+                center-P.TRACK_RECESS_HALF_ANGLE_DEG,
+                center+P.TRACK_RECESS_HALF_ANGLE_DEG,
+            ):
+                x=G.PIVOT.x+radius*math.cos(math.radians(angle))
+                y=G.PIVOT.y+radius*math.sin(math.radians(angle))
+                if side=="right":
+                    inside=(
+                        G.BASE_CENTER_WIDTH/2.0 <= x <= G.BASE.xmax
+                        and G.BASE.ymin <= y <= G.BASE.ymax
+                    )
+                else:
+                    inside=(
+                        G.BASE.xmin <= x <= -G.BASE_CENTER_WIDTH/2.0
+                        and G.BASE.ymin <= y <= G.BASE.ymax
+                    )
+                recess_inside &= inside
+                recess_samples.append([side,round(x,3),round(y,3),inside])
+    checks["track_recess_overbreak_stays_inside_side_modules"] = recess_inside
+
     details={
         "wear_thickness_mm":P.WEAR_THICKNESS,
         "center_residual_bearing_depth_mm":round(center_residual,3),
@@ -56,6 +88,9 @@ def main() -> int:
         "track_insert_area_mm2":round(P.TRACK_INSERT_AREA_MM2,2),
         "track_pressure_mpa_at_250N":round(P.TRACK_PRESSURE_MPA_AT_250N,5),
         "track_insert_angular_margin_beyond_swivel_deg":round(angular_margin,3),
+        "track_recess_overbreak_mm":P.TRACK_RECESS_OVERBREAK_MM,
+        "track_recess_overbreak_deg":P.TRACK_RECESS_OVERBREAK_DEG,
+        "track_recess_boundary_samples":recess_samples,
         "service_note":(
             "Wear pieces are fully supported in shallow recesses and restore "
             "the exact v5 bearing/glide top planes."
