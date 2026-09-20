@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "structural_version": "v8",
+    "contact_parts_version": null,
+    "printer": null,
+    "material": "PETG",
+    "nozzle_mm": null,
+    "layer_height_mm": null,
+    "tested_by": null,
+    "date": null,
+    "notes": ""
+  },
+  "criteria": {
+    "proof_load_min_n": 500.0,
+    "proof_dwell_min_minutes_per_position": null,
+    "creep_load_min_n": null,
+    "creep_dwell_min_hours": null,
+    "swivel_cycles_min": null,
+    "end_stop_contacts_each_side_min": null,
+    "rationale": ""
+  },
+  "measurement_gate": {
+    "real_measurements_complete": false,
+    "measured_contact_parts_generated": false,
+    "dry_fit_original_stand_passed": false
+  },
+  "fit_coupons": {
+    "base_roof_key_clearance_mm": null,
+    "inner_roof_key_clearance_mm": null,
+    "outer_roof_key_clearance_mm": null,
+    "base_retainer_passed": false,
+    "outer_retainer_passed": false,
+    "pivot_retainer_passed": false,
+    "detent_variant_mm": null,
+    "detent_passed": false
+  },
+  "proof_load": {
+    "center": {
+      "load_n": null,
+      "duration_minutes": null,
+      "permanent_deformation_detected": null,
+      "crack_or_layer_separation": null,
+      "whitening": null,
+      "retainer_loosened": null,
+      "wear_insert_unseated": null
+    },
+    "minus_15": {
+      "load_n": null,
+      "duration_minutes": null,
+      "permanent_deformation_detected": null,
+      "crack_or_layer_separation": null,
+      "whitening": null,
+      "retainer_loosened": null,
+      "wear_insert_unseated": null
+    },
+    "plus_15": {
+      "load_n": null,
+      "duration_minutes": null,
+      "permanent_deformation_detected": null,
+      "crack_or_layer_separation": null,
+      "whitening": null,
+      "retainer_loosened": null,
+      "wear_insert_unseated": null
+    }
+  },
+  "sounddeck_interface": {
+    "unloaded_base_movement_detected": null,
+    "loaded_base_movement_detected": null,
+    "surface_damage_or_indentation": null
+  },
+  "creep_dwell": {
+    "load_n": null,
+    "duration_hours": null,
+    "progressive_set_detected": null,
+    "joint_play_increased": null,
+    "whitening": null,
+    "wear_insert_unseated": null,
+    "post_unload_swivel_ok": null
+  },
+  "cycling": {
+    "swivel_cycles_completed": null,
+    "minus_end_stop_contacts": null,
+    "plus_end_stop_contacts": null,
+    "stop_damage": null,
+    "detent_degraded": null,
+    "retainer_walkout": null
+  },
+  "evidence": {
+    "photos_committed": false,
+    "measurement_results_committed": false,
+    "notes": ""
+  }
+}
