@@ -1,0 +1,202 @@
+name: Build Samsung Stand v3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/geometry_model.py"
+      - "scripts/v2_params.py"
+      - "scripts/v3_params.py"
+      - "scripts/validate_v3_design.py"
+      - "scripts/build_v3.py"
+      - "scripts/validate_meshes_v3.py"
+      - "scripts/validate_v3_assembly.py"
+      - "scripts/preview_v3.scad"
+      - "cad/v2/STEP/**"
+      - ".github/workflows/build-v3.yml"
+
+concurrency:
+  group: samsung-stand-v3-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-v3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate geometry chain through v3
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_layout.py > layout-validation.json
+          python3 scripts/validate_v1_design.py > v1-design-validation.json
+          python3 scripts/validate_v2_design.py > v2-design-validation.json
+          python3 scripts/validate_v3_design.py > v3-design-validation.json
+          python3 -m unittest discover -s tests -v
+
+      - name: Verify validated v2 upstream exists
+        run: |
+          set -euo pipefail
+          test -s cad/v2/STEP/samsung_stand_v2_base_center.step
+          test -s cad/v2/STEP/samsung_stand_v2_inner_arm.step
+          test -s cad/v2/validation/MESH_VALIDATION_v2.json
+          test -s cad/v2/validation/ASSEMBLY_VALIDATION_v2.json
+          python3 - <<'PY'
+          import json
+          for p in (
+              'cad/v2/validation/MESH_VALIDATION_v2.json',
+              'cad/v2/validation/ASSEMBLY_VALIDATION_v2.json',
+          ):
+              d=json.load(open(p, encoding='utf-8'))
+              assert not d.get('failed'), (p,d.get('failed'))
+          print('Validated v2 upstream is green')
+          PY
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openscad libfuse2 xvfb python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+          "$FREECADCMD" -c 'import FreeCAD,Part,Import,Mesh,MeshPart; print(FreeCAD.Version()); assert Part.makeBox(1,1,1).isValid()'
+
+      - name: Compile v3 scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/geometry_model.py \
+            scripts/v2_params.py \
+            scripts/v3_params.py \
+            scripts/validate_v3_design.py \
+            scripts/build_v3.py \
+            scripts/validate_meshes_v3.py \
+            scripts/validate_v3_assembly.py
+
+      - name: Build v3 CAD
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0, 'scripts'); import build_v3" 2>&1 | tee build_v3.log
+          test -s build_v3/VALIDATION_v3_source.json
+          test -s build_v3/samsung_stand_v3_inner_arm.stl
+          test -s build_v3/samsung_stand_v3_outer_guide.stl
+
+      - name: Validate v3 meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_meshes_v3.py
+          test -s build_v3/MESH_VALIDATION_v3.json
+
+      - name: Validate installed v3 OCC assembly
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0, 'scripts'); import validate_v3_assembly as V; V.main()"
+          test -s build_v3/ASSEMBLY_VALIDATION_v3.json
+
+      - name: Render installed v3 preview
+        run: |
+          set -euo pipefail
+          xvfb-run -a openscad \
+            --imgsize=1600,1000 \
+            --projection=ortho \
+            --viewall \
+            --autocenter \
+            --camera=0,0,0,62,0,28,850 \
+            -o build_v3/samsung_stand_v3_preview.png \
+            scripts/preview_v3.scad
+          test -s build_v3/samsung_stand_v3_preview.png
+
+      - name: Publish validated v3 outputs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/v3/FCStd cad/v3/STEP cad/v3/STL cad/v3/assembly cad/v3/validation
+
+          rm -f cad/v3/FCStd/samsung_stand_v3_*.FCStd
+          rm -f cad/v3/STEP/samsung_stand_v3_*.step
+          rm -f cad/v3/STL/samsung_stand_v3_*.stl
+
+          cp build_v3/samsung_stand_v3_*.FCStd cad/v3/FCStd/
+          cp build_v3/samsung_stand_v3_*.step cad/v3/STEP/
+          cp build_v3/samsung_stand_v3_*.stl cad/v3/STL/
+          cp build_v3/samsung_stand_v3_preview.png cad/v3/assembly/
+          cp build_v3/VALIDATION_v3_source.json cad/v3/validation/
+          cp build_v3/MESH_VALIDATION_v3.json cad/v3/validation/
+          cp build_v3/ASSEMBLY_VALIDATION_v3.json cad/v3/validation/
+          cp v3-design-validation.json cad/v3/validation/DESIGN_VALIDATION_v3.json
+
+          cat > cad/v3/README.md <<'EOF'
+          # Samsung Stand v3
+
+          v3 extends the validated v2 rotating load path with modular outer guide rails.
+
+          Structural concept:
+          - INNER_ARM remains the vertical load carrier between rotor/root landing and the side glide track.
+          - OUTER_GUIDE plugs into the end of INNER_ARM with a 45-degree roof key.
+          - The same replaceable transverse PETG snap pin can retain the outer joint.
+          - OUTER_GUIDE has positive clearance to the fixed base and is intentionally not a normal vertical support.
+          - The U-shaped rail reaches beyond the reconstructed Samsung foot tip.
+
+          Current fit limitation:
+          - the U-channel is deliberately oversized (60 mm internal placeholder width).
+          - exact Samsung arm side/cross-section geometry still requires physical measurement.
+          - no claim is made that the placeholder channel is the final press/slide fit.
+
+          Suggested print quantities are stored in VALIDATION_v3_source.json.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/v3
+          if git diff --cached --quiet; then
+            echo "Validated v3 outputs already current"
+          else
+            git commit -m "Publish validated Samsung Stand v3 CAD"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload complete v3 proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-v3-complete
+          path: |
+            build_v3/
+            build_v3.log
+            layout-validation.json
+            v1-design-validation.json
+            v2-design-validation.json
+            v3-design-validation.json
