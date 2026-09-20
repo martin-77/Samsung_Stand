@@ -30,8 +30,8 @@
     "samsung_stand_v2_base_center.stl": {
       "watertight": true,
       "winding_consistent": true,
-      "volume_mm3": 663669.2476941836,
-      "faces": 1520,
+      "volume_mm3": 631053.5212436253,
+      "faces": 1840,
       "extents_mm": [
         280.0,
         295.0,

@@ -1,0 +1,33 @@
+{
+  "version": "v2",
+  "coordinate_note": "rotor installed at z=10; universal inner arm installed at z=18 and rotated to reconstructed Samsung arm plan angles",
+  "common_volumes_mm3": {
+    "rotor_vs_center": 0.0,
+    "rotor_vs_left_base": 0.0,
+    "rotor_vs_right_base": 0.0,
+    "left_arm_vs_rotor": 0.0,
+    "right_arm_vs_rotor": 0.0,
+    "left_arm_vs_left_base": 0.0,
+    "right_arm_vs_right_base": 0.0,
+    "left_arm_vs_right_arm": 0.0,
+    "left_insert_vs_left_arm": 0.0,
+    "right_insert_vs_right_arm": 0.0
+  },
+  "intended_contact_distances_mm": {
+    "rotor_to_center": 0.0,
+    "left_arm_to_rotor": 0.0,
+    "right_arm_to_rotor": 0.0,
+    "left_arm_to_left_track_base": 0.0,
+    "right_arm_to_right_track_base": 0.0
+  },
+  "insert_seating_distances_mm": {
+    "left_insert_to_arm": 0.0,
+    "right_insert_to_arm": 0.0
+  },
+  "contact_model": {
+    "root_support": "flat landing, global z=18",
+    "outer_support": "side glide track, top global z=18",
+    "key_tongue": "0.20 mm underside clearance; form-lock/guidance rather than primary vertical bearing"
+  },
+  "failed": []
+}

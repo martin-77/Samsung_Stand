@@ -23,7 +23,7 @@
   },
   "parts": {
     "samsung_stand_v2_base_center": {
-      "volume_mm3": 663723.383,
+      "volume_mm3": 631085.41,
       "bbox_mm": [
         -140.0,
         140.0,
@@ -37,7 +37,7 @@
         295.0,
         24.0
       ],
-      "facets": 1520
+      "facets": 1840
     },
     "samsung_stand_v2_base_left": {
       "volume_mm3": 501075.883,

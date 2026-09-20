@@ -1,6 +1,9 @@
 {
   "version": "v2",
   "checks": {
+    "rotating_clearance_covers_v2_receiver_envelope": true,
+    "rotating_clearance_preserves_pilot": true,
+    "rotating_clearance_stays_inside_rotor_bore": true,
     "support_plane_matches_rotor_top": true,
     "root_landing_coplanar_with_glide_track": true,
     "key_underside_clearance_is_deliberate": true,
@@ -21,6 +24,9 @@
     "blank_insert_has_fit_clearance": true
   },
   "details": {
+    "rotating_receiver_envelope_radius_mm": 98.656,
+    "rotating_clearance_radius_mm": 102.0,
+    "rotating_clearance_inner_radius_mm": 15.0,
     "track_top_z_mm": 18.0,
     "root_landing_global_top_z_mm": 18.0,
     "key_bottom_rotor_local_z_mm": 8.4,
