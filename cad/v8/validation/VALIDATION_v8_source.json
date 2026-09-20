@@ -1,0 +1,303 @@
+{
+  "version": "v8",
+  "upstream": "validated cad/v7/STEP",
+  "retention_architecture": {
+    "base_to_center": "4x transverse above-base snap pin",
+    "rotor_to_inner": "2x compact transverse snap pin",
+    "inner_to_outer": "2x long transverse snap pin through full saddle width",
+    "pivot": "1x fixed cross-pin inside circular rotor counterbore",
+    "legacy_vertical_base_retainer": "removed from print list",
+    "legacy_pivot_c_clip": "removed from print list",
+    "legacy_arm_lock_pin": "replaced"
+  },
+  "print_quantities": {
+    "samsung_stand_v8_base_center": 1,
+    "samsung_stand_v8_base_left": 1,
+    "samsung_stand_v8_base_right": 1,
+    "samsung_stand_v8_rotor": 1,
+    "samsung_stand_v8_inner_arm": 2,
+    "samsung_stand_v8_outer_guide": 2,
+    "samsung_stand_v8_saddle_insert_blank": 2,
+    "samsung_stand_v8_center_wear_ring": 1,
+    "samsung_stand_v8_track_wear_arc": 2,
+    "samsung_stand_v8_joint_lock_pin": 6,
+    "samsung_stand_v8_outer_lock_pin": 2,
+    "samsung_stand_v8_pivot_lock_pin": 1,
+    "samsung_stand_v8_detent_pin": 2,
+    "detent_cassette": "choose one of t18/t22/t26 after coupon calibration"
+  },
+  "parts": {
+    "samsung_stand_v8_base_center": {
+      "volume_mm3": 625118.898,
+      "size_mm": [
+        280.0,
+        295.0,
+        34.0
+      ],
+      "bbox_mm": [
+        -140.0,
+        140.0,
+        -147.5,
+        147.5,
+        0.0,
+        34.0
+      ],
+      "facets": 2662
+    },
+    "samsung_stand_v8_base_left": {
+      "volume_mm3": 481875.647,
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bbox_mm": [
+        -340.0,
+        -90.0,
+        -147.5,
+        147.5,
+        0.0,
+        24.0
+      ],
+      "facets": 596
+    },
+    "samsung_stand_v8_base_right": {
+      "volume_mm3": 481875.647,
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bbox_mm": [
+        90.0,
+        340.0,
+        -147.5,
+        147.5,
+        0.0,
+        24.0
+      ],
+      "facets": 596
+    },
+    "samsung_stand_v8_rotor": {
+      "volume_mm3": 220524.083,
+      "size_mm": [
+        194.913,
+        195.996,
+        27.0
+      ],
+      "bbox_mm": [
+        -94.913,
+        100.0,
+        -138.996,
+        57.0,
+        0.0,
+        27.0
+      ],
+      "facets": 1584
+    },
+    "samsung_stand_v8_inner_arm": {
+      "volume_mm3": 98340.004,
+      "size_mm": [
+        275.0,
+        58.0,
+        15.0
+      ],
+      "bbox_mm": [
+        -50.0,
+        225.0,
+        -29.0,
+        29.0,
+        0.0,
+        15.0
+      ],
+      "facets": 248
+    },
+    "samsung_stand_v8_outer_guide": {
+      "volume_mm3": 86714.305,
+      "size_mm": [
+        215.0,
+        68.0,
+        22.0
+      ],
+      "bbox_mm": [
+        -45.0,
+        170.0,
+        -34.0,
+        34.0,
+        0.0,
+        22.0
+      ],
+      "facets": 100
+    },
+    "samsung_stand_v8_saddle_insert_blank": {
+      "volume_mm3": 16390.92,
+      "size_mm": [
+        49.4,
+        47.4,
+        7.0
+      ],
+      "bbox_mm": [
+        -24.7,
+        24.7,
+        -23.7,
+        23.7,
+        0.0,
+        7.0
+      ],
+      "facets": 12
+    },
+    "samsung_stand_v8_detent_pin": {
+      "volume_mm3": 296.4,
+      "size_mm": [
+        7.0,
+        7.0,
+        14.4
+      ],
+      "bbox_mm": [
+        -3.5,
+        3.5,
+        -3.5,
+        3.5,
+        0.0,
+        14.4
+      ],
+      "facets": 28
+    },
+    "samsung_stand_v8_detent_cassette_t18": {
+      "volume_mm3": 1873.089,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bbox_mm": [
+        -2.4,
+        13.6,
+        -1.5,
+        50.0,
+        0.0,
+        6.0
+      ],
+      "facets": 260
+    },
+    "samsung_stand_v8_detent_cassette_t22": {
+      "volume_mm3": 1949.889,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bbox_mm": [
+        -2.4,
+        13.6,
+        -1.5,
+        50.0,
+        0.0,
+        6.0
+      ],
+      "facets": 260
+    },
+    "samsung_stand_v8_detent_cassette_t26": {
+      "volume_mm3": 2026.689,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bbox_mm": [
+        -2.4,
+        13.6,
+        -1.5,
+        50.0,
+        0.0,
+        6.0
+      ],
+      "facets": 260
+    },
+    "samsung_stand_v8_center_wear_ring": {
+      "volume_mm3": 14870.415,
+      "size_mm": [
+        149.27,
+        149.285,
+        1.2
+      ],
+      "bbox_mm": [
+        -74.62,
+        74.65,
+        -74.643,
+        74.643,
+        0.0,
+        1.2
+      ],
+      "facets": 772
+    },
+    "samsung_stand_v8_track_wear_arc": {
+      "volume_mm3": 10348.369,
+      "size_mm": [
+        63.317,
+        177.432,
+        1.2
+      ],
+      "bbox_mm": [
+        241.862,
+        305.178,
+        -88.716,
+        88.716,
+        0.0,
+        1.2
+      ],
+      "facets": 580
+    },
+    "samsung_stand_v8_joint_lock_pin": {
+      "volume_mm3": 1349.0,
+      "size_mm": [
+        61.0,
+        10.0,
+        6.0
+      ],
+      "bbox_mm": [
+        -3.0,
+        58.0,
+        -5.0,
+        5.0,
+        0.0,
+        6.0
+      ],
+      "facets": 68
+    },
+    "samsung_stand_v8_outer_lock_pin": {
+      "volume_mm3": 1612.2,
+      "size_mm": [
+        73.0,
+        10.0,
+        6.0
+      ],
+      "bbox_mm": [
+        -3.0,
+        70.0,
+        -5.0,
+        5.0,
+        0.0,
+        6.0
+      ],
+      "facets": 68
+    },
+    "samsung_stand_v8_pivot_lock_pin": {
+      "volume_mm3": 1907.4,
+      "size_mm": [
+        39.0,
+        12.0,
+        8.0
+      ],
+      "bbox_mm": [
+        -3.0,
+        36.0,
+        -6.0,
+        6.0,
+        0.0,
+        8.0
+      ],
+      "facets": 68
+    }
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "version": "v8",
+  "base_module_joint": {
+    "center_left_common_volume_mm3": 0.0,
+    "center_right_common_volume_mm3": 0.0,
+    "center_left_distance_mm": 0.0,
+    "center_right_distance_mm": 0.0
+  },
+  "base_lock_pins": {
+    "left_-90": {
+      "pin_center_common_volume_mm3": 0.0,
+      "pin_side_common_volume_mm3": 0.0,
+      "z_min_mm": 8.25,
+      "z_max_mm": 14.25
+    },
+    "left_+90": {
+      "pin_center_common_volume_mm3": 0.0,
+      "pin_side_common_volume_mm3": 0.0,
+      "z_min_mm": 8.25,
+      "z_max_mm": 14.25
+    },
+    "right_-90": {
+      "pin_center_common_volume_mm3": 0.0,
+      "pin_side_common_volume_mm3": 0.0,
+      "z_min_mm": 8.25,
+      "z_max_mm": 14.25
+    },
+    "right_+90": {
+      "pin_center_common_volume_mm3": 0.0,
+      "pin_side_common_volume_mm3": 0.0,
+      "z_min_mm": 8.25,
+      "z_max_mm": 14.25
+    }
+  },
+  "rotor_inner_lock_pins": {
+    "left": {
+      "pin_rotor_common_volume_mm3": 0.0,
+      "pin_inner_common_volume_mm3": 0.0,
+      "pin_z_min_mm": 19.25
+    },
+    "right": {
+      "pin_rotor_common_volume_mm3": 0.0,
+      "pin_inner_common_volume_mm3": 0.0,
+      "pin_z_min_mm": 19.25
+    }
+  },
+  "inner_outer_lock_pins": {
+    "left": {
+      "pin_inner_common_volume_mm3": 0.0,
+      "pin_outer_common_volume_mm3": 0.0,
+      "pin_outer_distance_mm": 0.25,
+      "pin_z_min_mm": 22.25
+    },
+    "right": {
+      "pin_inner_common_volume_mm3": 0.0,
+      "pin_outer_common_volume_mm3": 0.0,
+      "pin_outer_distance_mm": 0.25,
+      "pin_z_min_mm": 22.25
+    }
+  },
+  "pivot_retention": {
+    "pin_base_common_volume_mm3": 0.0,
+    "rest_pin_rotor_common_volume_mm3": 0.0,
+    "rest_pin_rotor_distance_mm": 0.7,
+    "rotation_sweep": {
+      "-15.0": {
+        "pin_rotor_common_volume_mm3": 0.0,
+        "pin_rotor_distance_mm": 0.7
+      },
+      "-7.5": {
+        "pin_rotor_common_volume_mm3": 0.0,
+        "pin_rotor_distance_mm": 0.7
+      },
+      "+0.0": {
+        "pin_rotor_common_volume_mm3": 0.0,
+        "pin_rotor_distance_mm": 0.7
+      },
+      "+7.5": {
+        "pin_rotor_common_volume_mm3": 0.0,
+        "pin_rotor_distance_mm": 0.7
+      },
+      "+15.0": {
+        "pin_rotor_common_volume_mm3": 0.0,
+        "pin_rotor_distance_mm": 0.7
+      }
+    },
+    "axial_lift_behavior": {
+      "0.0": {
+        "common_volume_mm3": 0.0,
+        "distance_mm": 0.7
+      },
+      "0.5": {
+        "common_volume_mm3": 0.0,
+        "distance_mm": 0.2
+      },
+      "0.7": {
+        "common_volume_mm3": 0.0,
+        "distance_mm": 0.0
+      },
+      "1.0": {
+        "common_volume_mm3": 23.792546,
+        "distance_mm": 0.0
+      }
+    }
+  },
+  "legacy_retainer_status": {
+    "vertical_base_retainer": "not used",
+    "pivot_c_clip": "not used",
+    "v2_arm_lock_pin": "not used"
+  },
+  "failed": []
+}
