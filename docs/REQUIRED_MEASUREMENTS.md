@@ -29,6 +29,7 @@ Target measurement station is the current support orbit at approximately
 
 For both left and right stand arms measure:
 
+- the cross-section center position `center_xy_mm` relative to the swivel pivot;
 - arm width across Y-like / lateral direction;
 - arm total thickness / height;
 - underside shape;
@@ -49,11 +50,16 @@ is materially different from the reconstructed orbit.
 The OUTER_GUIDE starts at about 310 mm radius and extends outward about 170 mm.
 The current inside channel is deliberately oversized.
 
-Measure arm width and height at three stations per side:
+Measure the arm at three stations per side:
 
 1. near the outer-guide root;
 2. near the middle;
 3. near the stand tip.
+
+At every station record both the cross-section polygon and its
+`center_xy_mm` relative to the swivel pivot. This allows the contact parts to
+follow small real centerline deviations instead of assuming the reconstructed
+arm axis is exact.
 
 Also record:
 
@@ -112,6 +118,7 @@ Minimal structural form:
   "inner_saddle": {
     "left": {
       "station_radius_mm": null,
+      "center_xy_mm": [null, null],
       "profile_points_mm": null
     },
     "right": {
@@ -121,9 +128,9 @@ Minimal structural form:
   },
   "outer_guide": {
     "left": {
-      "root": {"station_radius_mm": null, "profile_points_mm": null},
-      "mid":  {"station_radius_mm": null, "profile_points_mm": null},
-      "tip":  {"station_radius_mm": null, "profile_points_mm": null}
+      "root": {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null},
+      "mid":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null},
+      "tip":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null}
     },
     "right": {
       "root": {"station_radius_mm": null, "profile_points_mm": null},
