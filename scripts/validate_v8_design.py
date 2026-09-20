@@ -182,9 +182,13 @@ def main() -> int:
         pin_right_reach >= rotor_bore_radius + 2.0
         and pin_left_reach >= rotor_bore_radius + 2.0
     )
+    checks["pivot_pin_barb_starts_outside_post"] = (
+        P.PIVOT_PIN_INSTALL_X0 + P.PIVOT_PIN_BARB_START_X
+        >= post_radius - 0.05
+    )
     checks["pivot_pin_barb_snaps_beyond_post"] = (
         P.PIVOT_PIN_INSTALL_X0 + P.PIVOT_PIN_BARB_PEAK_X
-        >= post_radius + 0.3
+        >= post_radius + 1.5
     )
 
     checks["pivot_retention_has_small_lift_clearance"] = (
@@ -223,6 +227,12 @@ def main() -> int:
         ),
         "pivot_rotor_lift_clearance_mm": round(
             P.PIVOT_ROTOR_LIFT_CLEARANCE, 3
+        ),
+        "pivot_barb_start_global_x_mm": round(
+            P.PIVOT_PIN_INSTALL_X0 + P.PIVOT_PIN_BARB_START_X, 3
+        ),
+        "pivot_barb_peak_global_x_mm": round(
+            P.PIVOT_PIN_INSTALL_X0 + P.PIVOT_PIN_BARB_PEAK_X, 3
         ),
         "pivot_pin_bending_stress_mpa_at_500N_development_only": round(
             P.PIVOT_PIN_BENDING_STRESS_MPA_AT_500N, 3
