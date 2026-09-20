@@ -1,0 +1,205 @@
+name: Build Samsung Stand v7
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/geometry_model.py"
+      - "scripts/v2_params.py"
+      - "scripts/v7_params.py"
+      - "scripts/v7_geometry.py"
+      - "scripts/validate_v7_design.py"
+      - "scripts/build_v7.py"
+      - "scripts/validate_meshes_v7.py"
+      - "scripts/validate_v7_assembly.py"
+      - "scripts/preview_v7.scad"
+      - "cad/v5/STEP/**"
+      - ".github/workflows/build-v7.yml"
+
+concurrency:
+  group: samsung-stand-v7-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-v7:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate v7 design
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_v7_design.py > v7-design-validation.json
+          python3 -m unittest discover -s tests -v
+
+      - name: Verify validated v5 upstream exists
+        run: |
+          set -euo pipefail
+          test -s cad/v5/STEP/samsung_stand_v5_base_center.step
+          test -s cad/v5/STEP/samsung_stand_v5_base_left.step
+          test -s cad/v5/STEP/samsung_stand_v5_base_right.step
+          test -s cad/v5/validation/MESH_VALIDATION_v5.json
+          test -s cad/v5/validation/ASSEMBLY_VALIDATION_v5.json
+          python3 - <<'PY'
+          import json
+          for p in (
+              'cad/v5/validation/MESH_VALIDATION_v5.json',
+              'cad/v5/validation/ASSEMBLY_VALIDATION_v5.json',
+          ):
+              d=json.load(open(p,encoding='utf-8'))
+              assert not d.get('failed'),(p,d.get('failed'))
+          print('Validated v5 upstream is green')
+          PY
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openscad libfuse2 xvfb python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+
+      - name: Compile v7 scripts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/v7_params.py \
+            scripts/v7_geometry.py \
+            scripts/validate_v7_design.py \
+            scripts/build_v7.py \
+            scripts/validate_meshes_v7.py \
+            scripts/validate_v7_assembly.py
+
+      - name: Build v7 CAD
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_v7" \
+            2>&1 | tee build_v7.log
+          test -s build_v7/VALIDATION_v7_source.json
+
+      - name: Validate v7 meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_meshes_v7.py
+          test -s build_v7/MESH_VALIDATION_v7.json
+
+      - name: Validate installed v7 OCC assembly
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_v7_assembly as V; V.main()"
+          test -s build_v7/ASSEMBLY_VALIDATION_v7.json
+
+      - name: Render v7 wear-surface preview
+        run: |
+          set -euo pipefail
+          xvfb-run -a openscad \
+            --imgsize=1600,1000 \
+            --projection=ortho \
+            --viewall \
+            --autocenter \
+            --camera=0,0,0,62,0,28,780 \
+            -o build_v7/samsung_stand_v7_preview.png \
+            scripts/preview_v7.scad
+          test -s build_v7/samsung_stand_v7_preview.png
+
+      - name: Publish validated v7 outputs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/v7/FCStd cad/v7/STEP cad/v7/STL cad/v7/assembly cad/v7/validation
+
+          rm -f cad/v7/FCStd/samsung_stand_v7_*.FCStd
+          rm -f cad/v7/STEP/samsung_stand_v7_*.step
+          rm -f cad/v7/STL/samsung_stand_v7_*.stl
+
+          cp build_v7/samsung_stand_v7_*.FCStd cad/v7/FCStd/
+          cp build_v7/samsung_stand_v7_*.step cad/v7/STEP/
+          cp build_v7/samsung_stand_v7_*.stl cad/v7/STL/
+          cp build_v7/samsung_stand_v7_preview.png cad/v7/assembly/
+          cp build_v7/VALIDATION_v7_source.json cad/v7/validation/
+          cp build_v7/MESH_VALIDATION_v7.json cad/v7/validation/
+          cp build_v7/ASSEMBLY_VALIDATION_v7.json cad/v7/validation/
+          cp v7-design-validation.json cad/v7/validation/DESIGN_VALIDATION_v7.json
+
+          cat > cad/v7/README.md <<'EOF'
+          # Samsung Stand v7
+
+          v7 adds replaceable flush PETG wear surfaces without changing the validated v5 geometry planes.
+
+          Added service parts:
+          - 1x center wear ring, 1.2 mm thick;
+          - 2x universal side-track wear arcs, 1.2 mm thick.
+
+          The fixed base receives shallow recesses. Installed wear pieces restore:
+          - center bearing top to the original z=10 mm plane;
+          - side glide-track top to the original z=18 mm plane.
+
+          The rotor, INNER_ARM, OUTER_GUIDE, end stops and detent geometry remain at their v5 positions.
+
+          Purpose:
+          normal PETG-on-PETG sliding wear is moved onto cheap replaceable parts rather than the large structural modules.
+
+          This remains a geometry candidate until the physical release gates are completed.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/v7
+          if git diff --cached --quiet; then
+            echo "Validated v7 outputs already current"
+          else
+            git commit -m "Publish validated Samsung Stand v7 CAD"
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Concurrent main update during publish; retrying ($attempt/4)"
+              sleep 2
+            done
+            test "$pushed" = true
+          fi
+
+      - name: Upload complete v7 proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-v7-complete
+          path: |
+            build_v7/
+            build_v7.log
+            v7-design-validation.json
