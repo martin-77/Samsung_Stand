@@ -59,17 +59,42 @@ def fuse_all(shapes):
     return out.removeSplitter()
 
 
-def saddle_insert(profile: M.Profile, pad_thickness: float):
+def _structural_arm_angle(assembly_side: str) -> float:
+    if assembly_side == "left":
+        return V2.LEFT_ARM_ANGLE_DEG
+    if assembly_side == "right":
+        return V2.RIGHT_ARM_ANGLE_DEG
+    raise ValueError(assembly_side)
+
+
+def station_frame(station: M.Station, assembly_side: str) -> tuple[float, float]:
+    return M.station_arm_frame(
+        station,
+        _structural_arm_angle(assembly_side),
+    )
+
+
+def saddle_insert(
+    profile: M.Profile,
+    pad_thickness: float,
+    lateral_offset: float,
+):
     env = M.lower_envelope(profile, SADDLE_PROFILE_SAMPLES)
     contact_low = SADDLE_NOMINAL_LOWEST_CONTACT_Z - pad_thickness
     if contact_low <= SADDLE_BASE_THICKNESS + 1.0:
         raise RuntimeError("contact pad leaves insufficient saddle insert thickness")
 
     pocket_half_y = V2.SADDLE_INSERT_WIDTH / 2.0
-    if profile.ymin < -pocket_half_y + 0.5 or profile.ymax > pocket_half_y - 0.5:
+    shifted_ymin = profile.ymin + lateral_offset
+    shifted_ymax = profile.ymax + lateral_offset
+    if (
+        shifted_ymin < -pocket_half_y + 0.5
+        or shifted_ymax > pocket_half_y - 0.5
+    ):
         raise RuntimeError(
-            "measured saddle profile is too wide for existing v5 insert pocket: "
-            f"profile [{profile.ymin:.3f},{profile.ymax:.3f}], "
+            "measured saddle profile plus centerline offset does not fit "
+            "existing insert pocket: "
+            f"shifted profile [{shifted_ymin:.3f},{shifted_ymax:.3f}], "
             f"insert half-width {pocket_half_y:.3f}"
         )
 
@@ -86,9 +111,14 @@ def saddle_insert(profile: M.Profile, pad_thickness: float):
 
     # YZ section: bottom is fused into the flat base; top follows the measured
     # lower envelope. Lowest physical stand point remains at the v5 contact plane.
-    yz = [(env[0][0], SADDLE_BASE_THICKNESS)]
-    yz += [(y, contact_low + z) for y, z in env]
-    yz += [(env[-1][0], SADDLE_BASE_THICKNESS)]
+    yz = [(env[0][0] + lateral_offset, SADDLE_BASE_THICKNESS)]
+    yz += [
+        (y + lateral_offset, contact_low + z)
+        for y, z in env
+    ]
+    yz += [
+        (env[-1][0] + lateral_offset, SADDLE_BASE_THICKNESS)
+    ]
 
     pts = [v(-V2.SADDLE_INSERT_LENGTH / 2.0, y, z) for y, z in yz]
     wire = Part.makePolygon(pts + [pts[0]])
@@ -99,31 +129,73 @@ def saddle_insert(profile: M.Profile, pad_thickness: float):
     return sh
 
 
-def _side_surface(profile: M.Profile, side: str) -> float:
+def _side_surface(
+    profile: M.Profile,
+    side: str,
+    lateral_offset: float,
+) -> float:
     if side == "left":
-        return profile.ymin - GUIDE_LATERAL_CLEARANCE
+        return (
+            profile.ymin
+            + lateral_offset
+            - GUIDE_LATERAL_CLEARANCE
+        )
     if side == "right":
-        return profile.ymax + GUIDE_LATERAL_CLEARANCE
+        return (
+            profile.ymax
+            + lateral_offset
+            + GUIDE_LATERAL_CLEARANCE
+        )
     raise ValueError(side)
 
 
-def _loft_side_rail(stations, wall_side: str):
+def _loft_side_rail(
+    stations,
+    wall_side: str,
+    assembly_side: str,
+):
     sections = []
-    # Map measured radial station to local OUTER_GUIDE X.
-    measured = [(st.radius - V3.OUTER_R0, st.profile) for st in stations]
-    measured.sort(key=lambda x: x[0])
+
+    measured = []
+    for st in stations:
+        along, lateral = station_frame(st, assembly_side)
+        measured.append(
+            (
+                along - V3.OUTER_R0,
+                st.profile,
+                lateral,
+            )
+        )
+    measured.sort(key=lambda item: item[0])
+
+    for x, _profile, _lateral in measured:
+        if x < GUIDE_LINER_X0 - 1e-6 or x > GUIDE_LINER_X1 + 1e-6:
+            raise RuntimeError(
+                f"outer measurement station projected x={x:.3f} lies "
+                f"outside liner measurement span "
+                f"{GUIDE_LINER_X0:.3f}..{GUIDE_LINER_X1:.3f}"
+            )
 
     if measured[0][0] > GUIDE_LINER_X0:
-        measured.insert(0, (GUIDE_LINER_X0, measured[0][1]))
-    else:
-        measured[0] = (GUIDE_LINER_X0, measured[0][1])
+        measured.insert(
+            0,
+            (
+                GUIDE_LINER_X0,
+                measured[0][1],
+                measured[0][2],
+            ),
+        )
 
     if measured[-1][0] < GUIDE_LINER_X1:
-        measured.append((GUIDE_LINER_X1, measured[-1][1]))
-    else:
-        measured[-1] = (GUIDE_LINER_X1, measured[-1][1])
+        measured.append(
+            (
+                GUIDE_LINER_X1,
+                measured[-1][1],
+                measured[-1][2],
+            )
+        )
 
-    for x, profile in measured:
+    for x, profile, lateral_offset in measured:
         if x < GUIDE_LINER_X0 - 1e-6 or x > GUIDE_LINER_X1 + 1e-6:
             raise RuntimeError(
                 f"outer measurement station x={x:.3f} lies outside liner span "
@@ -132,11 +204,19 @@ def _loft_side_rail(stations, wall_side: str):
 
         if wall_side == "left":
             y0 = -GUIDE_CHANNEL_HALF_WIDTH
-            y1 = _side_surface(profile, "left")
+            y1 = _side_surface(
+                profile,
+                "left",
+                lateral_offset,
+            )
             if y1 <= y0 + 1.0:
                 raise RuntimeError("left guide liner would be thinner than 1 mm")
         else:
-            y0 = _side_surface(profile, "right")
+            y0 = _side_surface(
+                profile,
+                "right",
+                lateral_offset,
+            )
             y1 = GUIDE_CHANNEL_HALF_WIDTH
             if y1 <= y0 + 1.0:
                 raise RuntimeError("right guide liner would be thinner than 1 mm")
@@ -156,15 +236,23 @@ def _loft_side_rail(stations, wall_side: str):
     return sh
 
 
-def outer_guide_liners(stations):
+def outer_guide_liners(stations, assembly_side: str):
     """Return two independent lateral-only guide rails.
 
     Deliberately do not bridge across the guide floor. A floor bridge could
     become an unintended vertical support under the Samsung arm and violate the
     v3/v8 load-path contract that OUTER_GUIDE is lateral guidance only.
     """
-    neg_y = _loft_side_rail(stations, "left")
-    pos_y = _loft_side_rail(stations, "right")
+    neg_y = _loft_side_rail(
+        stations,
+        "left",
+        assembly_side,
+    )
+    pos_y = _loft_side_rail(
+        stations,
+        "right",
+        assembly_side,
+    )
     return {"neg_y": neg_y, "pos_y": pos_y}
 
 
@@ -212,12 +300,32 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
     ms = M.load_measurements(measurement_path)
     pad = ms.pad_thickness if ms.pad_used else 0.0
 
+    inner_frames = {
+        "left": station_frame(ms.inner_left, "left"),
+        "right": station_frame(ms.inner_right, "right"),
+    }
+
+    saddle_center_radius = V2.INNER_R0 + V2.SADDLE_U
+    saddle_half_length = V2.SADDLE_INSERT_LENGTH / 2.0
+
+    for side, (along, _lateral) in inner_frames.items():
+        if abs(along - saddle_center_radius) > saddle_half_length - 2.0:
+            raise RuntimeError(
+                f"{side} measured saddle station along={along:.3f} mm "
+                f"falls outside usable saddle insert span centered at "
+                f"{saddle_center_radius:.3f} mm"
+            )
+
     parts = {
         "samsung_stand_v6_saddle_insert_left": saddle_insert(
-            ms.inner_left.profile, pad
+            ms.inner_left.profile,
+            pad,
+            inner_frames["left"][1],
         ),
         "samsung_stand_v6_saddle_insert_right": saddle_insert(
-            ms.inner_right.profile, pad
+            ms.inner_right.profile,
+            pad,
+            inner_frames["right"][1],
         ),
     }
 
@@ -225,7 +333,10 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         ("left", ms.outer_left),
         ("right", ms.outer_right),
     ):
-        rails = outer_guide_liners(stations)
+        rails = outer_guide_liners(
+            stations,
+            assembly_side,
+        )
         for wall_side, shape in rails.items():
             parts[
                 f"samsung_stand_v6_outer_liner_{assembly_side}_{wall_side}"
@@ -235,7 +346,34 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         "version": "v6-contact-parts",
         "measurement_path": measurement_path,
         "measurement_symmetry": {
-            k: round(vv,4) for k,vv in M.symmetry_report(ms).items()
+            k: round(vv,4)
+            for k,vv in M.symmetry_report(ms).items()
+        },
+        "measured_centerline_projection": {
+            "inner_saddle": {
+                side: {
+                    "along_mm": round(frame[0], 4),
+                    "lateral_mm": round(frame[1], 4),
+                }
+                for side, frame in inner_frames.items()
+            },
+            "outer_guide": {
+                side: [
+                    {
+                        "along_mm": round(
+                            station_frame(st, side)[0], 4
+                        ),
+                        "lateral_mm": round(
+                            station_frame(st, side)[1], 4
+                        ),
+                    }
+                    for st in stations
+                ]
+                for side, stations in (
+                    ("left", ms.outer_left),
+                    ("right", ms.outer_right),
+                )
+            },
         },
         "design_clearances": {
             "outer_lateral_each_side_mm": GUIDE_LATERAL_CLEARANCE,
