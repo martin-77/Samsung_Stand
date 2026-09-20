@@ -33,10 +33,8 @@ def main() -> int:
 
     rise = P.OUTER_KEY_APEX_Z - P.OUTER_KEY_WALL_TOP_Z
     roof_angle = math.degrees(math.atan2(rise, P.OUTER_KEY_HALF_WIDTH))
-    checks["outer_key_roof_support_friendly"] = roof_angle >= 30.0
-    # 32 degrees is still printable in PETG when the roof is a short symmetric
-    # bridge/chamfer, but keep a documented gate instead of silently accepting it.
-    checks["outer_key_not_flat_bridge"] = roof_angle >= 30.0
+    checks["outer_key_roof_support_friendly"] = roof_angle >= 45.0
+    checks["outer_key_not_flat_bridge"] = roof_angle >= 45.0
 
     checks["outer_key_clearance_reasonable"] = (
         0.30 <= P.OUTER_KEY_CLEARANCE <= 0.55
