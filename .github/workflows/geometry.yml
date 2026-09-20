@@ -1,0 +1,30 @@
+name: Geometry baseline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  geometry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run geometry layout gate
+        run: python scripts/validate_layout.py > layout-validation.json
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Upload layout report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layout-validation
+          path: layout-validation.json
+          if-no-files-found: warn
