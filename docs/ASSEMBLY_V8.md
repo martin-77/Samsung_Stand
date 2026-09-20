@@ -156,9 +156,9 @@ Before adding the television:
    down from above between the Samsung arm and the corresponding guide wall;
 3. verify all four side rails sit on the guide floor and remain on their own
    side of the arm centerline;
-4. verify the arm is not vertically supported by any side rail. The validated
-   geometry retains approximately 9 mm clearance between the stand underside
-   datum and the structural OUTER_GUIDE floor;
+4. verify the arm is not vertically supported by any side rail. The generated
+   V6 validation report must show at least 5 mm measured vertical clearance from
+   every root/mid/tip cross-section to the structural OUTER_GUIDE floor;
 5. rotate slowly from center to -15 degrees and +15 degrees;
 6. verify:
    - vertical load remains on the inner supports;
