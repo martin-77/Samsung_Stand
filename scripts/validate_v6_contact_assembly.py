@@ -351,6 +351,27 @@ def main(
             f"5 mm: {floor_vertical_clearance:.3f} mm"
         )
 
+    root_axial_free = B.GUIDE_LINER_X0 - V3.OUTER_ROOT_TIE_LENGTH
+    tip_tie_x0 = V3.OUTER_VISIBLE_LENGTH - V3.OUTER_TIP_TIE_LENGTH
+    tip_axial_free = tip_tie_x0 - B.GUIDE_LINER_X1
+    tie_vertical_overlap = (
+        V3.OUTER_TIE_HEIGHT - V3.OUTER_FLOOR_THICKNESS
+    )
+
+    if not 1.0 <= root_axial_free <= 5.0:
+        failures.append(
+            f"root rail axial capture gap invalid: {root_axial_free:.3f} mm"
+        )
+    if not 1.0 <= tip_axial_free <= 5.0:
+        failures.append(
+            f"tip rail axial capture gap invalid: {tip_axial_free:.3f} mm"
+        )
+    if tie_vertical_overlap < 2.0:
+        failures.append(
+            "OUTER_GUIDE cross-ties do not overlap installed side rails "
+            f"enough for passive axial capture: {tie_vertical_overlap:.3f} mm"
+        )
+
     result["outer_guide_load_path_contract"] = {
         "lateral_only": True,
         "generated_floor_bridge": False,
@@ -358,6 +379,11 @@ def main(
         "vertical_floor_clearance_mm": round(
             floor_vertical_clearance, 6
         ),
+        "passive_axial_capture": {
+            "root_free_travel_mm": round(root_axial_free, 6),
+            "tip_free_travel_mm": round(tip_axial_free, 6),
+            "tie_vertical_overlap_mm": round(tie_vertical_overlap, 6),
+        },
         "note": (
             "Each OUTER_GUIDE uses two independent side rails. Measured "
             "root/mid/tip profiles are OCC-checked against those rails. "
