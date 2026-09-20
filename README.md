@@ -43,22 +43,27 @@ See `docs/DESIGN_BASELINE.md` and the geometry validation scripts before changin
 
 ## Current status
 
-The repository has progressed to **v5** as the validated structural geometry candidate, plus a validated **v6 contact-generation pipeline**:
+The repository has progressed to **v8** as the validated structural geometry candidate, plus a measurement-driven contact-generation pipeline:
 
 - v1: modular three-piece fixed base and central annular swivel bearing;
 - v2: dual-load-path INNER_ARM with rotor root landing and side glide tracks;
 - v3: modular OUTER_GUIDE rails, intentionally non-load-bearing vertically;
 - v4: calibrated positive mechanical +/-15 degree end stops plus complete carrier sweep clearance;
 - v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants;
-- v6 contact pipeline: strict physical-measurement model plus side-specific saddle inserts and outer-guide liners generated only from validated real measurements.
+- v7: replaceable 1.2 mm PETG center-bearing and side-track wear surfaces while preserving the validated z=10 / z=18 support planes;
+- v8: fully assembled transverse PETG retention: four above-base module pins, two ROTOR/INNER pins, two externally accessible INNER/OUTER pins and one positive pivot cross-pin in a top-open rotor chamber;
+- measured-contact pipeline: strict physical-measurement model plus side-specific saddle inserts and outer-guide liners generated only from validated real measurements.
 
-For v5 the parameter gates, FreeCAD build, watertight-mesh checks and installed
-OCC collision/contact checks are green. The +/-15 degree end stops remain
-structural; the center detent is positional only.
+For v8 the parameter gates, FreeCAD build, watertight-mesh checks and installed
+OCC collision/contact checks are green. All replacement retainers are checked in
+their actual installed positions. The pivot lock preserves the full +/-15 degree
+rotation with 0.7 mm intentional axial lift clearance and positively blocks
+further lift. The +/-15 degree end stops remain structural; the center detent is
+positional only.
 
 The v6 measurement-to-CAD path is also green against a synthetic CI fixture:
 measurement validation, FreeCAD generation, watertight-mesh gates and installed
-contact-part checks against the real v5 structural STEP geometry all pass.
+contact-part checks against the current v8 structural STEP geometry all pass.
 Production v6 contact parts remain intentionally unpublished until
 `measurements/stand_measurements.json` contains complete physical measurements.
 
@@ -69,7 +74,10 @@ sequence and non-fragile proof-load test are required before TV use.
 
 See:
 
-- `cad/v5/` for the newest validated CAD candidate;
-- `cad/fit_coupons/` for published structural joint clearance coupons;
+- `cad/v8/` for the newest validated structural CAD candidate;
+- `cad/fit_coupons/` for roof-key clearance coupons;
+- `cad/retainer_coupons/` for v8 snap-pin / pivot-pin fit coupons;
+- `cad/detent_coupon/` for the zero-detent calibration rig;
+- `docs/ASSEMBLY_V8.md` for the practical v8 assembly order;
 - `measurements/` and `docs/REQUIRED_MEASUREMENTS.md` for the remaining physical dimensions and profile capture;
-- `docs/PHYSICAL_RELEASE_GATES.md` for the required fit and proof tests.
+- `docs/PHYSICAL_RELEASE_GATES.md` for fit, anti-slip, creep and proof-load release gates.
