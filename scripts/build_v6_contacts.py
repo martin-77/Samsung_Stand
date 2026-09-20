@@ -32,6 +32,7 @@ SADDLE_BASE_THICKNESS = 4.0
 SADDLE_NOMINAL_LOWEST_CONTACT_Z = V2.SADDLE_INSERT_HEIGHT
 SADDLE_PROFILE_SAMPLES = 41
 SADDLE_ENDPOINT_DISTANCE_MAX_MM = 8.0
+SADDLE_SECTION_SPACING_MAX_MM = 25.0
 
 GUIDE_LATERAL_CLEARANCE = 0.50
 GUIDE_ROOT_AXIAL_CLEARANCE = 2.0
@@ -178,6 +179,17 @@ def saddle_insert(
     if not (xs[0] < xs[1] < xs[2]):
         raise RuntimeError(
             f"{assembly_side} saddle stations do not increase along insert X"
+        )
+
+    spacings = [
+        xs[i + 1] - xs[i]
+        for i in range(len(xs) - 1)
+    ]
+    if max(spacings) > SADDLE_SECTION_SPACING_MAX_MM:
+        raise RuntimeError(
+            f"{assembly_side} saddle measured-section spacing "
+            f"{max(spacings):.3f} mm exceeds "
+            f"{SADDLE_SECTION_SPACING_MAX_MM:.1f} mm"
         )
 
     root_delta = abs(xs[0] + half_length)
@@ -591,6 +603,19 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
             "saddle_endpoint_distance_max_mm": (
                 SADDLE_ENDPOINT_DISTANCE_MAX_MM
             ),
+            "saddle_section_spacing_max_mm": (
+                SADDLE_SECTION_SPACING_MAX_MM
+            ),
+            "saddle_measured_section_spacing_mm": {
+                side: [
+                    round(
+                        frames[i + 1][0] - frames[i][0],
+                        4,
+                    )
+                    for i in range(len(frames) - 1)
+                ]
+                for side, frames in inner_station_frames.items()
+            },
             "saddle_lowest_contact_z_mm": {
                 side: [
                     round(
