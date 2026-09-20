@@ -40,8 +40,8 @@ SADDLE_INSERT_HEIGHT = 7.0
 
 # Dedicated smaller form-locking arm connector.
 ARM_KEY_HALF_WIDTH = 10.0
-ARM_KEY_WALL_TOP_Z = 4.0
-ARM_KEY_APEX_Z = 14.0
+ARM_KEY_WALL_TOP_Z = 5.0
+ARM_KEY_APEX_Z = 15.0
 ARM_KEY_CLEARANCE = 0.40
 
 # Receiver sits on top of the rotor disk. Rotor itself is installed +10 mm
@@ -50,8 +50,20 @@ ROTOR_RECEIVER_R_INNER = 31.0
 ROTOR_RECEIVER_R_OUTER = INNER_R0
 ROTOR_RECEIVER_WIDTH = 40.0
 ROTOR_RECEIVER_Z0 = G.ROTOR_THICKNESS
-ROTOR_RECEIVER_TOP_Z = 26.0
+ROTOR_RECEIVER_TOP_Z = 27.0
 ARM_RETAINER_RADIUS = 60.0
+
+# Replaceable transverse snap pin: slides tangentially through rotor receiver and
+# arm tongue. The tunnel has a printable roof; the pin carries withdrawal shear,
+# while its split-end barbs only retain the pin.
+ARM_LOCK_PIN_LENGTH = 48.0
+ARM_LOCK_PIN_RADIAL_WIDTH = 6.0
+ARM_LOCK_PIN_HEIGHT = 3.5
+ARM_LOCK_HOLE_RADIAL_WIDTH = 7.0
+ARM_LOCK_HOLE_BOTTOM_Z_ROTOR = 9.0
+ARM_LOCK_HOLE_WALL_TOP_Z_ROTOR = 13.0
+ARM_LOCK_HOLE_APEX_Z_ROTOR = 16.5
+ARM_LOCK_HOLE_TRANSVERSE_LENGTH = 46.0
 
 # Reuse v1 replaceable snap-pin envelope.
 ARM_RETAINER_HOLE_X = G.RETAINER_HOLE_X
