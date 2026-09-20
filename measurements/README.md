@@ -17,7 +17,7 @@ Do **not** fill missing values by estimation.
 
 Each `profile_points_mm` array contains points `[y,z]` in millimetres:
 
-- y = lateral across the stand arm;
+- y = lateral across the stand arm, with **y = 0 on the local arm centerline**;
 - z = upward from the lowest physical point of that local cross-section;
 - points ordered around the outside contour;
 - no repeated final point is required;
