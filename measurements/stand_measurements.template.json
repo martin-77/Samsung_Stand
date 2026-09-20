@@ -5,7 +5,8 @@
     "measured_by": null,
     "date": null,
     "caliper_resolution_mm": null,
-    "notes": ""
+    "notes": "",
+    "measurement_kind": "physical"
   },
   "global": {
     "stand_width_mm": null,
