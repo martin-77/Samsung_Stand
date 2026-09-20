@@ -13,7 +13,7 @@ on:
       - "tests/test_measurement_model.py"
       - "tests/fixtures/stand_measurements.synthetic.json"
       - "measurements/**"
-      - "cad/v5/STEP/**"
+      - "cad/v8/STEP/**"
       - ".github/workflows/build-v6-contacts.yml"
 
 concurrency:
@@ -39,22 +39,22 @@ jobs:
             tests/fixtures/stand_measurements.synthetic.json \
             > synthetic-measurement-validation.json
 
-      - name: Verify validated v5 structure exists
+      - name: Verify validated v8 structure exists
         run: |
           set -euo pipefail
-          test -s cad/v5/STEP/samsung_stand_v5_inner_arm.step
-          test -s cad/v5/STEP/samsung_stand_v5_outer_guide.step
-          test -s cad/v5/validation/MESH_VALIDATION_v5.json
-          test -s cad/v5/validation/ASSEMBLY_VALIDATION_v5.json
+          test -s cad/v8/STEP/samsung_stand_v8_inner_arm.step
+          test -s cad/v8/STEP/samsung_stand_v8_outer_guide.step
+          test -s cad/v8/validation/MESH_VALIDATION_v8.json
+          test -s cad/v8/validation/ASSEMBLY_VALIDATION_v8.json
           python3 - <<'PY'
           import json
           for p in (
-              'cad/v5/validation/MESH_VALIDATION_v5.json',
-              'cad/v5/validation/ASSEMBLY_VALIDATION_v5.json',
+              'cad/v8/validation/MESH_VALIDATION_v8.json',
+              'cad/v8/validation/ASSEMBLY_VALIDATION_v8.json',
           ):
               d=json.load(open(p, encoding='utf-8'))
               assert not d.get('failed'), (p,d.get('failed'))
-          print('Validated v5 upstream is green')
+          print('Validated v8 upstream is green')
           PY
 
       - name: Install runtime
@@ -175,7 +175,7 @@ jobs:
           - left/right inner saddle insert;
           - left/right outer-guide liner.
 
-          The validated v5 structural assembly remains upstream and unchanged.
+          The validated v8 structural assembly remains upstream and unchanged.
 
           Do not treat these parts as structurally released until the physical fit coupons,
           complete assembly proof load and swivel/end-stop cycling in PHYSICAL_RELEASE_GATES.md
