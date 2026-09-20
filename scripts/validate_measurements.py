@@ -13,6 +13,11 @@ from measurement_model import MeasurementError, load_measurements, symmetry_repo
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("path")
+    ap.add_argument(
+        "--require-physical",
+        action="store_true",
+        help="reject synthetic fixtures; required for production contact CAD",
+    )
     ns = ap.parse_args()
 
     try:
@@ -21,8 +26,26 @@ def main() -> int:
         print(json.dumps({"ok": False, "error": str(exc)}, indent=2))
         return 2
 
+    if ns.require_physical and ms.measurement_kind != "physical":
+        print(json.dumps({
+            "ok": False,
+            "error": (
+                "physical measurement input required; got "
+                f"{ms.measurement_kind!r}"
+            ),
+        }, indent=2))
+        return 2
+
     report = {
         "ok": True,
+        "meta": {
+            "measurement_kind": ms.measurement_kind,
+            "model": ms.model,
+            "stand_part": ms.stand_part,
+            "measured_by": ms.measured_by,
+            "date": ms.measurement_date,
+            "caliper_resolution_mm": ms.caliper_resolution_mm,
+        },
         "global": {
             "stand_width_mm": ms.stand_width,
             "stand_depth_mm": ms.stand_depth,
