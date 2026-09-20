@@ -2,6 +2,9 @@
   "version": "v2",
   "checks": {
     "support_plane_matches_rotor_top": true,
+    "root_landing_coplanar_with_glide_track": true,
+    "key_underside_clearance_is_deliberate": true,
+    "receiver_keeps_floor_under_key": true,
     "track_has_positive_height": true,
     "inner_print_length_under_295": true,
     "inner_print_width_under_295": true,
@@ -19,6 +22,10 @@
   },
   "details": {
     "track_top_z_mm": 18.0,
+    "root_landing_global_top_z_mm": 18.0,
+    "key_bottom_rotor_local_z_mm": 8.4,
+    "key_cavity_floor_rotor_local_z_mm": 8.200000000000001,
+    "key_underside_clearance_mm": 0.2,
     "inner_arm_install_z_mm": 18.0,
     "right_arm_angle_deg": 26.3464,
     "left_arm_angle_deg": 153.6536,

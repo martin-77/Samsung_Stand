@@ -108,8 +108,8 @@
     "samsung_stand_v2_inner_arm.stl": {
       "watertight": true,
       "winding_consistent": true,
-      "volume_mm3": 98861.58333333333,
-      "faces": 144,
+      "volume_mm3": 101943.58332737286,
+      "faces": 138,
       "extents_mm": [
         275.0,
         58.0,
@@ -134,21 +134,21 @@
     "samsung_stand_v2_rotor.stl": {
       "watertight": true,
       "winding_consistent": true,
-      "volume_mm3": 211275.87319219732,
-      "faces": 988,
+      "volume_mm3": 214724.7939257979,
+      "faces": 1028,
       "extents_mm": [
-        170.094,
+        189.825,
         149.99,
         27.0
       ],
       "bounds_mm": [
         [
-          -85.047,
+          -94.913,
           -138.99,
           0.0
         ],
         [
-          85.047,
+          94.913,
           11.0,
           27.0
         ]
@@ -203,7 +203,7 @@
     "declared_print_envelope_mm": [
       275.0,
       58.0,
-      14.0
+      15.0
     ],
     "ok": true
   },
@@ -223,7 +223,7 @@
     "pocket_mm": [
       50.0,
       48.0,
-      7.0
+      8.0
     ],
     "ok": true
   },

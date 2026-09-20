@@ -74,24 +74,24 @@
       "facets": 532
     },
     "samsung_stand_v2_rotor": {
-      "volume_mm3": 211349.073,
+      "volume_mm3": 214799.824,
       "bbox_mm": [
-        -85.047,
-        85.047,
+        -94.913,
+        94.913,
         -138.99,
         11.0,
         0.0,
         27.0
       ],
       "size_mm": [
-        170.094,
+        189.825,
         149.99,
         27.0
       ],
-      "facets": 988
+      "facets": 1028
     },
     "samsung_stand_v2_inner_arm": {
-      "volume_mm3": 98861.583,
+      "volume_mm3": 101943.583,
       "bbox_mm": [
         -50.0,
         225.0,
@@ -105,7 +105,7 @@
         58.0,
         15.0
       ],
-      "facets": 144
+      "facets": 138
     },
     "samsung_stand_v2_saddle_insert_blank": {
       "volume_mm3": 16390.92,
