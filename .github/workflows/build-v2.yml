@@ -1,0 +1,198 @@
+name: Build Samsung Stand v2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/geometry_model.py"
+      - "scripts/v2_params.py"
+      - "scripts/validate_v2_design.py"
+      - "scripts/build_v2.py"
+      - "scripts/validate_meshes_v2.py"
+      - "scripts/preview_v2.scad"
+      - "cad/v1/STEP/**"
+      - ".github/workflows/build-v2.yml"
+
+concurrency:
+  group: samsung-stand-v2-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate v1 baseline and v2 design
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_layout.py > layout-validation.json
+          python3 scripts/validate_v1_design.py > v1-design-validation.json
+          python3 scripts/validate_v2_design.py > v2-design-validation.json
+          python3 -m unittest discover -s tests -v
+
+      - name: Verify validated v1 upstream exists
+        run: |
+          set -euo pipefail
+          test -s cad/v1/STEP/samsung_stand_v1_base_center.step
+          test -s cad/v1/STEP/samsung_stand_v1_base_left.step
+          test -s cad/v1/STEP/samsung_stand_v1_base_right.step
+          test -s cad/v1/STEP/samsung_stand_v1_rotor.step
+          test -s cad/v1/validation/MESH_VALIDATION_v1.json
+          python3 - <<'PY'
+          import json
+          p='cad/v1/validation/MESH_VALIDATION_v1.json'
+          d=json.load(open(p, encoding='utf-8'))
+          assert not d.get('failed'), d.get('failed')
+          print('Validated v1 upstream is green')
+          PY
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openscad libfuse2 xvfb python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+          "$FREECADCMD" -c 'import FreeCAD,Part,Import,Mesh,MeshPart; print(FreeCAD.Version()); assert Part.makeBox(1,1,1).isValid()'
+
+      - name: Compile v2 builders and validators
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/geometry_model.py \
+            scripts/v2_params.py \
+            scripts/validate_v2_design.py \
+            scripts/build_v2.py \
+            scripts/validate_meshes_v2.py
+
+      - name: Build v2 CAD
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0, 'scripts'); import build_v2" 2>&1 | tee build_v2.log
+          test -s build_v2/VALIDATION_v2_source.json
+          test -s build_v2/samsung_stand_v2_base_center.stl
+          test -s build_v2/samsung_stand_v2_base_left.stl
+          test -s build_v2/samsung_stand_v2_base_right.stl
+          test -s build_v2/samsung_stand_v2_rotor.stl
+          test -s build_v2/samsung_stand_v2_inner_arm.stl
+          test -s build_v2/samsung_stand_v2_saddle_insert_blank.stl
+          test -s build_v2/samsung_stand_v2_arm_lock_pin.stl
+
+      - name: Validate v2 meshes
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_meshes_v2.py
+          test -s build_v2/MESH_VALIDATION_v2.json
+
+      - name: Render installed v2 preview
+        run: |
+          set -euo pipefail
+          xvfb-run -a openscad \
+            --imgsize=1600,1000 \
+            --projection=ortho \
+            --viewall \
+            --autocenter \
+            --camera=0,0,0,62,0,28,800 \
+            -o build_v2/samsung_stand_v2_preview.png \
+            scripts/preview_v2.scad
+          test -s build_v2/samsung_stand_v2_preview.png
+
+      - name: Publish validated v2 outputs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/v2/FCStd cad/v2/STEP cad/v2/STL cad/v2/assembly cad/v2/validation
+
+          rm -f cad/v2/FCStd/samsung_stand_v2_*.FCStd
+          rm -f cad/v2/STEP/samsung_stand_v2_*.step
+          rm -f cad/v2/STL/samsung_stand_v2_*.stl
+
+          cp build_v2/samsung_stand_v2_*.FCStd cad/v2/FCStd/
+          cp build_v2/samsung_stand_v2_*.step cad/v2/STEP/
+          cp build_v2/samsung_stand_v2_*.stl cad/v2/STL/
+          cp build_v2/samsung_stand_v2_preview.png cad/v2/assembly/
+          cp build_v2/VALIDATION_v2_source.json cad/v2/validation/
+          cp build_v2/MESH_VALIDATION_v2.json cad/v2/validation/
+          cp v2-design-validation.json cad/v2/validation/DESIGN_VALIDATION_v2.json
+
+          cat > cad/v2/README.md <<'EOF'
+          # Samsung Stand v2
+
+          Validated second structural increment built on the published v1 STEP baseline.
+
+          Added:
+          - annular-sector glide tracks on the fixed left/right base modules;
+          - track top coplanar with the installed rotor top;
+          - two form-locking rotor receivers;
+          - one universal INNER_ARM printed twice;
+          - replaceable transverse PETG snap-lock pin;
+          - replaceable saddle cartridge.
+
+          Load-path intent:
+          - central load enters the rotor through its broad annular support;
+          - each inner arm is supported at its root by the rotor and near the real load station by its own side glide track;
+          - the inner arm is therefore not treated as a long cantilever from the center.
+
+          Important unresolved manufacturing input:
+          - the exact Samsung stand-arm cross-section is not inferred into the structural part.
+            samsung_stand_v2_saddle_insert_blank is intentionally only a calibration blank.
+            The final contact insert will be generated after physical cross-section measurements.
+
+          OUTER_GUIDE parts and final swivel detents/end-stops are not part of v2 yet.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/v2
+          if git diff --cached --quiet; then
+            echo "Validated v2 outputs already current"
+          else
+            git commit -m "Publish validated Samsung Stand v2 CAD"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload complete v2 proof
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-v2-complete
+          path: |
+            build_v2/
+            build_v2.log
+            layout-validation.json
+            v1-design-validation.json
+            v2-design-validation.json
