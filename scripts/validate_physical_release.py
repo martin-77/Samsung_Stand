@@ -42,7 +42,7 @@ def nonempty(v: Any, path: str) -> str:
 
 
 def require_false(v: Any, path: str, failures: list[str]) -> None:
-    if not boolean(v,path):
+    if boolean(v,path):
         failures.append(path+" is true")
 
 
