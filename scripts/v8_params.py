@@ -117,3 +117,14 @@ OUTER_PIN_BARB_PEAK_X = 67.5
 OUTER_PIN_BARB_HALF_WIDTH = 3.8
 OUTER_PIN_INSTALL_AXIS_START = -OUTER_LOCK_TUNNEL_LENGTH / 2.0
 OUTER_PIN_INSTALL_Z = 4.25
+
+
+# Local escape pocket for the *front* base-pin barb after it has passed the
+# receiver wall. The asymmetric center-base diagonal rib otherwise touches the
+# expanded barb by ~1 mm^3. This pocket is outside the structural receiver/key
+# bearing surfaces and does not enlarge the 7 mm snap tunnel itself.
+FRONT_BASE_BARB_RELIEF_HALF_X = 4.2
+FRONT_BASE_BARB_RELIEF_Y0 = 58.0
+FRONT_BASE_BARB_RELIEF_Y1 = 65.5
+FRONT_BASE_BARB_RELIEF_Z0 = 8.0
+FRONT_BASE_BARB_RELIEF_Z1 = 12.3
