@@ -50,6 +50,12 @@ for a physical proof test.
 Before mounting the TV, assemble the complete adapter on the real Sounddeck and
 apply a non-fragile substitute load at the real Samsung support locations.
 
+The repository provides `cad/proof_load_fixture/proof_load_saddle_pad`.
+Print two pads and place one in each INNER_ARM saddle pocket. A rigid flat
+spreader board may then bridge only those two pads so the substitute load enters
+at the validated saddle stations without using the television or the
+OUTER_GUIDE parts as load supports.
+
 Minimum test sequence:
 
 1. preload / settle the assembly;
@@ -160,6 +166,15 @@ A physically released version needs all of the following:
 - swivel/end-stop cycling passed;
 - chosen detent cassette passed physical calibration;
 - photographs and measured results committed under a release-validation folder.
+
+Record the physical result in a copy of
+`release_validation/physical_release.template.json` named
+`release_validation/physical_release.json`. The declared dwell durations and
+cycle counts must be chosen before the test and explained in the record. CI then
+runs `scripts/validate_physical_release.py` and checks the recorded outcomes
+against those declared criteria. The 500 N development load remains the only
+hard-coded proof-load floor; passing the validator is not a certification or
+independent safety approval.
 
 Until then, the newest CAD version is a validated **geometry candidate**, not a
 verified structural product.
