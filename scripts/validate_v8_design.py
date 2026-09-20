@@ -156,6 +156,16 @@ def main() -> int:
     checks["pivot_pin_fits_inside_rotor_counterbore"] = (
         pivot_counterbore_margin >= 1.0
     )
+    pin_total_x_span = (
+        P.PIVOT_PIN_LENGTH + P.PIVOT_PIN_HEAD_LENGTH
+    )
+    checks["pivot_counterbore_is_top_down_assembly_chamber"] = (
+        2.0 * P.PIVOT_COUNTERBORE_RADIUS >= pin_total_x_span + 15.0
+    )
+    checks["pivot_counterbore_stops_before_arm_receivers"] = (
+        P.PIVOT_COUNTERBORE_RADIUS
+        <= V2.ROTOR_RECEIVER_R_INNER - 0.4
+    )
     checks["pivot_post_fits_existing_rotor_bore_below_shoulder"] = (
         P.PIVOT_POST_DIAMETER < G.PIVOT_BORE_DIAMETER
     )
@@ -203,6 +213,14 @@ def main() -> int:
         "pivot_counterbore_radial_margin_mm": round(
             pivot_counterbore_margin, 3
         ),
+        "pivot_counterbore_diameter_mm": round(
+            2.0 * P.PIVOT_COUNTERBORE_RADIUS, 3
+        ),
+        "pivot_pin_total_x_span_mm": round(pin_total_x_span, 3),
+        "pivot_receiver_radial_margin_mm": round(
+            V2.ROTOR_RECEIVER_R_INNER - P.PIVOT_COUNTERBORE_RADIUS,
+            3
+        ),
         "pivot_rotor_lift_clearance_mm": round(
             P.PIVOT_ROTOR_LIFT_CLEARANCE, 3
         ),
@@ -212,7 +230,8 @@ def main() -> int:
         "retainer_architecture": (
             "No v8 structural retainer protrudes below the base. Base and arm "
             "locks use transverse snap pins; pivot retention uses a fixed "
-            "cross-pin inside a circular rotor counterbore."
+            "cross-pin inside a top-open circular rotor counterbore that "
+            "also provides the real assembly/removal chamber."
         ),
     }
 
