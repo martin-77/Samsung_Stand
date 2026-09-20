@@ -42,6 +42,14 @@ jobs:
             tests/fixtures/stand_measurements.synthetic.json \
             > synthetic-measurement-validation.json
 
+          if python3 scripts/validate_measurements.py \
+            --require-physical \
+            tests/fixtures/stand_measurements.synthetic.json \
+            > synthetic-must-not-pass-as-physical.json; then
+            echo "Synthetic fixture incorrectly passed physical provenance gate"
+            exit 1
+          fi
+
       - name: Verify validated v8 structure exists
         run: |
           set -euo pipefail
