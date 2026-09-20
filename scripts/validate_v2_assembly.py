@@ -67,13 +67,13 @@ def installed_inner(angle_deg):
 
 def installed_insert(angle_deg):
     sh = load_step("samsung_stand_v2_saddle_insert_blank")
-    sh.translate(v(P.INNER_R0 + P.SADDLE_U, 0, P.TRACK_TOP_Z + P.SADDLE_POCKET_FLOOR))
-    sh.rotate(v(G.PIVOT.x, G.PIVOT.y, 0), v(0, 0, 1), angle_deg)
-    # Previous rotate call uses global pivot only for XY; correct to explicit
-    # local-plan transform below by undoing/replacing if pivot is non-origin.
-    # Rebuild deterministically:
-    sh = load_step("samsung_stand_v2_saddle_insert_blank")
-    sh.translate(v(P.INNER_R0 + P.SADDLE_U, 0, P.TRACK_TOP_Z + P.SADDLE_POCKET_FLOOR))
+    sh.translate(
+        v(
+            P.INNER_R0 + P.SADDLE_U,
+            0,
+            P.TRACK_TOP_Z + P.SADDLE_POCKET_FLOOR,
+        )
+    )
     sh.rotate(v(0, 0, 0), v(0, 0, 1), angle_deg)
     sh.translate(v(G.PIVOT.x, G.PIVOT.y, 0))
     return sh
