@@ -38,9 +38,6 @@ GUIDE_LINER_X1 = V3.OUTER_VISIBLE_LENGTH - 12.0
 GUIDE_LINER_Z0_IN_GUIDE = V3.OUTER_FLOOR_THICKNESS
 GUIDE_LINER_HEIGHT = V3.OUTER_WALL_HEIGHT - GUIDE_LINER_Z0_IN_GUIDE
 GUIDE_CHANNEL_HALF_WIDTH = V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH / 2.0
-GUIDE_CROSSBAR_HEIGHT = 2.0
-GUIDE_CROSSBAR_LENGTH = 5.0
-GUIDE_CROSSBAR_X = (20.0, 85.0, 150.0)
 
 
 def v(x, y, z):
@@ -159,25 +156,16 @@ def _loft_side_rail(stations, wall_side: str):
     return sh
 
 
-def outer_guide_liner(stations):
-    left = _loft_side_rail(stations, "left")
-    right = _loft_side_rail(stations, "right")
+def outer_guide_liners(stations):
+    """Return two independent lateral-only guide rails.
 
-    bars = []
-    for x in GUIDE_CROSSBAR_X:
-        if GUIDE_LINER_X0 <= x <= GUIDE_LINER_X1 - GUIDE_CROSSBAR_LENGTH:
-            bars.append(
-                Part.makeBox(
-                    GUIDE_CROSSBAR_LENGTH,
-                    2.0 * GUIDE_CHANNEL_HALF_WIDTH,
-                    GUIDE_CROSSBAR_HEIGHT,
-                    v(x, -GUIDE_CHANNEL_HALF_WIDTH, 0),
-                )
-            )
-
-    sh = fuse_all([left, right] + bars)
-    require_single(sh, "OUTER_GUIDE_LINER")
-    return sh
+    Deliberately do not bridge across the guide floor. A floor bridge could
+    become an unintended vertical support under the Samsung arm and violate the
+    v3/v8 load-path contract that OUTER_GUIDE is lateral guidance only.
+    """
+    neg_y = _loft_side_rail(stations, "left")
+    pos_y = _loft_side_rail(stations, "right")
+    return {"neg_y": neg_y, "pos_y": pos_y}
 
 
 def export_shape(out_dir, name, shape):
@@ -225,11 +213,23 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
     pad = ms.pad_thickness if ms.pad_used else 0.0
 
     parts = {
-        "samsung_stand_v6_saddle_insert_left": saddle_insert(ms.inner_left.profile, pad),
-        "samsung_stand_v6_saddle_insert_right": saddle_insert(ms.inner_right.profile, pad),
-        "samsung_stand_v6_outer_liner_left": outer_guide_liner(ms.outer_left),
-        "samsung_stand_v6_outer_liner_right": outer_guide_liner(ms.outer_right),
+        "samsung_stand_v6_saddle_insert_left": saddle_insert(
+            ms.inner_left.profile, pad
+        ),
+        "samsung_stand_v6_saddle_insert_right": saddle_insert(
+            ms.inner_right.profile, pad
+        ),
     }
+
+    for assembly_side, stations in (
+        ("left", ms.outer_left),
+        ("right", ms.outer_right),
+    ):
+        rails = outer_guide_liners(stations)
+        for wall_side, shape in rails.items():
+            parts[
+                f"samsung_stand_v6_outer_liner_{assembly_side}_{wall_side}"
+            ] = shape
 
     report = {
         "version": "v6-contact-parts",
@@ -247,6 +247,12 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         "structural_note": (
             "These parts change only Samsung-contact geometry. V8 structural "
             "load path, outer guide shell, end stops and detent remain upstream."
+        ),
+        "outer_guide_load_path_contract": (
+            "Each physical OUTER_GUIDE receives two independent side rails. "
+            "There is intentionally no printed V6 bridge or floor surface under "
+            "the Samsung arm, so measured contact parts cannot create a normal "
+            "vertical load path at the outer guide."
         ),
         "parts": {},
     }
