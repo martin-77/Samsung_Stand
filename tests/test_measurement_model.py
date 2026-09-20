@@ -44,17 +44,45 @@ def complete_measurements():
         },
         "inner_saddle": {
             "left": {
-                "station_radius_mm": 279.0,
-                "center_xy_mm": [-250.0196, 123.8192],
-                "lowest_point_height_mm": 6.0,
-                "profile_points_mm": rect_profile(26.0, 9.0),
+                "root": {
+                    "station_radius_mm": 260.0,
+                    "center_xy_mm": [-232.9950, 115.3874],
+                    "lowest_point_height_mm": 5.8,
+                    "profile_points_mm": rect_profile(26.4, 8.8),
+                },
+                "center": {
+                    "station_radius_mm": 279.0,
+                    "center_xy_mm": [-250.0196, 123.8192],
+                    "lowest_point_height_mm": 6.0,
+                    "profile_points_mm": rect_profile(26.0, 9.0),
+                },
+                "tip": {
+                    "station_radius_mm": 298.0,
+                    "center_xy_mm": [-267.0442, 132.2510],
+                    "lowest_point_height_mm": 6.3,
+                    "profile_points_mm": rect_profile(25.6, 8.7),
+                },
                 "notes": "",
             },
             "right": {
-                "station_radius_mm": 279.5,
-                "center_xy_mm": [250.4677, 124.0411],
-                "lowest_point_height_mm": 6.4,
-                "profile_points_mm": rect_profile(26.2, 9.1),
+                "root": {
+                    "station_radius_mm": 260.5,
+                    "center_xy_mm": [233.4435, 115.6093],
+                    "lowest_point_height_mm": 6.1,
+                    "profile_points_mm": rect_profile(26.6, 8.9),
+                },
+                "center": {
+                    "station_radius_mm": 279.5,
+                    "center_xy_mm": [250.4677, 124.0411],
+                    "lowest_point_height_mm": 6.4,
+                    "profile_points_mm": rect_profile(26.2, 9.1),
+                },
+                "tip": {
+                    "station_radius_mm": 298.5,
+                    "center_xy_mm": [267.4923, 132.4729],
+                    "lowest_point_height_mm": 6.7,
+                    "profile_points_mm": rect_profile(25.8, 8.8),
+                },
                 "notes": "",
             },
         },
@@ -121,7 +149,7 @@ class MeasurementModelTests(unittest.TestCase):
     def test_complete_measurement_set_loads(self):
         ms = load_measurements(self.write_temp(complete_measurements()))
         self.assertAlmostEqual(ms.stand_width, 840.0)
-        self.assertAlmostEqual(ms.inner_left.profile.width, 26.0)
+        self.assertAlmostEqual(ms.inner_left[1].profile.width, 26.0)
         self.assertEqual(len(ms.outer_left), 3)
 
     def test_left_right_differences_are_reported_not_rejected(self):
@@ -132,13 +160,13 @@ class MeasurementModelTests(unittest.TestCase):
 
     def test_missing_profile_is_rejected(self):
         d = complete_measurements()
-        d["inner_saddle"]["left"]["profile_points_mm"] = None
+        d["inner_saddle"]["left"]["center"]["profile_points_mm"] = None
         with self.assertRaises(MeasurementError):
             load_measurements(self.write_temp(d))
 
     def test_self_intersecting_profile_is_rejected(self):
         d = complete_measurements()
-        d["inner_saddle"]["left"]["profile_points_mm"] = [
+        d["inner_saddle"]["left"]["center"]["profile_points_mm"] = [
             [-10.0, 0.0], [10.0, 8.0], [-10.0, 8.0], [10.0, 0.0]
         ]
         with self.assertRaises(MeasurementError):
@@ -177,7 +205,7 @@ class MeasurementModelTests(unittest.TestCase):
             [-13.0, 8.8],
         ]
         ms = load_measurements(self.write_temp(d))
-        env = dict(lower_envelope(ms.inner_left.profile, samples=7))
+        env = dict(lower_envelope(ms.inner_left[1].profile, samples=7))
         self.assertIn(-10.0, env)
         self.assertIn(0.0, env)
         self.assertIn(10.0, env)
@@ -188,8 +216,8 @@ class MeasurementModelTests(unittest.TestCase):
     def test_station_projection_recovers_along_and_lateral_offsets(self):
         ms = load_measurements(self.write_temp(complete_measurements()))
         import v2_params as V2
-        left = station_arm_frame(ms.inner_left, V2.LEFT_ARM_ANGLE_DEG)
-        right = station_arm_frame(ms.inner_right, V2.RIGHT_ARM_ANGLE_DEG)
+        left = station_arm_frame(ms.inner_left[1], V2.LEFT_ARM_ANGLE_DEG)
+        right = station_arm_frame(ms.inner_right[1], V2.RIGHT_ARM_ANGLE_DEG)
         self.assertAlmostEqual(left[0], 279.0, places=3)
         self.assertAlmostEqual(right[0], 279.5, places=3)
         self.assertAlmostEqual(left[1], 0.0, places=3)
@@ -199,12 +227,12 @@ class MeasurementModelTests(unittest.TestCase):
         ms = load_measurements(self.write_temp(complete_measurements()))
         self.assertAlmostEqual(inner_vertical_reference_mm(ms), 6.2, places=9)
         self.assertAlmostEqual(
-            station_vertical_offset_mm(ms.inner_left, ms),
+            station_vertical_offset_mm(ms.inner_left[1], ms),
             -0.2,
             places=9,
         )
         self.assertAlmostEqual(
-            station_vertical_offset_mm(ms.inner_right, ms),
+            station_vertical_offset_mm(ms.inner_right[1], ms),
             0.2,
             places=9,
         )
@@ -228,13 +256,19 @@ class MeasurementModelTests(unittest.TestCase):
 
     def test_station_radius_must_match_center_xy(self):
         d = complete_measurements()
-        d["inner_saddle"]["right"]["center_xy_mm"] = [240.0, 100.0]
+        d["inner_saddle"]["right"]["center"]["center_xy_mm"] = [240.0, 100.0]
         with self.assertRaises(MeasurementError):
             load_measurements(self.write_temp(d))
 
     def test_station_center_xy_uses_correct_side_quadrant(self):
         d = complete_measurements()
         d["outer_guide"]["left"]["mid"]["center_xy_mm"] = [349.4898, 173.0806]
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_inner_saddle_station_radii_must_increase(self):
+        d = complete_measurements()
+        d["inner_saddle"]["left"]["center"]["station_radius_mm"] = 259.0
         with self.assertRaises(MeasurementError):
             load_measurements(self.write_temp(d))
 
