@@ -33,8 +33,16 @@ SADDLE_NOMINAL_LOWEST_CONTACT_Z = V2.SADDLE_INSERT_HEIGHT
 SADDLE_PROFILE_SAMPLES = 41
 
 GUIDE_LATERAL_CLEARANCE = 0.50
-GUIDE_LINER_X0 = 12.0
-GUIDE_LINER_X1 = V3.OUTER_VISIBLE_LENGTH - 12.0
+GUIDE_ROOT_AXIAL_CLEARANCE = 2.0
+GUIDE_TIP_AXIAL_CLEARANCE = 4.0
+GUIDE_LINER_X0 = (
+    V3.OUTER_ROOT_TIE_LENGTH + GUIDE_ROOT_AXIAL_CLEARANCE
+)
+GUIDE_LINER_X1 = (
+    V3.OUTER_VISIBLE_LENGTH
+    - V3.OUTER_TIP_TIE_LENGTH
+    - GUIDE_TIP_AXIAL_CLEARANCE
+)
 GUIDE_LINER_Z0_IN_GUIDE = V3.OUTER_FLOOR_THICKNESS
 GUIDE_LINER_HEIGHT = V3.OUTER_WALL_HEIGHT - GUIDE_LINER_Z0_IN_GUIDE
 GUIDE_CHANNEL_HALF_WIDTH = V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH / 2.0
@@ -403,6 +411,11 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         },
         "design_clearances": {
             "outer_lateral_each_side_mm": GUIDE_LATERAL_CLEARANCE,
+            "outer_root_axial_free_travel_mm": GUIDE_ROOT_AXIAL_CLEARANCE,
+            "outer_tip_axial_free_travel_mm": GUIDE_TIP_AXIAL_CLEARANCE,
+            "outer_tie_vertical_capture_overlap_mm": (
+                V3.OUTER_TIE_HEIGHT - V3.OUTER_FLOOR_THICKNESS
+            ),
             "outer_endpoint_distance_max_mm": (
                 GUIDE_ENDPOINT_DISTANCE_MAX_MM
             ),
