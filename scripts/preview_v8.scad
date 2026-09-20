@@ -29,9 +29,14 @@ module radial_part(file,r,a,z,c=[0.10,0.10,0.12]) {
 
 module base_pin(x,y) {
   color([0.62,0.62,0.66])
-    translate([x,y-26,8.25])
-      rotate([0,0,90])
-        import("../build_v8/samsung_stand_v8_joint_lock_pin.stl",convexity=20);
+    if (y < 0)
+      translate([x,y-26,8.25])
+        rotate([0,0,90])
+          import("../build_v8/samsung_stand_v8_joint_lock_pin.stl",convexity=20);
+    else
+      translate([x,y+26,8.25])
+        rotate([0,0,-90])
+          import("../build_v8/samsung_stand_v8_joint_lock_pin.stl",convexity=20);
 }
 
 module inner_pin(a) {
