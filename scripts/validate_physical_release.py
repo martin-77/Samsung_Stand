@@ -137,8 +137,18 @@ def main(path: str) -> dict[str,Any]:
         "real_measurements_complete",
         "measured_contact_parts_generated",
         "dry_fit_original_stand_passed",
+        "saddle_root_center_tip_contact_confirmed",
+        "outer_guide_lateral_fit_confirmed",
+        "outer_guide_vertical_free_clearance_confirmed",
     ):
         require_true(measurement.get(key),f"measurement_gate.{key}",failures)
+
+    for key in (
+        "saddle_rocking_detected",
+        "saddle_unexpected_hard_spot_detected",
+        "outer_guide_floor_contact_detected",
+    ):
+        require_false(measurement.get(key),f"measurement_gate.{key}",failures)
 
     coupons=data.get("fit_coupons",{})
     for key in (
