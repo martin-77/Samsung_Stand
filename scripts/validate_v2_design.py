@@ -29,6 +29,17 @@ def main() -> int:
     checks["support_plane_matches_rotor_top"] = abs(
         P.TRACK_TOP_Z - (G.BEARING_TOP_Z + G.ROTOR_THICKNESS)
     ) < 1e-9
+    root_landing_global_top = P.ROTOR_INSTALL_Z + P.ROOT_LANDING_TOP_Z
+    checks["root_landing_coplanar_with_glide_track"] = abs(
+        root_landing_global_top - P.TRACK_TOP_Z
+    ) < 1e-9
+    checks["key_underside_clearance_is_deliberate"] = abs(
+        P.ARM_KEY_INSTALLED_BOTTOM_ROTOR_Z - P.ROTOR_KEY_CAVITY_BOTTOM_Z
+        - P.ARM_KEY_UNDERSIDE_CLEARANCE
+    ) < 1e-9
+    checks["receiver_keeps_floor_under_key"] = (
+        P.ROTOR_KEY_CAVITY_BOTTOM_Z - P.ROTOR_RECEIVER_Z0 >= 0.35
+    )
     checks["track_has_positive_height"] = P.TRACK_HEIGHT > 0.0
     checks["inner_print_length_under_295"] = P.INNER_PRINT_LENGTH <= G.PREFERRED_PART_XY
     checks["inner_print_width_under_295"] = P.INNER_PRINT_WIDTH <= G.PREFERRED_PART_XY
@@ -147,6 +158,10 @@ def main() -> int:
 
     details = {
         "track_top_z_mm": P.TRACK_TOP_Z,
+        "root_landing_global_top_z_mm": root_landing_global_top,
+        "key_bottom_rotor_local_z_mm": P.ARM_KEY_INSTALLED_BOTTOM_ROTOR_Z,
+        "key_cavity_floor_rotor_local_z_mm": P.ROTOR_KEY_CAVITY_BOTTOM_Z,
+        "key_underside_clearance_mm": P.ARM_KEY_UNDERSIDE_CLEARANCE,
         "inner_arm_install_z_mm": P.TRACK_TOP_Z,
         "right_arm_angle_deg": round(P.RIGHT_ARM_ANGLE_DEG, 4),
         "left_arm_angle_deg": round(P.LEFT_ARM_ANGLE_DEG, 4),
