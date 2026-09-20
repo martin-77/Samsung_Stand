@@ -86,41 +86,69 @@ def main(contact_dir: str = "build_v6_contacts"):
             failures.append(f"{side} saddle is not seated in INNER_ARM pocket: {gap:.6f} mm")
 
     for side in ("left", "right"):
-        liner = load_step(
-            os.path.join(
-                contact_dir,
-                f"samsung_stand_v6_outer_liner_{side}.step",
+        result["liners"][side] = {}
+        for wall_side in ("neg_y", "pos_y"):
+            liner = load_step(
+                os.path.join(
+                    contact_dir,
+                    (
+                        f"samsung_stand_v6_outer_liner_{side}_"
+                        f"{wall_side}.step"
+                    ),
+                )
             )
-        )
-        liner.translate(v(0, 0, V3.OUTER_FLOOR_THICKNESS))
+            liner.translate(v(0, 0, V3.OUTER_FLOOR_THICKNESS))
 
-        vol = common_volume(liner, guide)
-        gap = distance(liner, guide)
-        bb = liner.BoundBox
+            vol = common_volume(liner, guide)
+            gap = distance(liner, guide)
+            bb = liner.BoundBox
 
-        row = {
-            "common_volume_mm3": round(vol, 6),
-            "distance_to_outer_guide_mm": round(gap, 6),
-            "installed_bbox_mm": [
-                round(bb.XMin,3), round(bb.XMax,3),
-                round(bb.YMin,3), round(bb.YMax,3),
-                round(bb.ZMin,3), round(bb.ZMax,3),
-            ],
-            "top_matches_guide_wall_mm": round(
-                V3.OUTER_WALL_HEIGHT - bb.ZMax, 6
-            ),
-        }
-        result["liners"][side] = row
+            row = {
+                "common_volume_mm3": round(vol, 6),
+                "distance_to_outer_guide_mm": round(gap, 6),
+                "installed_bbox_mm": [
+                    round(bb.XMin,3), round(bb.XMax,3),
+                    round(bb.YMin,3), round(bb.YMax,3),
+                    round(bb.ZMin,3), round(bb.ZMax,3),
+                ],
+                "top_matches_guide_wall_mm": round(
+                    V3.OUTER_WALL_HEIGHT - bb.ZMax, 6
+                ),
+                "crosses_arm_centerline": bool(
+                    bb.YMin <= 0.0 <= bb.YMax
+                ),
+            }
+            result["liners"][side][wall_side] = row
 
-        if vol > 0.05:
-            failures.append(f"{side} liner penetrates OUTER_GUIDE: {vol:.6f} mm3")
-        if gap > 0.05:
-            failures.append(f"{side} liner is not seated in OUTER_GUIDE: {gap:.6f} mm")
-        if bb.ZMax > V3.OUTER_WALL_HEIGHT + 0.05:
-            failures.append(
-                f"{side} liner exceeds OUTER_GUIDE wall height: zmax={bb.ZMax:.3f}"
-            )
+            if vol > 0.05:
+                failures.append(
+                    f"{side}/{wall_side} liner penetrates OUTER_GUIDE: "
+                    f"{vol:.6f} mm3"
+                )
+            if gap > 0.05:
+                failures.append(
+                    f"{side}/{wall_side} liner is not seated in OUTER_GUIDE: "
+                    f"{gap:.6f} mm"
+                )
+            if bb.ZMax > V3.OUTER_WALL_HEIGHT + 0.05:
+                failures.append(
+                    f"{side}/{wall_side} liner exceeds OUTER_GUIDE wall "
+                    f"height: zmax={bb.ZMax:.3f}"
+                )
+            if bb.YMin <= 0.0 <= bb.YMax:
+                failures.append(
+                    f"{side}/{wall_side} liner crosses arm centerline and "
+                    "could create an unintended vertical floor bridge"
+                )
 
+    result["outer_guide_load_path_contract"] = {
+        "lateral_only": True,
+        "generated_floor_bridge": False,
+        "note": (
+            "Each OUTER_GUIDE uses two independent side rails. Their installed "
+            "bounding boxes must remain on opposite sides of local y=0."
+        ),
+    }
     result["failed"] = failures
 
     os.makedirs(contact_dir, exist_ok=True)
