@@ -94,6 +94,38 @@
       "wear_insert_unseated": null
     }
   },
+  "sounddeck_geometry": {
+    "usable_flat_width_mm": null,
+    "usable_flat_depth_mm": null,
+    "base_fully_supported_on_flat_area": null,
+    "base_contacts_edge_roundover": null
+  },
+  "stability_characterization": {
+    "rear_reaction_line_y_mm": null,
+    "front_reaction_line_y_mm": null,
+    "reference_push_height_mm": null,
+    "minus_15": {
+      "rear_reaction_n": null,
+      "front_reaction_n": null
+    },
+    "center": {
+      "rear_reaction_n": null,
+      "front_reaction_n": null
+    },
+    "plus_15": {
+      "rear_reaction_n": null,
+      "front_reaction_n": null
+    }
+  },
+  "anti_tip_restraint": {
+    "manual_reference": "BN68-07177M-00",
+    "restraint_installed": false,
+    "wall_anchor_verified": false,
+    "tv_attachment_verified": false,
+    "full_swivel_without_binding": false,
+    "restraint_loose_or_damaged": null,
+    "restraint_interferes_with_swivel": null
+  },
   "sounddeck_interface": {
     "test_load_n": 164,
     "unloaded_base_movement_detected": null,
