@@ -466,8 +466,17 @@ def export_shape(out_dir, name, shape):
     }
 
 
-def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
+def main(
+    measurement_path: str,
+    out_dir: str = "build_v6_contacts",
+    require_physical: bool = False,
+):
     ms = M.load_measurements(measurement_path)
+    if require_physical and ms.measurement_kind != "physical":
+        raise RuntimeError(
+            "physical measurement input required for production contact CAD; "
+            f"got {ms.measurement_kind!r}"
+        )
     pad = ms.pad_thickness if ms.pad_used else 0.0
 
     vertical_reference = M.inner_vertical_reference_mm(ms)
@@ -511,6 +520,14 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
     report = {
         "version": "v6-contact-parts",
         "measurement_path": measurement_path,
+        "measurement_meta": {
+            "measurement_kind": ms.measurement_kind,
+            "model": ms.model,
+            "stand_part": ms.stand_part,
+            "measured_by": ms.measured_by,
+            "date": ms.measurement_date,
+            "caliper_resolution_mm": ms.caliper_resolution_mm,
+        },
         "measurement_symmetry": {
             k: round(vv,4)
             for k,vv in M.symmetry_report(ms).items()
