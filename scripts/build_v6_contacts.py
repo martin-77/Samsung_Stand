@@ -31,6 +31,7 @@ import v3_params as V3
 SADDLE_BASE_THICKNESS = 4.0
 SADDLE_NOMINAL_LOWEST_CONTACT_Z = V2.SADDLE_INSERT_HEIGHT
 SADDLE_PROFILE_SAMPLES = 41
+SADDLE_ENDPOINT_DISTANCE_MAX_MM = 8.0
 
 GUIDE_LATERAL_CLEARANCE = 0.50
 GUIDE_ROOT_AXIAL_CLEARANCE = 2.0
@@ -83,20 +84,37 @@ def station_frame(station: M.Station, assembly_side: str) -> tuple[float, float]
     )
 
 
-def saddle_insert(
+def _saddle_normalized_y_grid(stations) -> tuple[float, ...]:
+    """Common loft grid that preserves every measured profile vertex."""
+    us = {
+        i / (SADDLE_PROFILE_SAMPLES - 1)
+        for i in range(SADDLE_PROFILE_SAMPLES)
+    }
+    for st in stations:
+        width = st.profile.width
+        for y, _z in st.profile.points:
+            us.add((y - st.profile.ymin) / width)
+    return tuple(sorted(us))
+
+
+def _saddle_section_wire(
+    x: float,
     profile: M.Profile,
-    pad_thickness: float,
     lateral_offset: float,
     vertical_offset: float,
+    pad_thickness: float,
+    normalized_us,
 ):
-    env = M.lower_envelope(profile, SADDLE_PROFILE_SAMPLES)
     contact_low = (
         SADDLE_NOMINAL_LOWEST_CONTACT_Z
         - pad_thickness
         + vertical_offset
     )
     if contact_low <= SADDLE_BASE_THICKNESS + 1.0:
-        raise RuntimeError("contact pad leaves insufficient saddle insert thickness")
+        raise RuntimeError(
+            "measured saddle vertical offset leaves insufficient "
+            "insert thickness"
+        )
 
     pocket_half_y = V2.SADDLE_INSERT_WIDTH / 2.0
     shifted_ymin = profile.ymin + lateral_offset
@@ -112,37 +130,138 @@ def saddle_insert(
             f"insert half-width {pocket_half_y:.3f}"
         )
 
+    upper = []
+    for u in normalized_us:
+        y = profile.ymin + profile.width * u
+        z = M.lower_profile_z_at_y(profile, y)
+        upper.append(
+            (
+                y + lateral_offset,
+                contact_low + z,
+            )
+        )
+
+    yz = [(upper[0][0], SADDLE_BASE_THICKNESS)]
+    yz.extend(upper)
+    yz.append((upper[-1][0], SADDLE_BASE_THICKNESS))
+
+    pts = [v(x, y, z) for y, z in yz]
+    return Part.makePolygon(pts + [pts[0]])
+
+
+def saddle_station_frames(stations, assembly_side: str):
+    saddle_center_radius = V2.INNER_R0 + V2.SADDLE_U
+    return tuple(
+        (
+            station_frame(st, assembly_side)[0] - saddle_center_radius,
+            station_frame(st, assembly_side)[1],
+            st,
+        )
+        for st in stations
+    )
+
+
+def saddle_insert(
+    stations,
+    assembly_side: str,
+    ms: M.MeasurementSet,
+    pad_thickness: float,
+):
+    """Loft the load-bearing insert surface through root/center/tip measurements."""
+    half_length = V2.SADDLE_INSERT_LENGTH / 2.0
+    frames = sorted(
+        saddle_station_frames(stations, assembly_side),
+        key=lambda item: item[0],
+    )
+
+    xs = [item[0] for item in frames]
+    if not (xs[0] < xs[1] < xs[2]):
+        raise RuntimeError(
+            f"{assembly_side} saddle stations do not increase along insert X"
+        )
+
+    root_delta = abs(xs[0] + half_length)
+    tip_delta = abs(xs[-1] - half_length)
+    if root_delta > SADDLE_ENDPOINT_DISTANCE_MAX_MM:
+        raise RuntimeError(
+            f"{assembly_side} saddle root section is {root_delta:.3f} mm "
+            f"from insert root; max {SADDLE_ENDPOINT_DISTANCE_MAX_MM:.1f} mm"
+        )
+    if tip_delta > SADDLE_ENDPOINT_DISTANCE_MAX_MM:
+        raise RuntimeError(
+            f"{assembly_side} saddle tip section is {tip_delta:.3f} mm "
+            f"from insert tip; max {SADDLE_ENDPOINT_DISTANCE_MAX_MM:.1f} mm"
+        )
+
+    # Use measured sections inside the insert and bounded nearest-section
+    # extrapolation only for the short unmeasured end strips.
+    sections_src = [
+        item for item in frames
+        if -half_length <= item[0] <= half_length
+    ]
+    if not sections_src:
+        raise RuntimeError(f"{assembly_side} has no saddle section inside insert")
+
+    first = frames[0]
+    if sections_src[0][0] > -half_length + 1e-9:
+        sections_src.insert(
+            0,
+            (-half_length, first[1], first[2]),
+        )
+    elif first[0] < -half_length:
+        sections_src.insert(
+            0,
+            (-half_length, first[1], first[2]),
+        )
+
+    last = frames[-1]
+    if sections_src[-1][0] < half_length - 1e-9:
+        sections_src.append(
+            (half_length, last[1], last[2])
+        )
+    elif last[0] > half_length:
+        sections_src.append(
+            (half_length, last[1], last[2])
+        )
+
+    deduped = []
+    for item in sections_src:
+        if deduped and abs(item[0] - deduped[-1][0]) < 1e-9:
+            deduped[-1] = item
+        else:
+            deduped.append(item)
+
+    normalized_us = _saddle_normalized_y_grid(stations)
+    wires = []
+    for x, lateral_offset, st in deduped:
+        wires.append(
+            _saddle_section_wire(
+                x,
+                st.profile,
+                lateral_offset,
+                M.station_vertical_offset_mm(st, ms),
+                pad_thickness,
+                normalized_us,
+            )
+        )
+
+    cap = Part.makeLoft(wires, True, False)
+    require_single(cap, "SADDLE_INSERT_LOFT")
+
     base = Part.makeBox(
         V2.SADDLE_INSERT_LENGTH,
         V2.SADDLE_INSERT_WIDTH,
         SADDLE_BASE_THICKNESS,
         v(
-            -V2.SADDLE_INSERT_LENGTH / 2.0,
+            -half_length,
             -V2.SADDLE_INSERT_WIDTH / 2.0,
             0,
         ),
     )
 
-    # YZ section: bottom is fused into the flat base; top follows the measured
-    # lower envelope. Lowest physical stand point remains at the v5 contact plane.
-    yz = [(env[0][0] + lateral_offset, SADDLE_BASE_THICKNESS)]
-    yz += [
-        (y + lateral_offset, contact_low + z)
-        for y, z in env
-    ]
-    yz += [
-        (env[-1][0] + lateral_offset, SADDLE_BASE_THICKNESS)
-    ]
-
-    pts = [v(-V2.SADDLE_INSERT_LENGTH / 2.0, y, z) for y, z in yz]
-    wire = Part.makePolygon(pts + [pts[0]])
-    cap = Part.Face(wire).extrude(v(V2.SADDLE_INSERT_LENGTH, 0, 0))
-
     sh = base.fuse(cap).removeSplitter()
     require_single(sh, "SADDLE_INSERT")
     return sh
-
-
 def _side_surface(
     profile: M.Profile,
     side: str,
@@ -339,39 +458,28 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
     ms = M.load_measurements(measurement_path)
     pad = ms.pad_thickness if ms.pad_used else 0.0
 
-    inner_frames = {
-        "left": station_frame(ms.inner_left, "left"),
-        "right": station_frame(ms.inner_right, "right"),
-    }
     vertical_reference = M.inner_vertical_reference_mm(ms)
-    inner_vertical_offsets = {
-        "left": M.station_vertical_offset_mm(ms.inner_left, ms),
-        "right": M.station_vertical_offset_mm(ms.inner_right, ms),
+    inner_sets = {
+        "left": ms.inner_left,
+        "right": ms.inner_right,
     }
-
-    saddle_center_radius = V2.INNER_R0 + V2.SADDLE_U
-    saddle_half_length = V2.SADDLE_INSERT_LENGTH / 2.0
-
-    for side, (along, _lateral) in inner_frames.items():
-        if abs(along - saddle_center_radius) > saddle_half_length - 2.0:
-            raise RuntimeError(
-                f"{side} measured saddle station along={along:.3f} mm "
-                f"falls outside usable saddle insert span centered at "
-                f"{saddle_center_radius:.3f} mm"
-            )
+    inner_station_frames = {
+        side: saddle_station_frames(stations, side)
+        for side, stations in inner_sets.items()
+    }
 
     parts = {
         "samsung_stand_v6_saddle_insert_left": saddle_insert(
-            ms.inner_left.profile,
+            ms.inner_left,
+            "left",
+            ms,
             pad,
-            inner_frames["left"][1],
-            inner_vertical_offsets["left"],
         ),
         "samsung_stand_v6_saddle_insert_right": saddle_insert(
-            ms.inner_right.profile,
+            ms.inner_right,
+            "right",
+            ms,
             pad,
-            inner_frames["right"][1],
-            inner_vertical_offsets["right"],
         ),
     }
 
@@ -398,18 +506,22 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         "measured_vertical_datum": {
             "inner_reference_height_mm": round(vertical_reference, 4),
             "inner_saddle": {
-                side: {
-                    "measured_lowest_point_height_mm": round(
-                        station.lowest_point_height_mm, 4
-                    ),
-                    "relative_vertical_offset_mm": round(
-                        inner_vertical_offsets[side], 4
-                    ),
-                }
-                for side, station in (
-                    ("left", ms.inner_left),
-                    ("right", ms.inner_right),
-                )
+                side: [
+                    {
+                        "station": name,
+                        "measured_lowest_point_height_mm": round(
+                            st.lowest_point_height_mm, 4
+                        ),
+                        "relative_vertical_offset_mm": round(
+                            M.station_vertical_offset_mm(st, ms), 4
+                        ),
+                    }
+                    for name, st in zip(
+                        ("root", "center", "tip"),
+                        stations,
+                    )
+                ]
+                for side, stations in inner_sets.items()
             },
             "outer_guide": {
                 side: [
@@ -431,11 +543,18 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         },
         "measured_centerline_projection": {
             "inner_saddle": {
-                side: {
-                    "along_mm": round(frame[0], 4),
-                    "lateral_mm": round(frame[1], 4),
-                }
-                for side, frame in inner_frames.items()
+                side: [
+                    {
+                        "station": name,
+                        "insert_x_mm": round(frame[0], 4),
+                        "lateral_mm": round(frame[1], 4),
+                    }
+                    for name, frame in zip(
+                        ("root", "center", "tip"),
+                        frames,
+                    )
+                ]
+                for side, frames in inner_station_frames.items()
             },
             "outer_guide": {
                 side: [
@@ -469,14 +588,20 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
             "saddle_nominal_lowest_contact_z_mm": (
                 SADDLE_NOMINAL_LOWEST_CONTACT_Z - pad
             ),
+            "saddle_endpoint_distance_max_mm": (
+                SADDLE_ENDPOINT_DISTANCE_MAX_MM
+            ),
             "saddle_lowest_contact_z_mm": {
-                side: round(
-                    SADDLE_NOMINAL_LOWEST_CONTACT_Z
-                    - pad
-                    + inner_vertical_offsets[side],
-                    4,
-                )
-                for side in ("left", "right")
+                side: [
+                    round(
+                        SADDLE_NOMINAL_LOWEST_CONTACT_Z
+                        - pad
+                        + M.station_vertical_offset_mm(st, ms),
+                        4,
+                    )
+                    for st in stations
+                ]
+                for side, stations in inner_sets.items()
             },
         },
         "structural_note": (
