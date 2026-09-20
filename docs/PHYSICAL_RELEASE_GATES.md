@@ -34,7 +34,10 @@ Print small fit coupons before the large structural modules:
 3. INNER_ARM/OUTER_GUIDE roof-key + cross-pin coupon;
 4. final Samsung saddle insert;
 5. final outer-guide side-contact shim;
-6. selected zero-detent spring cassette.
+6. selected zero-detent spring cassette;
+7. v8 base-joint transverse retainer coupon;
+8. v8 long INNER_ARM/OUTER_GUIDE retainer coupon;
+9. v8 pivot-post / cross-pin retainer coupon.
 
 Record printer, material, nozzle, layer height and actual measured clearances.
 
@@ -67,7 +70,9 @@ Record:
 - loosened retaining pins;
 - change in swivel friction;
 - change in detent feel;
-- any base movement on the Sounddeck.
+- any base movement on the Sounddeck;
+- visible marking / indentation of the Sounddeck top surface;
+- whether the replaceable wear inserts remain seated.
 
 The eventual proof-load magnitude and duration must be chosen deliberately
 before calling the design structurally released. The current CAD repository does
@@ -98,7 +103,48 @@ Select the lowest spring force that reliably centers the stand without causing:
 - noisy stick-slip;
 - accelerated wear on the rotor cam.
 
-## 6. Release criterion
+## 6. Sounddeck interface / anti-slip gate
+
+The adapter is intentionally all-PETG at this stage. That means sufficient
+friction against the real Magnat top surface must be **measured**, not assumed.
+
+Before mounting the TV:
+
+1. place the complete unloaded adapter on the real Sounddeck;
+2. mark its centered position;
+3. apply the expected hand torque needed to move through the detent and the
+   complete +/-15 degree swivel range;
+4. repeat with the non-fragile proof load installed;
+5. verify that the rotating assembly moves while the fixed 680 x 295 mm base
+   does not translate or yaw on the Sounddeck;
+6. inspect the Sounddeck finish for scratches, pressure marks or local
+   indentation.
+
+If the fixed base moves, the all-PETG interface is not released. Do not simply
+increase detent force. The correction must reduce required swivel torque or add
+a separately justified locating / friction concept without concentrating the TV
+load onto small points.
+
+## 7. Creep / dwell gate
+
+Short OCC/static checks do not validate long-term PETG creep.
+
+Before final release, the complete printed load path must be held under a
+representative sustained substitute load long enough to detect meaningful
+settling at:
+
+- the center wear ring;
+- both side wear arcs;
+- INNER_ARM root landings;
+- saddle inserts;
+- form-locking base joints;
+- pivot post / cross-pin retention.
+
+Record initial and final heights / gaps at defined reference points and repeat
+the swivel test after unloading. Any progressive permanent set, growing joint
+play or whitening is a failed gate.
+
+## 8. Release criterion
 
 A physically released version needs all of the following:
 
@@ -106,9 +152,11 @@ A physically released version needs all of the following:
 - final STL mesh gates green;
 - installed OCC assembly gates green;
 - real stand geometry measured and final contact inserts generated;
-- fit coupons passed on the target printer/material;
+- roof-key, retainer and detent fit coupons passed on the target printer/material;
 - full assembly printed;
+- Sounddeck anti-slip / surface-protection gate passed;
 - physical static proof test passed;
+- sustained creep / dwell gate passed;
 - swivel/end-stop cycling passed;
 - chosen detent cassette passed physical calibration;
 - photographs and measured results committed under a release-validation folder.
