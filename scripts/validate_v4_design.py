@@ -71,6 +71,25 @@ def main():
                 tower_points.append([round(x,3),round(y,3),inside])
     checks["fixed_stop_towers_inside_center_module"] = towers_inside
 
+    beam_half_angle_at_clearance_r0 = math.degrees(
+        math.atan2(V2.INNER_BEAM_WIDTH / 2.0, P.ARM_SWEEP_CLEARANCE_R0)
+    )
+    checks["arm_sweep_clearance_has_angular_width_margin"] = (
+        P.ARM_SWEEP_CLEARANCE_ANGLE_MARGIN_DEG
+        >= beam_half_angle_at_clearance_r0 + 0.5
+    )
+    track_inner_radius = V2.TRACK_RADIUS - V2.TRACK_RADIAL_WIDTH / 2.0
+    checks["arm_sweep_clearance_stops_before_glide_track"] = (
+        P.ARM_SWEEP_CLEARANCE_R1 <= track_inner_radius - 2.0
+    )
+    checks["arm_sweep_clearance_is_above_load_plane"] = (
+        P.ARM_SWEEP_CLEARANCE_Z0 < V2.TRACK_TOP_Z
+        and V2.TRACK_TOP_Z - P.ARM_SWEEP_CLEARANCE_Z0 >= 0.3
+    )
+    checks["arm_sweep_clearance_preserves_lower_buttress"] = (
+        P.ARM_SWEEP_CLEARANCE_Z0 - G.BASE_FLOOR_THICKNESS >= 13.0
+    )
+
     checks["tower_angles_are_symmetric"] = abs(
         (P.ROTOR_STOP_HOME_ANGLE_DEG-P.FIXED_STOP_ANGLE_NEG_DEG)
         -(P.FIXED_STOP_ANGLE_POS_DEG-P.ROTOR_STOP_HOME_ANGLE_DEG)
@@ -80,6 +99,7 @@ def main():
         "target_stop_deg":P.STOP_TARGET_DEG,
         "tab_half_angle_deg":round(P.ROTOR_TAB_HALF_ANGLE_DEG,4),
         "tower_half_angle_deg":round(P.FIXED_TOWER_HALF_ANGLE_DEG,4),
+        "stop_contact_calibration_deg":round(P.STOP_CONTACT_CALIBRATION_DEG,6),
         "fixed_stop_angles_deg":[
             round(P.FIXED_STOP_ANGLE_NEG_DEG,4),
             round(P.FIXED_STOP_ANGLE_POS_DEG,4),
@@ -98,6 +118,18 @@ def main():
             P.STOP_SWEEP_MAX_HALF_ANGLE_DEG,4
         ),
         "printability_note":"rotor stop spoke and tab both begin at Z=0",
+        "arm_sweep_clearance_radial_range_mm":[
+            P.ARM_SWEEP_CLEARANCE_R0,P.ARM_SWEEP_CLEARANCE_R1
+        ],
+        "arm_sweep_clearance_angle_margin_deg":
+            P.ARM_SWEEP_CLEARANCE_ANGLE_MARGIN_DEG,
+        "arm_beam_half_angle_at_clearance_r0_deg":round(
+            beam_half_angle_at_clearance_r0,4
+        ),
+        "arm_sweep_clearance_z0_mm":P.ARM_SWEEP_CLEARANCE_Z0,
+        "preserved_buttress_height_above_floor_mm":round(
+            P.ARM_SWEEP_CLEARANCE_Z0-G.BASE_FLOOR_THICKNESS,3
+        ),
         "tower_corner_samples":tower_points,
         "note":"Exact end-stop behavior is OCC-gated after CAD generation.",
     }
