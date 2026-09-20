@@ -14,7 +14,7 @@ import v3_params as V3
 
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-V5_STEP = os.path.join(ROOT, "cad", "v5", "STEP")
+V8_STEP = os.path.join(ROOT, "cad", "v8", "STEP")
 
 
 def v(x, y, z):
@@ -50,8 +50,8 @@ def distance(a, b):
 
 
 def main(contact_dir: str = "build_v6_contacts"):
-    inner = load_step(os.path.join(V5_STEP, "samsung_stand_v5_inner_arm.step"))
-    guide = load_step(os.path.join(V5_STEP, "samsung_stand_v5_outer_guide.step"))
+    inner = load_step(os.path.join(V8_STEP, "samsung_stand_v8_inner_arm.step"))
+    guide = load_step(os.path.join(V8_STEP, "samsung_stand_v8_outer_guide.step"))
 
     failures = []
     result = {"version": "v6-contact-parts", "saddles": {}, "liners": {}}
