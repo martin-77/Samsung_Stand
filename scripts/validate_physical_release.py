@@ -198,6 +198,145 @@ def main(path: str) -> dict[str,Any]:
         ):
             require_false(row.get(key),f"proof_load.{position}.{key}",failures)
 
+    sounddeck_geometry=data.get("sounddeck_geometry",{})
+    usable_flat_width=number(
+        sounddeck_geometry.get("usable_flat_width_mm"),
+        "sounddeck_geometry.usable_flat_width_mm",
+        positive=True,
+    )
+    usable_flat_depth=number(
+        sounddeck_geometry.get("usable_flat_depth_mm"),
+        "sounddeck_geometry.usable_flat_depth_mm",
+        positive=True,
+    )
+    if usable_flat_width + 1e-9 < G.BASE.width:
+        failures.append(
+            f"sounddeck_geometry.usable_flat_width_mm "
+            f"{usable_flat_width:.1f} mm is below base width "
+            f"{G.BASE.width:.1f} mm"
+        )
+    if usable_flat_depth + 1e-9 < G.BASE.depth:
+        failures.append(
+            f"sounddeck_geometry.usable_flat_depth_mm "
+            f"{usable_flat_depth:.1f} mm is below base depth "
+            f"{G.BASE.depth:.1f} mm"
+        )
+    require_true(
+        sounddeck_geometry.get("base_fully_supported_on_flat_area"),
+        "sounddeck_geometry.base_fully_supported_on_flat_area",
+        failures,
+    )
+    require_false(
+        sounddeck_geometry.get("base_contacts_edge_roundover"),
+        "sounddeck_geometry.base_contacts_edge_roundover",
+        failures,
+    )
+
+    stability=data.get("stability_characterization",{})
+    rear_line=number(
+        stability.get("rear_reaction_line_y_mm"),
+        "stability_characterization.rear_reaction_line_y_mm",
+    )
+    front_line=number(
+        stability.get("front_reaction_line_y_mm"),
+        "stability_characterization.front_reaction_line_y_mm",
+    )
+    push_height=number(
+        stability.get("reference_push_height_mm"),
+        "stability_characterization.reference_push_height_mm",
+        positive=True,
+    )
+    if not (
+        G.BASE.ymin <= rear_line < 0.0
+        and 0.0 < front_line <= G.BASE.ymax
+        and rear_line < front_line
+    ):
+        failures.append(
+            "stability characterization reaction lines must straddle y=0 "
+            "and remain inside the fixed base"
+        )
+
+    stability_rows={}
+    totals=[]
+    for position in ("minus_15","center","plus_15"):
+        row=stability.get(position,{})
+        rear_reaction=number(
+            row.get("rear_reaction_n"),
+            f"stability_characterization.{position}.rear_reaction_n",
+            positive=True,
+        )
+        front_reaction=number(
+            row.get("front_reaction_n"),
+            f"stability_characterization.{position}.front_reaction_n",
+            positive=True,
+        )
+        total = rear_reaction + front_reaction
+        totals.append(total)
+        cg_y=(
+            rear_reaction * rear_line
+            + front_reaction * front_line
+        ) / total
+        rear_margin=cg_y - G.BASE.ymin
+        front_margin=G.BASE.ymax - cg_y
+        if rear_margin <= 0.0 or front_margin <= 0.0:
+            failures.append(
+                f"stability_characterization.{position}: measured CG "
+                "projection lies outside the fixed-base depth"
+            )
+        backward_tip_force=total * rear_margin / push_height
+        forward_tip_force=total * front_margin / push_height
+        stability_rows[position]={
+            "total_reaction_n":round(total,3),
+            "cg_y_mm":round(cg_y,3),
+            "rear_static_margin_mm":round(rear_margin,3),
+            "front_static_margin_mm":round(front_margin,3),
+            "idealized_backward_tip_force_at_reference_height_n":round(
+                backward_tip_force,3
+            ),
+            "idealized_forward_tip_force_at_reference_height_n":round(
+                forward_tip_force,3
+            ),
+        }
+
+    total_min=min(totals)
+    total_max=max(totals)
+    total_mean=sum(totals)/len(totals)
+    reaction_spread=(
+        (total_max-total_min)/total_mean
+        if total_mean > 0.0 else float("inf")
+    )
+    if reaction_spread > 0.05:
+        failures.append(
+            "stability characterization total reaction varies by more "
+            f"than 5% across swivel positions: {reaction_spread*100:.2f}%"
+        )
+
+    anti_tip=data.get("anti_tip_restraint",{})
+    if anti_tip.get("manual_reference")!="BN68-07177M-00":
+        failures.append(
+            "anti_tip_restraint.manual_reference must be BN68-07177M-00"
+        )
+    for key in (
+        "restraint_installed",
+        "wall_anchor_verified",
+        "tv_attachment_verified",
+        "full_swivel_without_binding",
+    ):
+        require_true(
+            anti_tip.get(key),
+            f"anti_tip_restraint.{key}",
+            failures,
+        )
+    for key in (
+        "restraint_loose_or_damaged",
+        "restraint_interferes_with_swivel",
+    ):
+        require_false(
+            anti_tip.get(key),
+            f"anti_tip_restraint.{key}",
+            failures,
+        )
+
     interface=data.get("sounddeck_interface",{})
     sounddeck_test_load=number(
         interface.get("test_load_n"),
@@ -274,6 +413,35 @@ def main(path: str) -> dict[str,Any]:
         "proof_setup":{
             "support_surface":proof_setup.get("support_surface"),
             "sounddeck_used":proof_setup.get("sounddeck_used"),
+        },
+        "sounddeck_geometry":{
+            "usable_flat_width_mm":usable_flat_width,
+            "usable_flat_depth_mm":usable_flat_depth,
+            "extra_flat_width_beyond_base_mm":round(
+                usable_flat_width-G.BASE.width,3
+            ),
+            "extra_flat_depth_beyond_base_mm":round(
+                usable_flat_depth-G.BASE.depth,3
+            ),
+        },
+        "stability_characterization":{
+            "reaction_lines_y_mm":[rear_line,front_line],
+            "reference_push_height_mm":push_height,
+            "total_reaction_spread_percent":round(
+                reaction_spread*100.0,3
+            ),
+            "positions":stability_rows,
+            "interpretation":(
+                "Idealized tip-force values are characterization only. "
+                "They are not a certified load rating or pass threshold."
+            ),
+        },
+        "anti_tip_restraint":{
+            "manual_reference":anti_tip.get("manual_reference"),
+            "restraint_installed":anti_tip.get("restraint_installed"),
+            "full_swivel_without_binding":anti_tip.get(
+                "full_swivel_without_binding"
+            ),
         },
         "sounddeck_interface_test_load_n":sounddeck_test_load,
         "verified_service_load":{
