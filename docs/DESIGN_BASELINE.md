@@ -33,6 +33,30 @@ These inferred values may be used for layout and collision exploration, but **mu
 - Sounddeck geometric center = (0, 0).
 - Initial swivel axis = (0, -64 mm), i.e. 64 mm rearward from Sounddeck center.
 
+
+## Magnat Sounddeck interface constraints
+
+Manufacturer documentation explicitly describes the Sounddeck 150 as suitable
+for placement directly below a television and states that the enclosure is
+designed to carry a small-to-medium TV. The front speaker systems and display are
+on the front face; the subwoofer is down-firing. The rear amplifier cooling
+plate / cooling openings must remain unobstructed.
+
+Project consequences:
+
+- the adapter remains entirely on the 700 × 340 mm top surface;
+- the 680 × 295 mm fixed base is centered and therefore leaves 22.5 mm top-edge
+  margin at both front and rear;
+- future base-depth changes must preserve at least 20 mm front/rear top-edge
+  margin;
+- no printed part may wrap around or cover the rear amplifier/cooling panel;
+- the Sounddeck must itself remain on the solid, level support required for the
+  down-firing subwoofer.
+
+Primary source:
+- Magnat Sounddeck 150 manual, installation/safety section and illustrations.
+
+
 ## Fixed base
 
 Target fixed base footprint:
