@@ -60,6 +60,20 @@ def base_center_v4():
     return sh
 
 
+def side_base_v4(side):
+    if side == "right":
+        base = load_step("samsung_stand_v3_base_right")
+    elif side == "left":
+        base = load_step("samsung_stand_v3_base_left")
+    else:
+        raise ValueError(side)
+
+    clearance = SG.arm_sweep_clearance_shape(side)
+    sh = base.cut(clearance).removeSplitter()
+    require_single(sh, "BASE_" + side.upper() + "_V4")
+    return sh
+
+
 def rotor_v4():
     rotor = load_step("samsung_stand_v3_rotor")
     stop = SG.rotor_stop_shape()
@@ -113,8 +127,8 @@ def export_shape(name, shape):
 
 parts = {
     "samsung_stand_v4_base_center": base_center_v4(),
-    "samsung_stand_v4_base_left": load_step("samsung_stand_v3_base_left"),
-    "samsung_stand_v4_base_right": load_step("samsung_stand_v3_base_right"),
+    "samsung_stand_v4_base_left": side_base_v4("left"),
+    "samsung_stand_v4_base_right": side_base_v4("right"),
     "samsung_stand_v4_rotor": rotor_v4(),
     "samsung_stand_v4_inner_arm": load_step("samsung_stand_v3_inner_arm"),
     "samsung_stand_v4_outer_guide": load_step("samsung_stand_v3_outer_guide"),
