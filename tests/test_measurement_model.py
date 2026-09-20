@@ -108,6 +108,13 @@ class MeasurementModelTests(unittest.TestCase):
         with self.assertRaises(MeasurementError):
             load_measurements(self.write_temp(d))
 
+    def test_non_petg_contact_pad_is_rejected(self):
+        d = complete_measurements()
+        d["contact_pad"]["used"] = True
+        d["contact_pad"]["compressed_thickness_mm"] = 1.0
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
     def test_outer_station_radii_must_increase(self):
         d = complete_measurements()
         d["outer_guide"]["left"]["mid"]["station_radius_mm"] = 319.0
