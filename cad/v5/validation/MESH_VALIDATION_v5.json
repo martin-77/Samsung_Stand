@@ -1,0 +1,420 @@
+{
+  "version": "v5",
+  "meshes": {
+    "samsung_stand_v5_arm_lock_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1136.1999955773354,
+      "faces": 68,
+      "extents_mm": [
+        51.0,
+        10.0,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -3.0,
+          -5.0,
+          0.0
+        ],
+        [
+          48.0,
+          5.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_base_center.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 641445.8136655533,
+      "faces": 1932,
+      "extents_mm": [
+        280.0,
+        295.0,
+        26.0
+      ],
+      "bounds_mm": [
+        [
+          -140.0,
+          -147.5,
+          0.0
+        ],
+        [
+          140.0,
+          147.5,
+          26.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_base_joint_retainer.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 3076.7999782562256,
+      "faces": 68,
+      "extents_mm": [
+        14.0,
+        18.0,
+        31.0
+      ],
+      "bounds_mm": [
+        [
+          -7.0,
+          -9.0,
+          0.0
+        ],
+        [
+          7.0,
+          9.0,
+          31.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_base_left.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 493731.8804090237,
+      "faces": 548,
+      "extents_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bounds_mm": [
+        [
+          -340.0,
+          -147.5,
+          0.0
+        ],
+        [
+          -90.0,
+          147.5,
+          24.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_base_right.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 493731.880409024,
+      "faces": 548,
+      "extents_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bounds_mm": [
+        [
+          90.0,
+          -147.5,
+          0.0
+        ],
+        [
+          340.0,
+          147.5,
+          24.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_cassette_t18.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1873.0071241315945,
+      "faces": 220,
+      "extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.499,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_cassette_t22.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1949.8071424421414,
+      "faces": 220,
+      "extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.499,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_cassette_t26.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 2026.607114976321,
+      "faces": 220,
+      "extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.499,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 296.3999938964844,
+      "faces": 28,
+      "extents_mm": [
+        7.0,
+        7.0,
+        14.4
+      ],
+      "bounds_mm": [
+        [
+          -3.5,
+          -3.5,
+          0.0
+        ],
+        [
+          3.5,
+          3.5,
+          14.4
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_inner_arm.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 98693.50453372626,
+      "faces": 240,
+      "extents_mm": [
+        275.0,
+        58.0,
+        15.0
+      ],
+      "bounds_mm": [
+        [
+          -50.0,
+          -29.0,
+          0.0
+        ],
+        [
+          225.0,
+          29.0,
+          15.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_outer_guide.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 86719.50004720688,
+      "faces": 100,
+      "extents_mm": [
+        215.0,
+        68.0,
+        22.0
+      ],
+      "bounds_mm": [
+        [
+          -45.0,
+          -34.0,
+          0.0
+        ],
+        [
+          170.0,
+          34.0,
+          22.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_pivot_clip.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1685.2842841858376,
+      "faces": 372,
+      "extents_mm": [
+        37.972,
+        37.319,
+        3.0
+      ],
+      "bounds_mm": [
+        [
+          -18.972,
+          -18.989,
+          0.0
+        ],
+        [
+          19.0,
+          18.33,
+          3.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_rotor.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 231073.89519688417,
+      "faces": 1346,
+      "extents_mm": [
+        194.913,
+        195.97,
+        27.0
+      ],
+      "bounds_mm": [
+        [
+          -94.913,
+          -138.97,
+          0.0
+        ],
+        [
+          100.0,
+          57.0,
+          27.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "samsung_stand_v5_saddle_insert_blank.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 16390.921033935563,
+      "faces": 12,
+      "extents_mm": [
+        49.4,
+        47.4,
+        7.0
+      ],
+      "bounds_mm": [
+        [
+          -24.7,
+          -23.7,
+          0.0
+        ],
+        [
+          24.7,
+          23.7,
+          7.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    }
+  },
+  "detent_cassette_gates": {
+    "samsung_stand_v5_detent_cassette_t18.stl": {
+      "thickness_mm": 1.8,
+      "actual_extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "z_min_mm": 0.0,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_cassette_t22.stl": {
+      "thickness_mm": 2.2,
+      "actual_extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "z_min_mm": 0.0,
+      "ok": true
+    },
+    "samsung_stand_v5_detent_cassette_t26.stl": {
+      "thickness_mm": 2.6,
+      "actual_extents_mm": [
+        16.0,
+        51.499,
+        6.0
+      ],
+      "z_min_mm": 0.0,
+      "ok": true
+    }
+  },
+  "detent_variant_volumes": [
+    [
+      1.8,
+      1873.007
+    ],
+    [
+      2.2,
+      1949.807
+    ],
+    [
+      2.6,
+      2026.607
+    ]
+  ],
+  "detent_variant_volume_monotonic": true,
+  "detent_pin_gate": {
+    "actual_extents_mm": [
+      7.0,
+      7.0,
+      14.4
+    ],
+    "ok": true
+  },
+  "side_base_symmetry": {
+    "size_delta_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "relative_volume_delta": 5.894662996568728e-16,
+    "ok": true
+  },
+  "failed": []
+}

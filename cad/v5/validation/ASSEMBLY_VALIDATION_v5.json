@@ -1,0 +1,73 @@
+{
+  "version": "v5",
+  "calibration_variant_thickness_mm": 2.2,
+  "cassette_to_base": {
+    "distance_mm": 0.0,
+    "common_volume_mm3": 0.0
+  },
+  "zero_detent": {
+    "nose_distance_mm": 0.067014,
+    "nose_common_volume_mm3": 0.0
+  },
+  "spring_body_sweep": {
+    "-15.0": {
+      "distance_mm": 0.401175,
+      "common_volume_mm3": 0.0
+    },
+    "-7.5": {
+      "distance_mm": 0.401127,
+      "common_volume_mm3": 0.0
+    },
+    "+0.0": {
+      "distance_mm": 0.534305,
+      "common_volume_mm3": 0.0
+    },
+    "+7.5": {
+      "distance_mm": 0.400423,
+      "common_volume_mm3": 0.0
+    },
+    "+15.0": {
+      "distance_mm": 0.40141,
+      "common_volume_mm3": 0.0
+    }
+  },
+  "relaxed_nose_sweep": {
+    "-15.0": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 14.014334
+    },
+    "-7.5": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 14.015375
+    },
+    "+0.0": {
+      "distance_mm": 0.067014,
+      "common_volume_mm3": 0.0
+    },
+    "+7.5": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 14.015375
+    },
+    "+15.0": {
+      "distance_mm": 0.0,
+      "common_volume_mm3": 14.014334
+    }
+  },
+  "relaxed_nose_symmetry_relative_delta": 0.0,
+  "v4_stop_recheck_common_volumes_mm3": {
+    "-15.5": 55.713647,
+    "-15.0": 0.0,
+    "-14.0": 0.0,
+    "+0.0": 0.0,
+    "+14.0": 0.0,
+    "+15.0": 0.0,
+    "+15.5": 55.713647
+  },
+  "interpretation": {
+    "zero": "relaxed nose is in the V-notch with small positive clearance",
+    "off_zero": "rigid nose interference is intentional and represents the in-plane spring deflection demand",
+    "spring_body": "must remain collision-free through full sweep",
+    "force": "not validated by OCC; physical coupon selection remains required"
+  },
+  "failed": []
+}
