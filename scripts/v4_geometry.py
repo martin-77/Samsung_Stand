@@ -6,6 +6,8 @@ This module is the single source for both production CAD and OCC validation.
 
 from __future__ import annotations
 
+import math
+
 import FreeCAD as App
 import Part
 
@@ -61,6 +63,37 @@ def radial_spoke(
         v(r0, -width / 2.0, z0),
     )
     return place_plan(local, angle_deg)
+
+
+def annular_sector(
+    r0: float,
+    r1: float,
+    a0_deg: float,
+    a1_deg: float,
+    z0: float,
+    height: float,
+    segments: int = 72,
+):
+    pts = []
+    for i in range(segments + 1):
+        a = math.radians(a0_deg + (a1_deg - a0_deg) * i / segments)
+        pts.append(v(G.PIVOT.x + r1 * math.cos(a), G.PIVOT.y + r1 * math.sin(a), z0))
+    for i in range(segments, -1, -1):
+        a = math.radians(a0_deg + (a1_deg - a0_deg) * i / segments)
+        pts.append(v(G.PIVOT.x + r0 * math.cos(a), G.PIVOT.y + r0 * math.sin(a), z0))
+    wire = Part.makePolygon(pts + [pts[0]])
+    return Part.Face(wire).extrude(v(0, 0, height))
+
+
+def stop_sweep_clearance_shape():
+    return annular_sector(
+        P.STOP_CLEARANCE_R0,
+        P.STOP_CLEARANCE_R1,
+        P.ROTOR_STOP_HOME_ANGLE_DEG - P.STOP_CLEARANCE_HALF_ANGLE_DEG,
+        P.ROTOR_STOP_HOME_ANGLE_DEG + P.STOP_CLEARANCE_HALF_ANGLE_DEG,
+        P.STOP_CLEARANCE_Z0,
+        P.STOP_CLEARANCE_HEIGHT,
+    )
 
 
 def rotor_stop_shape():
