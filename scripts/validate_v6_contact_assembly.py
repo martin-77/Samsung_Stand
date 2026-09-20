@@ -119,9 +119,10 @@ def main(
         "left": ms.inner_left.profile,
         "right": ms.inner_right.profile,
     }
-    stand_low_z_inner = (
+    stand_low_z_inner_nominal = (
         V2.SADDLE_POCKET_FLOOR + V2.SADDLE_INSERT_HEIGHT
     )
+    vertical_reference = M.inner_vertical_reference_mm(ms)
 
     for side in ("left", "right"):
         saddle = load_step(
@@ -164,6 +165,13 @@ def main(
             inner_station,
             side,
         )
+        inner_vertical_offset = M.station_vertical_offset_mm(
+            inner_station,
+            ms,
+        )
+        stand_low_z_inner = (
+            stand_low_z_inner_nominal + inner_vertical_offset
+        )
         stand = profile_prism(
             inner_profiles[side],
             inner_along - V2.INNER_R0,
@@ -182,6 +190,18 @@ def main(
             "stand_saddle_distance_mm": round(stand_saddle_gap, 6),
             "stand_inner_structure_common_volume_mm3": round(
                 stand_inner_vol, 6
+            ),
+            "measured_lowest_point_height_mm": round(
+                inner_station.lowest_point_height_mm, 6
+            ),
+            "vertical_reference_height_mm": round(
+                vertical_reference, 6
+            ),
+            "relative_vertical_offset_mm": round(
+                inner_vertical_offset, 6
+            ),
+            "installed_lowest_point_z_mm": round(
+                stand_low_z_inner, 6
             ),
             "expected": (
                 "surface contact to saddle insert; no penetration into "
@@ -212,12 +232,10 @@ def main(
         "left": ms.outer_left,
         "right": ms.outer_right,
     }
-    stand_low_z_outer = (
+    stand_low_z_outer_nominal = (
         V3.STAND_CONTACT_PLANE_GLOBAL_Z - V2.TRACK_TOP_Z
     )
-    floor_vertical_clearance = (
-        stand_low_z_outer - V3.OUTER_FLOOR_THICKNESS
-    )
+    outer_floor_clearances = []
 
     for side in ("left", "right"):
         result["liners"][side] = {}
@@ -285,6 +303,19 @@ def main(
         ):
             x = liner_station_x(station, side)
             _along, lateral = station_frame(station, side)
+            vertical_offset = M.station_vertical_offset_mm(
+                station,
+                ms,
+            )
+            stand_low_z_outer = (
+                stand_low_z_outer_nominal + vertical_offset
+            )
+            floor_vertical_clearance = (
+                stand_low_z_outer - V3.OUTER_FLOOR_THICKNESS
+            )
+            outer_floor_clearances.append(
+                floor_vertical_clearance
+            )
             stand = profile_prism(
                 station.profile,
                 x,
@@ -305,6 +336,15 @@ def main(
             row = {
                 "liner_x_mm": round(x, 4),
                 "measured_lateral_offset_mm": round(lateral, 6),
+                "measured_lowest_point_height_mm": round(
+                    station.lowest_point_height_mm, 6
+                ),
+                "relative_vertical_offset_mm": round(
+                    vertical_offset, 6
+                ),
+                "installed_lowest_point_z_mm": round(
+                    stand_low_z_outer, 6
+                ),
                 "neg_y_clearance_mm": round(neg_gap, 6),
                 "pos_y_clearance_mm": round(pos_gap, 6),
                 "neg_y_common_volume_mm3": round(neg_vol, 6),
@@ -344,12 +384,16 @@ def main(
                     f"penetrates structural OUTER_GUIDE: "
                     f"{structural_vol:.6f} mm3"
                 )
+            if floor_vertical_clearance < 5.0:
+                failures.append(
+                    f"{side}/{station_name} measured outer guide vertical "
+                    f"floor clearance fell below 5 mm: "
+                    f"{floor_vertical_clearance:.3f} mm"
+                )
 
-    if floor_vertical_clearance < 5.0:
-        failures.append(
-            "measured outer guide vertical floor clearance fell below "
-            f"5 mm: {floor_vertical_clearance:.3f} mm"
-        )
+    minimum_floor_vertical_clearance = min(
+        outer_floor_clearances
+    )
 
     root_axial_free = B.GUIDE_LINER_X0 - V3.OUTER_ROOT_TIE_LENGTH
     tip_tie_x0 = V3.OUTER_VISIBLE_LENGTH - V3.OUTER_TIP_TIE_LENGTH
@@ -376,8 +420,11 @@ def main(
         "lateral_only": True,
         "generated_floor_bridge": False,
         "target_lateral_clearance_mm": B.GUIDE_LATERAL_CLEARANCE,
-        "vertical_floor_clearance_mm": round(
-            floor_vertical_clearance, 6
+        "minimum_vertical_floor_clearance_mm": round(
+            minimum_floor_vertical_clearance, 6
+        ),
+        "vertical_reference_height_mm": round(
+            vertical_reference, 6
         ),
         "passive_axial_capture": {
             "root_free_travel_mm": round(root_axial_free, 6),
