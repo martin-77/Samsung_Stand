@@ -183,8 +183,8 @@ class MeasurementSet:
     pivot_to_rear: float
     left_tip_xy: tuple[float, float]
     right_tip_xy: tuple[float, float]
-    inner_left: Station
-    inner_right: Station
+    inner_left: tuple[Station, Station, Station]
+    inner_right: tuple[Station, Station, Station]
     outer_left: tuple[Station, Station, Station]
     outer_right: tuple[Station, Station, Station]
     pad_used: bool
@@ -276,6 +276,15 @@ def load_measurements(path: str | Path) -> MeasurementSet:
             "contact_pad.compressed_thickness_mm must be 0 for PETG-only build"
         )
 
+    def inner_side(side: str) -> tuple[Station, Station, Station]:
+        obj = inner.get(side)
+        if not isinstance(obj, dict):
+            raise MeasurementError(f"inner_saddle.{side}: expected object")
+        return tuple(
+            _station(obj.get(name), f"inner_saddle.{side}.{name}")
+            for name in ("root", "center", "tip")
+        )
+
     def outer_side(side: str) -> tuple[Station, Station, Station]:
         obj = outer.get(side)
         if not isinstance(obj, dict):
@@ -292,8 +301,8 @@ def load_measurements(path: str | Path) -> MeasurementSet:
         pivot_to_rear=_require_number(g.get("pivot_to_rear_mm"), "global.pivot_to_rear_mm", positive=True),
         left_tip_xy=_tip_xy(g.get("left_tip_xy_mm"), "global.left_tip_xy_mm"),
         right_tip_xy=_tip_xy(g.get("right_tip_xy_mm"), "global.right_tip_xy_mm"),
-        inner_left=_station(inner.get("left"), "inner_saddle.left"),
-        inner_right=_station(inner.get("right"), "inner_saddle.right"),
+        inner_left=inner_side("left"),
+        inner_right=inner_side("right"),
         outer_left=outer_side("left"),
         outer_right=outer_side("right"),
         pad_used=pad_used,
@@ -312,10 +321,18 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
     if not 40.0 <= ms.pivot_to_rear <= 130.0:
         raise MeasurementError(f"global.pivot_to_rear_mm: implausible {ms.pivot_to_rear:.3f}")
 
-    for name, st in (("inner_left", ms.inner_left), ("inner_right", ms.inner_right)):
-        if not 240.0 <= st.radius <= 310.0:
+    for side, stations in (
+        ("left", ms.inner_left),
+        ("right", ms.inner_right),
+    ):
+        radii = [x.radius for x in stations]
+        if not all(240.0 <= r <= 310.0 for r in radii):
             raise MeasurementError(
-                f"{name}.station_radius_mm: implausible {st.radius:.3f}"
+                f"inner_saddle.{side}: station radius outside 240..310 mm"
+            )
+        if not (radii[0] < radii[1] < radii[2]):
+            raise MeasurementError(
+                f"inner_saddle.{side}: radii must increase root < center < tip"
             )
 
     for side, stations in (("left", ms.outer_left), ("right", ms.outer_right)):
@@ -332,7 +349,9 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
     # Global sign convention: left arm is -X, right arm is +X, both extend
     # forward (+Y) from the pivot.
     for name, st in (
-        ("inner_saddle.left", ms.inner_left),
+        ("inner_saddle.left.root", ms.inner_left[0]),
+        ("inner_saddle.left.center", ms.inner_left[1]),
+        ("inner_saddle.left.tip", ms.inner_left[2]),
         ("outer_guide.left.root", ms.outer_left[0]),
         ("outer_guide.left.mid", ms.outer_left[1]),
         ("outer_guide.left.tip", ms.outer_left[2]),
@@ -343,7 +362,9 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
             )
 
     for name, st in (
-        ("inner_saddle.right", ms.inner_right),
+        ("inner_saddle.right.root", ms.inner_right[0]),
+        ("inner_saddle.right.center", ms.inner_right[1]),
+        ("inner_saddle.right.tip", ms.inner_right[2]),
         ("outer_guide.right.root", ms.outer_right[0]),
         ("outer_guide.right.mid", ms.outer_right[1]),
         ("outer_guide.right.tip", ms.outer_right[2]),
@@ -354,11 +375,19 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
             )
 
 
+def inner_center_station(ms: MeasurementSet, side: str) -> Station:
+    if side == "left":
+        return ms.inner_left[1]
+    if side == "right":
+        return ms.inner_right[1]
+    raise ValueError(side)
+
+
 def inner_vertical_reference_mm(ms: MeasurementSet) -> float:
-    """Common stand datum used to preserve measured pitch/roll in contact CAD."""
+    """Common stand datum from the two measured center saddle stations."""
     return (
-        ms.inner_left.lowest_point_height_mm
-        + ms.inner_right.lowest_point_height_mm
+        ms.inner_left[1].lowest_point_height_mm
+        + ms.inner_right[1].lowest_point_height_mm
     ) / 2.0
 
 
@@ -373,16 +402,32 @@ def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
     return {
         "tip_x_magnitude_delta_mm": abs(abs(ms.left_tip_xy[0]) - abs(ms.right_tip_xy[0])),
         "tip_y_delta_mm": abs(ms.left_tip_xy[1] - ms.right_tip_xy[1]),
-        "inner_radius_delta_mm": abs(ms.inner_left.radius - ms.inner_right.radius),
-        "inner_centerline_angle_delta_deg": abs(
-            (180.0 - ms.inner_left.coordinate_angle_deg)
-            - ms.inner_right.coordinate_angle_deg
+        "inner_radius_delta_mm": abs(
+            ms.inner_left[1].radius - ms.inner_right[1].radius
         ),
-        "inner_profile_width_delta_mm": abs(ms.inner_left.profile.width - ms.inner_right.profile.width),
-        "inner_profile_height_delta_mm": abs(ms.inner_left.profile.height - ms.inner_right.profile.height),
+        "inner_centerline_angle_delta_deg": abs(
+            (180.0 - ms.inner_left[1].coordinate_angle_deg)
+            - ms.inner_right[1].coordinate_angle_deg
+        ),
+        "inner_profile_width_delta_mm": abs(
+            ms.inner_left[1].profile.width
+            - ms.inner_right[1].profile.width
+        ),
+        "inner_profile_height_delta_mm": abs(
+            ms.inner_left[1].profile.height
+            - ms.inner_right[1].profile.height
+        ),
         "inner_lowest_point_height_delta_mm": abs(
-            ms.inner_left.lowest_point_height_mm
-            - ms.inner_right.lowest_point_height_mm
+            ms.inner_left[1].lowest_point_height_mm
+            - ms.inner_right[1].lowest_point_height_mm
+        ),
+        "inner_root_width_delta_mm": abs(
+            ms.inner_left[0].profile.width
+            - ms.inner_right[0].profile.width
+        ),
+        "inner_tip_width_delta_mm": abs(
+            ms.inner_left[2].profile.width
+            - ms.inner_right[2].profile.width
         ),
         "outer_root_width_delta_mm": abs(ms.outer_left[0].profile.width - ms.outer_right[0].profile.width),
         "outer_mid_width_delta_mm": abs(ms.outer_left[1].profile.width - ms.outer_right[1].profile.width),
