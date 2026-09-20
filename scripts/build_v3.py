@@ -141,16 +141,20 @@ def outer_guide():
     # Short cross-ties stiffen the U-section without putting a normal support
     # surface near the reconstructed Samsung foot underside.
     root_tie = Part.makeBox(
-        10.0,
+        P.OUTER_ROOT_TIE_LENGTH,
         P.OUTER_BODY_WIDTH,
-        8.0,
+        P.OUTER_TIE_HEIGHT,
         v(0, -P.OUTER_BODY_WIDTH / 2.0, 0),
     )
     tip_tie = Part.makeBox(
-        8.0,
+        P.OUTER_TIP_TIE_LENGTH,
         P.OUTER_BODY_WIDTH,
-        8.0,
-        v(P.OUTER_VISIBLE_LENGTH - 8.0, -P.OUTER_BODY_WIDTH / 2.0, 0),
+        P.OUTER_TIE_HEIGHT,
+        v(
+            P.OUTER_VISIBLE_LENGTH - P.OUTER_TIP_TIE_LENGTH,
+            -P.OUTER_BODY_WIDTH / 2.0,
+            0,
+        ),
     )
 
     male = roof_prism_x(
