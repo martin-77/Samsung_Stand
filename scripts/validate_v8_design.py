@@ -86,6 +86,31 @@ def main() -> int:
         P.BASE_LOCK_TUNNEL_LENGTH >= G.JOINT_RECEIVER_WIDTH + 2.0
     )
 
+    front_receiver_inner_face_y = (
+        max(G.JOINT_Y_CENTERS) - G.JOINT_RECEIVER_WIDTH / 2.0
+    )
+    front_relief_volume = (
+        2.0 * P.FRONT_BASE_BARB_RELIEF_HALF_X
+        * (P.FRONT_BASE_BARB_RELIEF_Y1 - P.FRONT_BASE_BARB_RELIEF_Y0)
+        * (P.FRONT_BASE_BARB_RELIEF_Z1 - P.FRONT_BASE_BARB_RELIEF_Z0)
+    )
+    checks["front_barb_relief_is_local"] = (
+        P.FRONT_BASE_BARB_RELIEF_HALF_X <= 4.5
+        and P.FRONT_BASE_BARB_RELIEF_Y0
+        >= front_receiver_inner_face_y - 8.0
+        and P.FRONT_BASE_BARB_RELIEF_Y1
+        <= front_receiver_inner_face_y + 0.6
+        and front_relief_volume <= 300.0
+    )
+    relief_legacy_ligament = (
+        abs(P.LEGACY_VERTICAL_LOCK_X_ABS - P.BASE_LOCK_X_ABS)
+        - G.RETAINER_HOLE_X / 2.0
+        - P.FRONT_BASE_BARB_RELIEF_HALF_X
+    )
+    checks["front_barb_relief_keeps_legacy_hole_ligament"] = (
+        relief_legacy_ligament >= 5.0
+    )
+
     # Pin barb must be relaxed only after it is outside the far receiver face.
     base_pin_far_face_local_x = (
         -P.BASE_LOCK_PIN_AXIS_START + G.JOINT_RECEIVER_WIDTH / 2.0
@@ -202,6 +227,10 @@ def main() -> int:
         "outer_lock_roof_angle_deg": round(outer_roof, 3),
         "base_lock_ligament_to_legacy_vertical_hole_mm": round(
             base_lock_ligament, 3
+        ),
+        "front_barb_relief_volume_mm3_each": round(front_relief_volume, 3),
+        "front_barb_relief_legacy_hole_ligament_mm": round(
+            relief_legacy_ligament, 3
         ),
         "base_pin_far_receiver_face_local_x_mm": round(
             base_pin_far_face_local_x, 3
