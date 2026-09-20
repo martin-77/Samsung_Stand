@@ -87,9 +87,14 @@ def saddle_insert(
     profile: M.Profile,
     pad_thickness: float,
     lateral_offset: float,
+    vertical_offset: float,
 ):
     env = M.lower_envelope(profile, SADDLE_PROFILE_SAMPLES)
-    contact_low = SADDLE_NOMINAL_LOWEST_CONTACT_Z - pad_thickness
+    contact_low = (
+        SADDLE_NOMINAL_LOWEST_CONTACT_Z
+        - pad_thickness
+        + vertical_offset
+    )
     if contact_low <= SADDLE_BASE_THICKNESS + 1.0:
         raise RuntimeError("contact pad leaves insufficient saddle insert thickness")
 
@@ -338,6 +343,11 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         "left": station_frame(ms.inner_left, "left"),
         "right": station_frame(ms.inner_right, "right"),
     }
+    vertical_reference = M.inner_vertical_reference_mm(ms)
+    inner_vertical_offsets = {
+        "left": M.station_vertical_offset_mm(ms.inner_left, ms),
+        "right": M.station_vertical_offset_mm(ms.inner_right, ms),
+    }
 
     saddle_center_radius = V2.INNER_R0 + V2.SADDLE_U
     saddle_half_length = V2.SADDLE_INSERT_LENGTH / 2.0
@@ -355,11 +365,13 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
             ms.inner_left.profile,
             pad,
             inner_frames["left"][1],
+            inner_vertical_offsets["left"],
         ),
         "samsung_stand_v6_saddle_insert_right": saddle_insert(
             ms.inner_right.profile,
             pad,
             inner_frames["right"][1],
+            inner_vertical_offsets["right"],
         ),
     }
 
@@ -382,6 +394,40 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         "measurement_symmetry": {
             k: round(vv,4)
             for k,vv in M.symmetry_report(ms).items()
+        },
+        "measured_vertical_datum": {
+            "inner_reference_height_mm": round(vertical_reference, 4),
+            "inner_saddle": {
+                side: {
+                    "measured_lowest_point_height_mm": round(
+                        station.lowest_point_height_mm, 4
+                    ),
+                    "relative_vertical_offset_mm": round(
+                        inner_vertical_offsets[side], 4
+                    ),
+                }
+                for side, station in (
+                    ("left", ms.inner_left),
+                    ("right", ms.inner_right),
+                )
+            },
+            "outer_guide": {
+                side: [
+                    {
+                        "measured_lowest_point_height_mm": round(
+                            st.lowest_point_height_mm, 4
+                        ),
+                        "relative_vertical_offset_mm": round(
+                            M.station_vertical_offset_mm(st, ms), 4
+                        ),
+                    }
+                    for st in stations
+                ]
+                for side, stations in (
+                    ("left", ms.outer_left),
+                    ("right", ms.outer_right),
+                )
+            },
         },
         "measured_centerline_projection": {
             "inner_saddle": {
@@ -420,9 +466,18 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
                 GUIDE_ENDPOINT_DISTANCE_MAX_MM
             ),
             "contact_pad_compressed_mm": pad,
-            "saddle_lowest_printed_contact_z_mm": (
+            "saddle_nominal_lowest_contact_z_mm": (
                 SADDLE_NOMINAL_LOWEST_CONTACT_Z - pad
             ),
+            "saddle_lowest_contact_z_mm": {
+                side: round(
+                    SADDLE_NOMINAL_LOWEST_CONTACT_Z
+                    - pad
+                    + inner_vertical_offsets[side],
+                    4,
+                )
+                for side in ("left", "right")
+            },
         },
         "structural_note": (
             "These parts change only Samsung-contact geometry. V8 structural "
