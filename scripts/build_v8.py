@@ -85,6 +85,10 @@ def base_center_v8():
         for y in G.JOINT_Y_CENTERS:
             sh = sh.cut(LG.base_lock_tunnel(x, y)).removeSplitter()
 
+        # Only the front (+Y) pin exits next to the asymmetric diagonal rib.
+        # Give its expanded snap barb a local pocket after the receiver wall.
+        sh = sh.cut(LG.front_base_barb_relief(x)).removeSplitter()
+
     require_single(sh, "BASE_CENTER_V8")
     return sh
 
