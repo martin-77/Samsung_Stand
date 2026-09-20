@@ -69,15 +69,20 @@ replaceable side-contact shims/inserts instead of reprinting the 215 mm rail.
 
 ## D. Contact material / protection
 
-Before final contact inserts are generated, decide whether the original Samsung
-stand should touch:
+Current project constraint: **all contact parts remain PETG-only**.
 
-- printed PETG directly; or
-- a thin replaceable protective layer/pad.
+The original Samsung stand therefore touches printed PETG directly. External
+protective pads, foam, TPU, rubber or adhesive layers are not part of the current
+design and are rejected by the measurement validator.
 
-If a pad is used, record its measured compressed thickness and include that
-thickness in the final insert geometry.  Do not simply subtract a nominal
-catalog thickness.
+Keep:
+
+- `contact_pad.used = false`
+- `contact_pad.compressed_thickness_mm = 0.0`
+
+If this constraint is ever changed deliberately, the measurement schema,
+generator and physical-release gates must be revised together rather than
+silently adding another material.
 
 ## E. Values to return to CAD
 
@@ -127,9 +132,9 @@ A measurement set is complete when it can fill a record equivalent to:
     }
   },
   "contact_pad": {
-    "used": null,
-    "compressed_thickness_mm": null,
-    "notes": ""
+    "used": false,
+    "compressed_thickness_mm": 0.0,
+    "notes": "PETG-only project constraint"
   }
 }
 ```
