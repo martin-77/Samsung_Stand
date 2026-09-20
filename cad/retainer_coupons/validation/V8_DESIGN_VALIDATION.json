@@ -34,7 +34,7 @@
     "outer_lock_roof_angle_deg": 48.814,
     "base_lock_ligament_to_legacy_vertical_hole_mm": 7.2,
     "base_pin_far_receiver_face_local_x_mm": 51.0,
-    "joint_pin_barb_start_local_x_mm": 47.0,
+    "joint_pin_barb_start_local_x_mm": 51.0,
     "outer_pin_far_saddle_face_local_x_mm": 61.0,
     "outer_pin_barb_start_local_x_mm": 59.0,
     "pivot_pin_max_radius_mm": 21.84,
