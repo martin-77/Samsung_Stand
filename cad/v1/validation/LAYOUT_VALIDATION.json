@@ -1,0 +1,526 @@
+{
+  "sounddeck_mm": [
+    700.0,
+    340.0
+  ],
+  "fixed_base_mm": [
+    680.0,
+    295.0
+  ],
+  "stand_width_mm": 840.0,
+  "stand_depth_status": "reconstructed; not yet physical manufacturing truth",
+  "pivot_sounddeck_xy_mm": [
+    0.0,
+    -64.0
+  ],
+  "swivel_limit_deg": 15.0,
+  "saddle_local_xy_mm": [
+    250.0,
+    123.80952380952381
+  ],
+  "saddle_orbit_radius_mm": 278.978,
+  "support_pad_assumption_mm": [
+    40.0,
+    40.0
+  ],
+  "checks": {
+    "base_fits_sounddeck_width": true,
+    "base_fits_sounddeck_depth": true,
+    "stand_width_exceeds_sounddeck_as_expected": true,
+    "saddle_radius_matches_geometry": true,
+    "saddle_centers_inside_sounddeck_full_sweep": true,
+    "40x40_support_pads_inside_sounddeck_full_sweep": true,
+    "all_declared_modules_fit_printer": true
+  },
+  "details": {
+    "stand_side_overhang_zero_deg_mm": 70.0
+  },
+  "modules": {
+    "BASE_CENTER": {
+      "size_mm": [
+        280.0,
+        295.0,
+        24.0
+      ],
+      "fits_printer": true
+    },
+    "BASE_LEFT": {
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "fits_printer": true
+    },
+    "BASE_RIGHT": {
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "fits_printer": true
+    },
+    "ROTOR": {
+      "size_mm": [
+        150.0,
+        150.0,
+        16.0
+      ],
+      "fits_printer": true
+    },
+    "JOINT_RETAINER": {
+      "size_mm": [
+        14.0,
+        18.0,
+        31.0
+      ],
+      "fits_printer": true
+    },
+    "PIVOT_CLIP": {
+      "size_mm": [
+        38.0,
+        38.0,
+        3.0
+      ],
+      "fits_printer": true
+    },
+    "INNER_LEFT": {
+      "size_mm": [
+        285.0,
+        120.0,
+        45.0
+      ],
+      "fits_printer": true
+    },
+    "INNER_RIGHT": {
+      "size_mm": [
+        285.0,
+        120.0,
+        45.0
+      ],
+      "fits_printer": true
+    },
+    "OUTER_GUIDE_LEFT": {
+      "size_mm": [
+        220.0,
+        80.0,
+        45.0
+      ],
+      "fits_printer": true
+    },
+    "OUTER_GUIDE_RIGHT": {
+      "size_mm": [
+        220.0,
+        80.0,
+        45.0
+      ],
+      "fits_printer": true
+    }
+  },
+  "sweep": [
+    {
+      "angle_deg": -15.0,
+      "left": [
+        -209.437,
+        120.296
+      ],
+      "right": [
+        273.526,
+        -9.114
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -14.0,
+      "left": [
+        -212.622,
+        116.612
+      ],
+      "right": [
+        272.526,
+        -4.349
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -13.0,
+      "left": [
+        -215.741,
+        112.874
+      ],
+      "right": [
+        271.444,
+        0.399
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -12.0,
+      "left": [
+        -218.795,
+        109.082
+      ],
+      "right": [
+        270.278,
+        5.126
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -11.0,
+      "left": [
+        -221.783,
+        105.237
+      ],
+      "right": [
+        269.031,
+        9.833
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -10.0,
+      "left": [
+        -224.703,
+        101.341
+      ],
+      "right": [
+        267.701,
+        14.517
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -9.0,
+      "left": [
+        -227.554,
+        97.394
+      ],
+      "right": [
+        266.29,
+        19.177
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -8.0,
+      "left": [
+        -230.336,
+        93.398
+      ],
+      "right": [
+        264.798,
+        23.811
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -7.0,
+      "left": [
+        -233.048,
+        89.354
+      ],
+      "right": [
+        263.225,
+        28.419
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -6.0,
+      "left": [
+        -235.689,
+        85.263
+      ],
+      "right": [
+        261.572,
+        32.999
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -5.0,
+      "left": [
+        -238.258,
+        81.127
+      ],
+      "right": [
+        259.839,
+        37.549
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -4.0,
+      "left": [
+        -240.754,
+        76.947
+      ],
+      "right": [
+        258.028,
+        42.069
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -3.0,
+      "left": [
+        -243.178,
+        72.724
+      ],
+      "right": [
+        256.137,
+        46.556
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -2.0,
+      "left": [
+        -245.527,
+        68.459
+      ],
+      "right": [
+        254.169,
+        51.009
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": -1.0,
+      "left": [
+        -247.801,
+        64.154
+      ],
+      "right": [
+        252.123,
+        55.428
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 0.0,
+      "left": [
+        -250.0,
+        59.81
+      ],
+      "right": [
+        250.0,
+        59.81
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 1.0,
+      "left": [
+        -252.123,
+        55.428
+      ],
+      "right": [
+        247.801,
+        64.154
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 2.0,
+      "left": [
+        -254.169,
+        51.009
+      ],
+      "right": [
+        245.527,
+        68.459
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 3.0,
+      "left": [
+        -256.137,
+        46.556
+      ],
+      "right": [
+        243.178,
+        72.724
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 4.0,
+      "left": [
+        -258.028,
+        42.069
+      ],
+      "right": [
+        240.754,
+        76.947
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 5.0,
+      "left": [
+        -259.839,
+        37.549
+      ],
+      "right": [
+        238.258,
+        81.127
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 6.0,
+      "left": [
+        -261.572,
+        32.999
+      ],
+      "right": [
+        235.689,
+        85.263
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 7.0,
+      "left": [
+        -263.225,
+        28.419
+      ],
+      "right": [
+        233.048,
+        89.354
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 8.0,
+      "left": [
+        -264.798,
+        23.811
+      ],
+      "right": [
+        230.336,
+        93.398
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 9.0,
+      "left": [
+        -266.29,
+        19.177
+      ],
+      "right": [
+        227.554,
+        97.394
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 10.0,
+      "left": [
+        -267.701,
+        14.517
+      ],
+      "right": [
+        224.703,
+        101.341
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 11.0,
+      "left": [
+        -269.031,
+        9.833
+      ],
+      "right": [
+        221.783,
+        105.237
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 12.0,
+      "left": [
+        -270.278,
+        5.126
+      ],
+      "right": [
+        218.795,
+        109.082
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 13.0,
+      "left": [
+        -271.444,
+        0.399
+      ],
+      "right": [
+        215.741,
+        112.874
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 14.0,
+      "left": [
+        -272.526,
+        -4.349
+      ],
+      "right": [
+        212.622,
+        116.612
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    },
+    {
+      "angle_deg": 15.0,
+      "left": [
+        -273.526,
+        -9.114
+      ],
+      "right": [
+        209.437,
+        120.296
+      ],
+      "centers_inside": true,
+      "40x40_pads_inside": true
+    }
+  ],
+  "failed": []
+}

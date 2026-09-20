@@ -1,0 +1,859 @@
+{
+  "version": "v1",
+  "checks": {
+    "two_joint_keys_per_side": true,
+    "joint_overlap_at_least_50mm": true,
+    "joint_clearance_petg_reasonable": true,
+    "roof_is_support_friendly_45deg_or_steeper": true,
+    "receiver_has_minimum_roof_wall": true,
+    "retainer_hole_clears_pin": true,
+    "retainer_hole_lies_inside_overlap": true,
+    "bearing_fits_center_module_x": true,
+    "bearing_fits_center_module_y": true,
+    "bearing_keeps_min_8mm_rear_margin": true,
+    "pivot_bore_has_radial_clearance": true,
+    "pivot_clip_captures_rotor_bore": true,
+    "bearing_nominal_area_large": true,
+    "bearing_nominal_pressure_low": true,
+    "all_v1_modules_fit_core_one_l": true,
+    "all_v1_modules_keep_295mm_xy_margin": true,
+    "support_pads_inside_sounddeck_full_sweep": true,
+    "support_pads_have_positive_edge_margin": true
+  },
+  "details": {
+    "joint_roof_angle_deg": 45.0,
+    "bearing_area_mm2": 12644.91,
+    "bearing_rear_margin_mm": 8.5,
+    "bearing_front_margin_mm": 136.5,
+    "bearing_nominal_pressure_mpa_at_500N": 0.03954,
+    "minimum_40x40_support_pad_edge_margin_mm": 29.704,
+    "load_path_note": "Roof keys transfer vertical/lateral joint loads through large form-locking surfaces. Retainer pin prevents withdrawal; its snap barbs only retain the pin. Pivot stem guides rotation; annular bearing is the intended primary vertical load path."
+  },
+  "modules": {
+    "BASE_CENTER": {
+      "size_mm": [
+        280.0,
+        295.0,
+        24.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "BASE_LEFT": {
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "BASE_RIGHT": {
+      "size_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "ROTOR": {
+      "size_mm": [
+        150.0,
+        150.0,
+        16.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "JOINT_RETAINER": {
+      "size_mm": [
+        14.0,
+        18.0,
+        31.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "PIVOT_CLIP": {
+      "size_mm": [
+        38.0,
+        38.0,
+        3.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "INNER_LEFT": {
+      "size_mm": [
+        285.0,
+        120.0,
+        45.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "INNER_RIGHT": {
+      "size_mm": [
+        285.0,
+        120.0,
+        45.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "OUTER_GUIDE_LEFT": {
+      "size_mm": [
+        220.0,
+        80.0,
+        45.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    },
+    "OUTER_GUIDE_RIGHT": {
+      "size_mm": [
+        220.0,
+        80.0,
+        45.0
+      ],
+      "fits_core_one_l": true,
+      "within_preferred_xy_295": true
+    }
+  },
+  "sweep": [
+    {
+      "angle_deg": -15.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -209.437,
+        120.296
+      ],
+      "right_xy_mm": [
+        273.526,
+        -9.114
+      ]
+    },
+    {
+      "angle_deg": -14.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -211.037,
+        118.461
+      ],
+      "right_xy_mm": [
+        273.036,
+        -6.729
+      ]
+    },
+    {
+      "angle_deg": -14.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -212.622,
+        116.612
+      ],
+      "right_xy_mm": [
+        272.526,
+        -4.349
+      ]
+    },
+    {
+      "angle_deg": -13.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -214.19,
+        114.75
+      ],
+      "right_xy_mm": [
+        271.995,
+        -1.973
+      ]
+    },
+    {
+      "angle_deg": -13.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -215.741,
+        112.874
+      ],
+      "right_xy_mm": [
+        271.444,
+        0.399
+      ]
+    },
+    {
+      "angle_deg": -12.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -217.277,
+        110.985
+      ],
+      "right_xy_mm": [
+        270.871,
+        2.765
+      ]
+    },
+    {
+      "angle_deg": -12.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -218.795,
+        109.082
+      ],
+      "right_xy_mm": [
+        270.278,
+        5.126
+      ]
+    },
+    {
+      "angle_deg": -11.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -220.298,
+        107.166
+      ],
+      "right_xy_mm": [
+        269.665,
+        7.482
+      ]
+    },
+    {
+      "angle_deg": -11.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -221.783,
+        105.237
+      ],
+      "right_xy_mm": [
+        269.031,
+        9.833
+      ]
+    },
+    {
+      "angle_deg": -10.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -223.251,
+        103.295
+      ],
+      "right_xy_mm": [
+        268.376,
+        12.177
+      ]
+    },
+    {
+      "angle_deg": -10.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -224.703,
+        101.341
+      ],
+      "right_xy_mm": [
+        267.701,
+        14.517
+      ]
+    },
+    {
+      "angle_deg": -9.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -226.137,
+        99.373
+      ],
+      "right_xy_mm": [
+        267.006,
+        16.85
+      ]
+    },
+    {
+      "angle_deg": -9.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -227.554,
+        97.394
+      ],
+      "right_xy_mm": [
+        266.29,
+        19.177
+      ]
+    },
+    {
+      "angle_deg": -8.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -228.954,
+        95.402
+      ],
+      "right_xy_mm": [
+        265.554,
+        21.497
+      ]
+    },
+    {
+      "angle_deg": -8.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -230.336,
+        93.398
+      ],
+      "right_xy_mm": [
+        264.798,
+        23.811
+      ]
+    },
+    {
+      "angle_deg": -7.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -231.701,
+        91.382
+      ],
+      "right_xy_mm": [
+        264.022,
+        26.119
+      ]
+    },
+    {
+      "angle_deg": -7.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -233.048,
+        89.354
+      ],
+      "right_xy_mm": [
+        263.225,
+        28.419
+      ]
+    },
+    {
+      "angle_deg": -6.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -234.377,
+        87.314
+      ],
+      "right_xy_mm": [
+        262.409,
+        30.713
+      ]
+    },
+    {
+      "angle_deg": -6.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -235.689,
+        85.263
+      ],
+      "right_xy_mm": [
+        261.572,
+        32.999
+      ]
+    },
+    {
+      "angle_deg": -5.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -236.982,
+        83.201
+      ],
+      "right_xy_mm": [
+        260.716,
+        35.278
+      ]
+    },
+    {
+      "angle_deg": -5.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -238.258,
+        81.127
+      ],
+      "right_xy_mm": [
+        259.839,
+        37.549
+      ]
+    },
+    {
+      "angle_deg": -4.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -239.515,
+        79.043
+      ],
+      "right_xy_mm": [
+        258.943,
+        39.813
+      ]
+    },
+    {
+      "angle_deg": -4.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -240.754,
+        76.947
+      ],
+      "right_xy_mm": [
+        258.028,
+        42.069
+      ]
+    },
+    {
+      "angle_deg": -3.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -241.975,
+        74.841
+      ],
+      "right_xy_mm": [
+        257.092,
+        44.316
+      ]
+    },
+    {
+      "angle_deg": -3.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -243.178,
+        72.724
+      ],
+      "right_xy_mm": [
+        256.137,
+        46.556
+      ]
+    },
+    {
+      "angle_deg": -2.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -244.362,
+        70.597
+      ],
+      "right_xy_mm": [
+        255.163,
+        48.787
+      ]
+    },
+    {
+      "angle_deg": -2.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -245.527,
+        68.459
+      ],
+      "right_xy_mm": [
+        254.169,
+        51.009
+      ]
+    },
+    {
+      "angle_deg": -1.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -246.673,
+        66.311
+      ],
+      "right_xy_mm": [
+        253.155,
+        53.223
+      ]
+    },
+    {
+      "angle_deg": -1.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -247.801,
+        64.154
+      ],
+      "right_xy_mm": [
+        252.123,
+        55.428
+      ]
+    },
+    {
+      "angle_deg": -0.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -248.91,
+        61.986
+      ],
+      "right_xy_mm": [
+        251.071,
+        57.623
+      ]
+    },
+    {
+      "angle_deg": 0.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -250.0,
+        59.81
+      ],
+      "right_xy_mm": [
+        250.0,
+        59.81
+      ]
+    },
+    {
+      "angle_deg": 0.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -251.071,
+        57.623
+      ],
+      "right_xy_mm": [
+        248.91,
+        61.986
+      ]
+    },
+    {
+      "angle_deg": 1.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -252.123,
+        55.428
+      ],
+      "right_xy_mm": [
+        247.801,
+        64.154
+      ]
+    },
+    {
+      "angle_deg": 1.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -253.155,
+        53.223
+      ],
+      "right_xy_mm": [
+        246.673,
+        66.311
+      ]
+    },
+    {
+      "angle_deg": 2.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -254.169,
+        51.009
+      ],
+      "right_xy_mm": [
+        245.527,
+        68.459
+      ]
+    },
+    {
+      "angle_deg": 2.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -255.163,
+        48.787
+      ],
+      "right_xy_mm": [
+        244.362,
+        70.597
+      ]
+    },
+    {
+      "angle_deg": 3.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -256.137,
+        46.556
+      ],
+      "right_xy_mm": [
+        243.178,
+        72.724
+      ]
+    },
+    {
+      "angle_deg": 3.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -257.092,
+        44.316
+      ],
+      "right_xy_mm": [
+        241.975,
+        74.841
+      ]
+    },
+    {
+      "angle_deg": 4.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -258.028,
+        42.069
+      ],
+      "right_xy_mm": [
+        240.754,
+        76.947
+      ]
+    },
+    {
+      "angle_deg": 4.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -258.943,
+        39.813
+      ],
+      "right_xy_mm": [
+        239.515,
+        79.043
+      ]
+    },
+    {
+      "angle_deg": 5.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -259.839,
+        37.549
+      ],
+      "right_xy_mm": [
+        238.258,
+        81.127
+      ]
+    },
+    {
+      "angle_deg": 5.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -260.716,
+        35.278
+      ],
+      "right_xy_mm": [
+        236.982,
+        83.201
+      ]
+    },
+    {
+      "angle_deg": 6.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -261.572,
+        32.999
+      ],
+      "right_xy_mm": [
+        235.689,
+        85.263
+      ]
+    },
+    {
+      "angle_deg": 6.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -262.409,
+        30.713
+      ],
+      "right_xy_mm": [
+        234.377,
+        87.314
+      ]
+    },
+    {
+      "angle_deg": 7.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -263.225,
+        28.419
+      ],
+      "right_xy_mm": [
+        233.048,
+        89.354
+      ]
+    },
+    {
+      "angle_deg": 7.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -264.022,
+        26.119
+      ],
+      "right_xy_mm": [
+        231.701,
+        91.382
+      ]
+    },
+    {
+      "angle_deg": 8.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -264.798,
+        23.811
+      ],
+      "right_xy_mm": [
+        230.336,
+        93.398
+      ]
+    },
+    {
+      "angle_deg": 8.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -265.554,
+        21.497
+      ],
+      "right_xy_mm": [
+        228.954,
+        95.402
+      ]
+    },
+    {
+      "angle_deg": 9.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -266.29,
+        19.177
+      ],
+      "right_xy_mm": [
+        227.554,
+        97.394
+      ]
+    },
+    {
+      "angle_deg": 9.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -267.006,
+        16.85
+      ],
+      "right_xy_mm": [
+        226.137,
+        99.373
+      ]
+    },
+    {
+      "angle_deg": 10.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -267.701,
+        14.517
+      ],
+      "right_xy_mm": [
+        224.703,
+        101.341
+      ]
+    },
+    {
+      "angle_deg": 10.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -268.376,
+        12.177
+      ],
+      "right_xy_mm": [
+        223.251,
+        103.295
+      ]
+    },
+    {
+      "angle_deg": 11.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -269.031,
+        9.833
+      ],
+      "right_xy_mm": [
+        221.783,
+        105.237
+      ]
+    },
+    {
+      "angle_deg": 11.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -269.665,
+        7.482
+      ],
+      "right_xy_mm": [
+        220.298,
+        107.166
+      ]
+    },
+    {
+      "angle_deg": 12.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -270.278,
+        5.126
+      ],
+      "right_xy_mm": [
+        218.795,
+        109.082
+      ]
+    },
+    {
+      "angle_deg": 12.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -270.871,
+        2.765
+      ],
+      "right_xy_mm": [
+        217.277,
+        110.985
+      ]
+    },
+    {
+      "angle_deg": 13.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -271.444,
+        0.399
+      ],
+      "right_xy_mm": [
+        215.741,
+        112.874
+      ]
+    },
+    {
+      "angle_deg": 13.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -271.995,
+        -1.973
+      ],
+      "right_xy_mm": [
+        214.19,
+        114.75
+      ]
+    },
+    {
+      "angle_deg": 14.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -272.526,
+        -4.349
+      ],
+      "right_xy_mm": [
+        212.622,
+        116.612
+      ]
+    },
+    {
+      "angle_deg": 14.5,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -273.036,
+        -6.729
+      ],
+      "right_xy_mm": [
+        211.037,
+        118.461
+      ]
+    },
+    {
+      "angle_deg": 15.0,
+      "supports_inside": true,
+      "left_xy_mm": [
+        -273.526,
+        -9.114
+      ],
+      "right_xy_mm": [
+        209.437,
+        120.296
+      ]
+    }
+  ],
+  "failed": []
+}
