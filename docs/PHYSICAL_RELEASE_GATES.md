@@ -20,8 +20,10 @@ Still required:
 The structural CAD deliberately isolates these unknowns:
 
 - the inner support uses a replaceable saddle insert;
-- the outer U-guide remains an oversized structural guide until side-contact
-  shims / inserts are generated from physical measurements.
+- the outer U-guide remains an oversized structural guide until four
+  lateral-only side rails (negative-Y and positive-Y per guide) are generated
+  from physical measurements. No generated outer contact part may bridge below
+  the Samsung arm or become a normal vertical support.
 
 Do not convert reconstructed dimensions into manufacturing truth by assumption.
 
@@ -33,7 +35,7 @@ Print small fit coupons before the large structural modules:
 2. rotor/INNER_ARM roof-key + cross-pin coupon;
 3. INNER_ARM/OUTER_GUIDE roof-key + cross-pin coupon;
 4. final Samsung saddle insert;
-5. final outer-guide side-contact shim;
+5. final measured OUTER_GUIDE side-rail fit (all four rails);
 6. selected zero-detent spring cassette;
 7. v8 base-joint transverse retainer coupon;
 8. v8 long INNER_ARM/OUTER_GUIDE retainer coupon;
