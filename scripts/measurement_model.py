@@ -465,6 +465,16 @@ def _profile_z_intersections_at_y(
     return tuple(zs)
 
 
+def lower_profile_z_at_y(profile: Profile, y: float) -> float:
+    """Measured lower boundary at Y, normalized to this profile's z=0 datum."""
+    zs = _profile_z_intersections_at_y(profile, y)
+    if not zs:
+        raise MeasurementError(
+            f"cannot derive lower envelope at y={y:.6f} from profile"
+        )
+    return min(zs) - profile.zmin
+
+
 def lower_envelope(
     profile: Profile,
     samples: int = 31,
@@ -487,18 +497,10 @@ def lower_envelope(
     vertex_ys = {y for y, _z in profile.points}
     ys = sorted(uniform_ys | vertex_ys)
 
-    out = []
-    for y in ys:
-        zs = _profile_z_intersections_at_y(profile, y)
-        if not zs:
-            raise MeasurementError(
-                f"cannot derive lower envelope at y={y:.6f} from profile"
-            )
-        out.append((y, min(zs)))
-
-    # Normalize against the actual measured minimum, not the sampled minimum.
-    # This preserves the physical datum even if a uniform sample would miss it.
-    return tuple((y, z - profile.zmin) for y, z in out)
+    return tuple(
+        (y, lower_profile_z_at_y(profile, y))
+        for y in ys
+    )
 
 
 def project_xy_to_arm_frame(
