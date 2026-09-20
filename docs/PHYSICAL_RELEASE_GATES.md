@@ -11,8 +11,8 @@ until all gates below are completed on the real hardware and recorded.
 
 Still required:
 
-- stand-arm cross-section at the inner saddle station;
-- stand-arm cross-section / side profile inside the outer guide;
+- stand-arm cross-sections at inner-saddle root / center / tip on both sides;
+- stand-arm cross-section / side profile at outer-guide root / mid / tip;
 - actual stand depth and rear contour;
 - verification that the reconstructed pivot/arm centerline matches the physical
   stand closely enough over the complete +/-15 degree sweep.
@@ -42,6 +42,32 @@ Print small fit coupons before the large structural modules:
 9. v8 pivot-post / cross-pin retainer coupon.
 
 Record printer, material, nozzle, layer height and actual measured clearances.
+
+### Measured-contact dry fit
+
+Before any proof load, install the **real original Samsung stand** into the
+generated PETG contact parts without the television and verify the complete
+contact path.
+
+For each left/right saddle insert:
+
+1. confirm seating/contact at the measured **root, center and tip** sections;
+2. check that the stand does not rock when alternately pressed near the root and
+   tip of the saddle region;
+3. check for a local high spot that prevents another measured section from
+   seating;
+4. inspect the unmeasured intervals between the three sections for unexpected
+   bosses, ribs or curvature that the loft could not know from the measurements.
+
+For each OUTER_GUIDE:
+
+1. confirm the side rails guide the real arm without binding;
+2. confirm visible/free vertical clearance below the arm;
+3. specifically verify that the arm does **not** touch the structural guide
+   floor anywhere through the guide span.
+
+These observations are separate fields in the physical release record. A generic
+"dry fit passed" is not sufficient by itself.
 
 ## 3. Static proof loading
 
