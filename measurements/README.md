@@ -6,7 +6,7 @@ Do **not** fill missing values by estimation.
 
 ## Workflow
 
-1. Copy `docs/stand_measurements.template.json` to `measurements/stand_measurements.json`.
+1. Copy `measurements/stand_measurements.template.json` to `measurements/stand_measurements.json`.
 2. Enter measured global dimensions.
 3. For each inner saddle station, enter a 2D cross-section polygon looking along the stand arm axis.
 4. For each outer-guide station (root/mid/tip), enter the measured cross-section polygon.
