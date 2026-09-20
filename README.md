@@ -41,6 +41,28 @@ Initial working geometry:
 
 See `docs/DESIGN_BASELINE.md` and the geometry validation scripts before changing these values.
 
-## Status
+## Current status
 
-Repository bootstrap / geometry-validation phase. No printable release yet.
+The repository has progressed to **v5**, a validated geometry candidate:
+
+- v1: modular three-piece fixed base and central annular swivel bearing;
+- v2: dual-load-path INNER_ARM with rotor root landing and side glide tracks;
+- v3: modular OUTER_GUIDE rails, intentionally non-load-bearing vertically;
+- v4: calibrated positive mechanical +/-15 degree end stops plus complete carrier sweep clearance;
+- v5: replaceable zero-position PETG detent cassette with 1.8 / 2.2 / 2.6 mm calibration variants.
+
+For v5 the parameter gates, FreeCAD build, watertight-mesh checks and installed
+OCC collision/contact checks are green.  The +/-15 degree end stops remain
+structural; the center detent is positional only.
+
+This is **not yet a physical structural release for mounting the TV**.  The
+Samsung arm contact geometry is still based partly on reconstruction and must be
+measured before final saddle/guide inserts are generated.  A real fit-coupon
+sequence and non-fragile proof-load test are required before TV use.
+
+See:
+
+- `cad/v5/` for the newest validated CAD candidate;
+- `cad/fit_coupons/` for structural joint clearance coupons once its workflow is published;
+- `docs/REQUIRED_MEASUREMENTS.md` for the remaining physical dimensions;
+- `docs/PHYSICAL_RELEASE_GATES.md` for the required fit and proof tests.
