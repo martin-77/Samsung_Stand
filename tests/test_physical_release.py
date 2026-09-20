@@ -60,6 +60,7 @@ def passing_record():
             "outer_guide_lateral_fit_confirmed":True,
             "outer_guide_vertical_free_clearance_confirmed":True,
             "outer_guide_floor_contact_detected":False,
+            "outer_liners_fully_seated":True,
         },
         "fit_coupons":{
             "base_roof_key_clearance_mm":0.4,
@@ -100,6 +101,8 @@ def passing_record():
             "stop_damage":False,
             "detent_degraded":False,
             "retainer_walkout":False,
+            "outer_liner_unseated":False,
+            "outer_liner_axial_walkout":False,
         },
         "evidence":{
             "photos_committed":True,
@@ -232,6 +235,20 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         report=V.main(self.write(d))
         self.assertFalse(report["ok"])
         self.assertTrue(any("static TV service load" in x for x in report["failed"]))
+
+    def test_outer_liner_unseating_fails_cycling_gate(self):
+        d=passing_record()
+        d["cycling"]["outer_liner_unseated"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("outer_liner_unseated" in x for x in report["failed"]))
+
+    def test_outer_liner_axial_walkout_fails_cycling_gate(self):
+        d=passing_record()
+        d["cycling"]["outer_liner_axial_walkout"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("outer_liner_axial_walkout" in x for x in report["failed"]))
 
     def test_cycle_counts_are_enforced(self):
         d=passing_record()
