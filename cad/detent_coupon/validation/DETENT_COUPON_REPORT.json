@@ -1,0 +1,70 @@
+{
+  "purpose": "physical zero-detent spring calibration before full stand print",
+  "uses_exact_v5_geometry": true,
+  "cassette_variants_mm": [
+    1.8,
+    2.2,
+    2.6
+  ],
+  "assembly": {
+    "cam_install_z_mm": 10.0,
+    "pins_required": 2,
+    "instruction": "Install one cassette with two pins, place cam at z=10 over pivot, and rotate gently through the center notch. Choose the lowest spring thickness that centers reliably without whitening or excessive torque."
+  },
+  "parts": {
+    "detent_coupon_base": {
+      "volume_mm3": 131083.929,
+      "size_mm": [
+        180.0,
+        155.0,
+        18.0
+      ],
+      "facets": 852
+    },
+    "detent_coupon_cam": {
+      "volume_mm3": 41586.858,
+      "size_mm": [
+        187.027,
+        91.31,
+        6.0
+      ],
+      "facets": 1236
+    },
+    "detent_coupon_pin": {
+      "volume_mm3": 296.4,
+      "size_mm": [
+        7.0,
+        7.0,
+        14.4
+      ],
+      "facets": 28
+    },
+    "detent_coupon_cassette_t18": {
+      "volume_mm3": 1873.089,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "facets": 260
+    },
+    "detent_coupon_cassette_t22": {
+      "volume_mm3": 1949.889,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "facets": 260
+    },
+    "detent_coupon_cassette_t26": {
+      "volume_mm3": 2026.689,
+      "size_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "facets": 260
+    }
+  }
+}

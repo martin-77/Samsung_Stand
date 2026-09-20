@@ -1,0 +1,47 @@
+{
+  "version": "detent-coupon",
+  "calibration_thickness_mm": 2.2,
+  "cassette_mount": {
+    "distance_mm": 0.0,
+    "common_volume_mm3": 0.0
+  },
+  "sweep": {
+    "-15.0": {
+      "cam_base_common_volume_mm3": 0.0,
+      "cam_base_distance_mm": 0.0,
+      "spring_body_common_volume_mm3": 0.0,
+      "nose_common_volume_mm3": 14.014334,
+      "nose_distance_mm": 0.0
+    },
+    "-7.5": {
+      "cam_base_common_volume_mm3": 0.0,
+      "cam_base_distance_mm": 0.0,
+      "spring_body_common_volume_mm3": 0.0,
+      "nose_common_volume_mm3": 14.015375,
+      "nose_distance_mm": 0.0
+    },
+    "+0.0": {
+      "cam_base_common_volume_mm3": 0.0,
+      "cam_base_distance_mm": 0.0,
+      "spring_body_common_volume_mm3": 0.0,
+      "nose_common_volume_mm3": 0.0,
+      "nose_distance_mm": 0.067014
+    },
+    "+7.5": {
+      "cam_base_common_volume_mm3": 0.0,
+      "cam_base_distance_mm": 0.0,
+      "spring_body_common_volume_mm3": 0.0,
+      "nose_common_volume_mm3": 14.015375,
+      "nose_distance_mm": 0.0
+    },
+    "+15.0": {
+      "cam_base_common_volume_mm3": 0.0,
+      "cam_base_distance_mm": 0.0,
+      "spring_body_common_volume_mm3": 0.0,
+      "nose_common_volume_mm3": 14.014334,
+      "nose_distance_mm": 0.0
+    }
+  },
+  "nose_symmetry_relative_delta": 0.0,
+  "failed": []
+}

@@ -1,0 +1,164 @@
+{
+  "version": "detent-coupon",
+  "meshes": {
+    "detent_coupon_base.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 131061.1235004493,
+      "extents_mm": [
+        180.0,
+        155.0,
+        18.0
+      ],
+      "bounds_mm": [
+        [
+          -45.0,
+          -110.0,
+          0.0
+        ],
+        [
+          135.0,
+          45.0,
+          18.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "detent_coupon_cam.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 41563.034185178774,
+      "extents_mm": [
+        187.027,
+        91.31,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -87.027,
+          -109.911,
+          0.0
+        ],
+        [
+          100.0,
+          -18.601,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "detent_coupon_cassette_t18.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1873.0375182376654,
+      "extents_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.5,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "detent_coupon_cassette_t22.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1949.8375365482123,
+      "extents_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.5,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "detent_coupon_cassette_t26.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 2026.637509082392,
+      "extents_mm": [
+        16.0,
+        51.5,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -2.4,
+          -1.5,
+          0.0
+        ],
+        [
+          13.6,
+          50.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    },
+    "detent_coupon_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 296.3999938964844,
+      "extents_mm": [
+        7.0,
+        7.0,
+        14.4
+      ],
+      "bounds_mm": [
+        [
+          -3.5,
+          -3.5,
+          0.0
+        ],
+        [
+          3.5,
+          3.5,
+          14.4
+        ]
+      ],
+      "fits_core_one_l": true,
+      "ok": true
+    }
+  },
+  "cassette_volumes": [
+    [
+      1.8,
+      1873.0375182376654
+    ],
+    [
+      2.2,
+      1949.8375365482123
+    ],
+    [
+      2.6,
+      2026.637509082392
+    ]
+  ],
+  "failed": []
+}
