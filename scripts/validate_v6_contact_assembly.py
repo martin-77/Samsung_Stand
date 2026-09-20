@@ -56,29 +56,30 @@ def common_volume(a, b):
     return float(a.common(b).Volume)
 
 
+def common_area(a, b):
+    return float(a.common(b).Area)
+
+
 def distance(a, b):
     return float(a.distToShape(b)[0])
 
 
-def profile_prism(
+def profile_face(
     profile: M.Profile,
-    x_center: float,
-    length: float,
+    x: float,
     z0: float,
     lateral_offset: float = 0.0,
 ):
-    """Extrude a measured YZ cross-section along local structural-arm X."""
-    x0 = x_center - length / 2.0
+    """Exact measured YZ cross-section at one structural-arm X station."""
     pts = [
-        v(x0, y + lateral_offset, z0 + z)
+        v(x, y + lateral_offset, z0 + z)
         for y, z in profile.points
     ]
     wire = Part.makePolygon(pts + [pts[0]])
     face = Part.Face(wire)
-    sh = face.extrude(v(length, 0, 0)).removeSplitter()
-    if sh.isNull() or not sh.isValid() or len(sh.Solids) != 1:
-        raise RuntimeError("invalid measured profile prism")
-    return sh
+    if face.isNull() or not face.isValid() or face.Area <= 0.0:
+        raise RuntimeError("invalid measured profile face")
+    return face
 
 
 def station_frame(station: M.Station, side: str) -> tuple[float, float]:
@@ -173,28 +174,27 @@ def main(
             stand_low_z_inner = (
                 stand_low_z_inner_nominal + vertical_offset
             )
-            stand = profile_prism(
+            stand = profile_face(
                 station.profile,
                 inner_along - V2.INNER_R0,
-                0.8,
                 stand_low_z_inner,
                 lateral_offset=inner_lateral,
             )
-            stand_saddle_vol = common_volume(stand, saddle)
+            stand_saddle_area = common_area(stand, saddle)
             stand_saddle_gap = distance(stand, saddle)
-            stand_inner_vol = common_volume(stand, inner)
+            stand_inner_area = common_area(stand, inner)
 
             result["measured_profile_fit"]["saddles"][side][
                 station_name
             ] = {
-                "stand_saddle_common_volume_mm3": round(
-                    stand_saddle_vol, 6
+                "stand_saddle_common_area_mm2": round(
+                    stand_saddle_area, 6
                 ),
                 "stand_saddle_distance_mm": round(
                     stand_saddle_gap, 6
                 ),
-                "stand_inner_structure_common_volume_mm3": round(
-                    stand_inner_vol, 6
+                "stand_inner_structure_common_area_mm2": round(
+                    stand_inner_area, 6
                 ),
                 "measured_lateral_offset_mm": round(
                     inner_lateral, 6
@@ -217,22 +217,23 @@ def main(
                 ),
             }
 
-            if stand_saddle_vol > 0.05:
+            if stand_saddle_area > 0.01:
                 failures.append(
                     f"{side}/{station_name} measured saddle profile "
-                    f"penetrates insert: {stand_saddle_vol:.6f} mm3"
+                    f"penetrates insert section: "
+                    f"{stand_saddle_area:.6f} mm2"
                 )
-            if stand_saddle_gap > 0.05:
+            if stand_saddle_gap > 0.02:
                 failures.append(
                     f"{side}/{station_name} measured saddle profile is "
                     f"not supported by insert: gap "
                     f"{stand_saddle_gap:.6f} mm"
                 )
-            if stand_inner_vol > 0.05:
+            if stand_inner_area > 0.01:
                 failures.append(
                     f"{side}/{station_name} measured saddle profile "
-                    f"penetrates structural INNER_ARM: "
-                    f"{stand_inner_vol:.6f} mm3"
+                    f"penetrates structural INNER_ARM section: "
+                    f"{stand_inner_area:.6f} mm2"
                 )
 
     # ------------------------------------------------------------------
@@ -326,10 +327,9 @@ def main(
             outer_floor_clearances.append(
                 floor_vertical_clearance
             )
-            stand = profile_prism(
+            stand = profile_face(
                 station.profile,
                 x,
-                0.8,
                 stand_low_z_outer,
                 lateral_offset=lateral,
             )
@@ -339,9 +339,9 @@ def main(
 
             neg_gap = distance(stand, neg)
             pos_gap = distance(stand, pos)
-            neg_vol = common_volume(stand, neg)
-            pos_vol = common_volume(stand, pos)
-            structural_vol = common_volume(stand, guide)
+            neg_area = common_area(stand, neg)
+            pos_area = common_area(stand, pos)
+            structural_area = common_area(stand, guide)
 
             row = {
                 "liner_x_mm": round(x, 4),
@@ -357,10 +357,10 @@ def main(
                 ),
                 "neg_y_clearance_mm": round(neg_gap, 6),
                 "pos_y_clearance_mm": round(pos_gap, 6),
-                "neg_y_common_volume_mm3": round(neg_vol, 6),
-                "pos_y_common_volume_mm3": round(pos_vol, 6),
-                "stand_guide_structure_common_volume_mm3": round(
-                    structural_vol, 6
+                "neg_y_common_area_mm2": round(neg_area, 6),
+                "pos_y_common_area_mm2": round(pos_area, 6),
+                "stand_guide_structure_common_area_mm2": round(
+                    structural_area, 6
                 ),
                 "vertical_clearance_above_guide_floor_mm": round(
                     floor_vertical_clearance, 6
@@ -370,14 +370,15 @@ def main(
                 station_name
             ] = row
 
-            for wall_side, measured_gap, measured_vol in (
-                ("neg_y", neg_gap, neg_vol),
-                ("pos_y", pos_gap, pos_vol),
+            for wall_side, measured_gap, measured_area in (
+                ("neg_y", neg_gap, neg_area),
+                ("pos_y", pos_gap, pos_area),
             ):
-                if measured_vol > 0.05:
+                if measured_area > 0.01:
                     failures.append(
                         f"{side}/{station_name}/{wall_side} measured stand "
-                        f"profile penetrates liner: {measured_vol:.6f} mm3"
+                        f"profile penetrates liner section: "
+                        f"{measured_area:.6f} mm2"
                     )
                 if abs(
                     measured_gap - B.GUIDE_LATERAL_CLEARANCE
@@ -388,11 +389,11 @@ def main(
                         f"{B.GUIDE_LATERAL_CLEARANCE:.3f} mm"
                     )
 
-            if structural_vol > 0.05:
+            if structural_area > 0.01:
                 failures.append(
                     f"{side}/{station_name} measured stand profile "
-                    f"penetrates structural OUTER_GUIDE: "
-                    f"{structural_vol:.6f} mm3"
+                    f"penetrates structural OUTER_GUIDE section: "
+                    f"{structural_area:.6f} mm2"
                 )
             if floor_vertical_clearance < 5.0:
                 failures.append(
