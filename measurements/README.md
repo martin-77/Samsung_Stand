@@ -25,4 +25,6 @@ Each `profile_points_mm` array contains points `[y,z]` in millimetres:
 
 The profile is the **physical Samsung arm**, not desired clearance.
 
-The CAD generator will apply its own explicit clearance and optional protective-pad allowance.
+The CAD generator applies its own explicit geometric clearance. The current
+project is PETG-only: `contact_pad.used` must remain `false` and compressed
+pad thickness must remain `0.0`.
