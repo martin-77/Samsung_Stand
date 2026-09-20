@@ -39,6 +39,8 @@ class Rect:
 SOUNDDECK = Rect(width=700.0, depth=340.0)
 BASE = Rect(width=680.0, depth=295.0)
 
+PRINTER_MODEL = "Prusa CORE One L"
+PRINT_MATERIAL = "PETG"
 PRINTER_X = 300.0
 PRINTER_Y = 300.0
 PRINTER_Z = 330.0
