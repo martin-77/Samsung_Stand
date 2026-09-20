@@ -106,6 +106,30 @@ def detent_mount_shape():
     ).removeSplitter()
 
 
+def detent_mount_holes_shape():
+    holes = []
+    for x in P.DETENT_PIN_LOCAL_X:
+        local = Part.makeBox(
+            P.DETENT_PIN_HOLE_SIZE,
+            P.DETENT_PIN_HOLE_SIZE,
+            13.5,
+            v(
+                x - P.DETENT_PIN_HOLE_SIZE / 2.0,
+                P.DETENT_PIN_LOCAL_Y - P.DETENT_PIN_HOLE_SIZE / 2.0,
+                3.5,
+            ),
+        )
+        holes.append(
+            place_local_frame(
+                local,
+                P.DETENT_NOSE_CENTER_RADIUS,
+                P.DETENT_HOME_ANGLE_DEG,
+                0.0,
+            )
+        )
+    return holes[0].fuse(holes[1])
+
+
 def detent_cassette_shape(thickness):
     nose = Part.makeCylinder(
         P.DETENT_NOSE_RADIUS,
