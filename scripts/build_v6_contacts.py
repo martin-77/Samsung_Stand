@@ -245,7 +245,7 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
             ),
         },
         "structural_note": (
-            "These parts change only Samsung-contact geometry. V5 structural "
+            "These parts change only Samsung-contact geometry. V8 structural "
             "load path, outer guide shell, end stops and detent remain upstream."
         ),
         "parts": {},
