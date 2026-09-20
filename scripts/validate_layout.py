@@ -39,6 +39,8 @@ def main() -> int:
     sweep = []
     all_centers_inside = True
     all_pads_inside = True
+    all_pads_on_fixed_base = True
+    min_fixed_base_pad_margin = float("inf")
 
     for angle in G.sweep_angles(1.0):
         left, right = G.saddle_centers(angle)
@@ -50,20 +52,54 @@ def main() -> int:
             G.support_pad_inside_sounddeck(left)
             and G.support_pad_inside_sounddeck(right)
         )
+        base_pads_ok = (
+            G.support_pad_inside_rect(G.BASE, left)
+            and G.support_pad_inside_rect(G.BASE, right)
+        )
+        min_fixed_base_pad_margin = min(
+            min_fixed_base_pad_margin,
+            G.support_pad_edge_margin(G.BASE, left),
+            G.support_pad_edge_margin(G.BASE, right),
+        )
         all_centers_inside &= center_ok
         all_pads_inside &= pads_ok
+        all_pads_on_fixed_base &= base_pads_ok
         sweep.append(
             {
                 "angle_deg": round(angle, 3),
                 "left": [round(left.x, 3), round(left.y, 3)],
                 "right": [round(right.x, 3), round(right.y, 3)],
                 "centers_inside": center_ok,
-                "40x40_pads_inside": pads_ok,
+                "40x40_pads_inside_sounddeck": pads_ok,
+                "40x40_pads_on_fixed_base": base_pads_ok,
             }
         )
 
     checks["saddle_centers_inside_sounddeck_full_sweep"] = all_centers_inside
     checks["40x40_support_pads_inside_sounddeck_full_sweep"] = all_pads_inside
+    checks["40x40_support_pads_on_fixed_base_full_sweep"] = (
+        all_pads_on_fixed_base
+    )
+    checks["fixed_base_support_pad_margin_positive"] = (
+        min_fixed_base_pad_margin > 0.0
+    )
+    details["minimum_40x40_pad_margin_on_fixed_base_mm"] = round(
+        min_fixed_base_pad_margin,
+        3,
+    )
+    details["pivot_to_base_rear_edge_mm"] = round(
+        G.PIVOT.y - G.BASE.ymin,
+        3,
+    )
+    details["pivot_to_base_front_edge_mm"] = round(
+        G.BASE.ymax - G.PIVOT.y,
+        3,
+    )
+    details["bearing_rear_edge_margin_mm"] = round(
+        (G.PIVOT.y - G.BEARING_OUTER_DIAMETER / 2.0)
+        - G.BASE.ymin,
+        3,
+    )
 
     module_checks = {}
     for name, (x, y, z) in G.PRINT_MODULES.items():
