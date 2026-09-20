@@ -8,41 +8,257 @@
     "notes": "Synthetic validation fixture only. Never use as physical manufacturing data."
   },
   "global": {
-    "stand_width_mm": 840.0,
-    "stand_depth_mm": 289.0,
-    "pivot_to_rear_mm": 80.0,
-    "left_tip_xy_mm": [-420.0, 208.0],
-    "right_tip_xy_mm": [420.0, 208.0]
+    "stand_width_mm": 840,
+    "stand_depth_mm": 289,
+    "pivot_to_rear_mm": 80,
+    "left_tip_xy_mm": [
+      -420,
+      208
+    ],
+    "right_tip_xy_mm": [
+      420,
+      208
+    ]
   },
   "inner_saddle": {
     "left": {
-      "station_radius_mm": 279.0,
-      "profile_points_mm": [[-13.0,1.0],[-10.0,0.0],[0.0,0.6],[10.0,0.0],[13.0,1.0],[13.0,8.8],[-13.0,8.8]],
-      "notes": "synthetic"
+      "station_radius_mm": 279,
+      "profile_points_mm": [
+        [
+          -13,
+          1
+        ],
+        [
+          -10,
+          0
+        ],
+        [
+          0,
+          0.6
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          13,
+          1
+        ],
+        [
+          13,
+          8.8
+        ],
+        [
+          -13,
+          8.8
+        ]
+      ],
+      "notes": "synthetic",
+      "center_xy_mm": [
+        -250.0196,
+        123.8192
+      ]
     },
     "right": {
       "station_radius_mm": 279.5,
-      "profile_points_mm": [[-13.1,1.1],[-10.1,0.0],[0.0,0.7],[10.1,0.0],[13.1,1.1],[13.1,8.9],[-13.1,8.9]],
-      "notes": "synthetic"
+      "profile_points_mm": [
+        [
+          -13.1,
+          1.1
+        ],
+        [
+          -10.1,
+          0
+        ],
+        [
+          0,
+          0.7
+        ],
+        [
+          10.1,
+          0
+        ],
+        [
+          13.1,
+          1.1
+        ],
+        [
+          13.1,
+          8.9
+        ],
+        [
+          -13.1,
+          8.9
+        ]
+      ],
+      "notes": "synthetic",
+      "center_xy_mm": [
+        250.4677,
+        124.0411
+      ]
     }
   },
   "outer_guide": {
     "left": {
-      "root": {"station_radius_mm": 320.0, "profile_points_mm": [[-12.0,0.0],[12.0,0.0],[12.0,8.4],[-12.0,8.4]]},
-      "mid": {"station_radius_mm": 390.0, "profile_points_mm": [[-11.0,0.0],[11.0,0.0],[11.0,8.0],[-11.0,8.0]]},
-      "tip": {"station_radius_mm": 455.0, "profile_points_mm": [[-10.0,0.0],[10.0,0.0],[10.0,7.5],[-10.0,7.5]]},
+      "root": {
+        "station_radius_mm": 320,
+        "profile_points_mm": [
+          [
+            -12,
+            0
+          ],
+          [
+            12,
+            0
+          ],
+          [
+            12,
+            8.4
+          ],
+          [
+            -12,
+            8.4
+          ]
+        ],
+        "center_xy_mm": [
+          -286.7608,
+          142.0149
+        ]
+      },
+      "mid": {
+        "station_radius_mm": 390,
+        "profile_points_mm": [
+          [
+            -11,
+            0
+          ],
+          [
+            11,
+            0
+          ],
+          [
+            11,
+            8
+          ],
+          [
+            -11,
+            8
+          ]
+        ],
+        "center_xy_mm": [
+          -349.4898,
+          173.0806
+        ]
+      },
+      "tip": {
+        "station_radius_mm": 455,
+        "profile_points_mm": [
+          [
+            -10,
+            0
+          ],
+          [
+            10,
+            0
+          ],
+          [
+            10,
+            7.5
+          ],
+          [
+            -10,
+            7.5
+          ]
+        ],
+        "center_xy_mm": [
+          -407.7381,
+          201.9274
+        ]
+      },
       "notes": "synthetic"
     },
     "right": {
-      "root": {"station_radius_mm": 320.5, "profile_points_mm": [[-12.1,0.0],[12.1,0.0],[12.1,8.5],[-12.1,8.5]]},
-      "mid": {"station_radius_mm": 390.5, "profile_points_mm": [[-11.1,0.0],[11.1,0.0],[11.1,8.1],[-11.1,8.1]]},
-      "tip": {"station_radius_mm": 455.5, "profile_points_mm": [[-10.1,0.0],[10.1,0.0],[10.1,7.6],[-10.1,7.6]]},
+      "root": {
+        "station_radius_mm": 320.5,
+        "profile_points_mm": [
+          [
+            -12.1,
+            0
+          ],
+          [
+            12.1,
+            0
+          ],
+          [
+            12.1,
+            8.5
+          ],
+          [
+            -12.1,
+            8.5
+          ]
+        ],
+        "center_xy_mm": [
+          287.2089,
+          142.2368
+        ]
+      },
+      "mid": {
+        "station_radius_mm": 390.5,
+        "profile_points_mm": [
+          [
+            -11.1,
+            0
+          ],
+          [
+            11.1,
+            0
+          ],
+          [
+            11.1,
+            8.1
+          ],
+          [
+            -11.1,
+            8.1
+          ]
+        ],
+        "center_xy_mm": [
+          349.9378,
+          173.3025
+        ]
+      },
+      "tip": {
+        "station_radius_mm": 455.5,
+        "profile_points_mm": [
+          [
+            -10.1,
+            0
+          ],
+          [
+            10.1,
+            0
+          ],
+          [
+            10.1,
+            7.6
+          ],
+          [
+            -10.1,
+            7.6
+          ]
+        ],
+        "center_xy_mm": [
+          408.1861,
+          202.1493
+        ]
+      },
       "notes": "synthetic"
     }
   },
   "contact_pad": {
     "used": false,
-    "compressed_thickness_mm": 0.0,
+    "compressed_thickness_mm": 0,
     "notes": ""
   }
 }
