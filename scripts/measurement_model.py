@@ -294,44 +294,67 @@ def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
     }
 
 
-def lower_envelope(profile: Profile, samples: int = 31) -> tuple[tuple[float, float], ...]:
-    """Sample the lower Z boundary of a closed profile at evenly spaced Y."""
-    if samples < 3:
-        raise ValueError("samples must be >= 3")
-
-    ys = [
-        profile.ymin + (profile.ymax - profile.ymin) * i / (samples - 1)
-        for i in range(samples)
-    ]
-    out = []
+def _profile_z_intersections_at_y(
+    profile: Profile,
+    y: float,
+) -> tuple[float, ...]:
+    """Return all boundary intersections with a vertical line at local Y."""
+    zs = []
     pts = profile.points
     n = len(pts)
 
+    for i in range(n):
+        y1, z1 = pts[i]
+        y2, z2 = pts[(i + 1) % n]
+
+        if abs(y2 - y1) < 1e-12:
+            if abs(y - y1) < 1e-9:
+                zs.extend((z1, z2))
+            continue
+
+        lo = min(y1, y2)
+        hi = max(y1, y2)
+        if y < lo - 1e-9 or y > hi + 1e-9:
+            continue
+
+        t = (y - y1) / (y2 - y1)
+        if -1e-9 <= t <= 1.0 + 1e-9:
+            zs.append(z1 + t * (z2 - z1))
+
+    return tuple(zs)
+
+
+def lower_envelope(
+    profile: Profile,
+    samples: int = 31,
+) -> tuple[tuple[float, float], ...]:
+    """Return a vertex-exact lower Z boundary of a closed measured profile.
+
+    Every measured vertex Y is included exactly. Optional uniform samples only
+    densify the piecewise-linear contour; they can never replace or smooth over
+    a real measured kink. This matters for load-bearing saddle inserts, where a
+    missed lower-profile vertex would otherwise create small solid penetration.
+    """
+    if samples < 3:
+        raise ValueError("samples must be >= 3")
+
+    uniform_ys = {
+        profile.ymin
+        + (profile.ymax - profile.ymin) * i / (samples - 1)
+        for i in range(samples)
+    }
+    vertex_ys = {y for y, _z in profile.points}
+    ys = sorted(uniform_ys | vertex_ys)
+
+    out = []
     for y in ys:
-        zs = []
-        for i in range(n):
-            y1, z1 = pts[i]
-            y2, z2 = pts[(i + 1) % n]
-
-            if abs(y2 - y1) < 1e-12:
-                if abs(y - y1) < 1e-9:
-                    zs.extend((z1, z2))
-                continue
-
-            lo = min(y1, y2)
-            hi = max(y1, y2)
-            if y < lo - 1e-9 or y > hi + 1e-9:
-                continue
-
-            t = (y - y1) / (y2 - y1)
-            if -1e-9 <= t <= 1.0 + 1e-9:
-                zs.append(z1 + t * (z2 - z1))
-
+        zs = _profile_z_intersections_at_y(profile, y)
         if not zs:
             raise MeasurementError(
                 f"cannot derive lower envelope at y={y:.6f} from profile"
             )
         out.append((y, min(zs)))
 
-    z0 = min(z for _, z in out)
-    return tuple((y, z - z0) for y, z in out)
+    # Normalize against the actual measured minimum, not the sampled minimum.
+    # This preserves the physical datum even if a uniform sample would miss it.
+    return tuple((y, z - profile.zmin) for y, z in out)
