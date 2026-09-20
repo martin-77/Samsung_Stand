@@ -152,10 +152,15 @@ def side_with_track(side):
 def rotor_v2():
     sh = load_step("samsung_stand_v1_rotor")
     receiver_blocks = []
+    root_landings = []
     cavities = []
     tunnels = []
 
-    cavity_z_bottom = G.ROTOR_THICKNESS - P.ARM_KEY_CLEARANCE
+    cavity_z_bottom = (
+        (P.TRACK_TOP_Z - P.ROTOR_INSTALL_Z)
+        + P.ARM_KEY_BOTTOM_Z
+        - P.ARM_KEY_UNDERSIDE_CLEARANCE
+    )
     cavity_wall_top = (
         P.TRACK_TOP_Z + P.ARM_KEY_WALL_TOP_Z - G.BEARING_TOP_Z
         + P.ARM_KEY_CLEARANCE
@@ -180,6 +185,20 @@ def rotor_v2():
             place_plan(block_local, angle, G.PIVOT.x, G.PIVOT.y)
         )
 
+        landing_local = Part.makeBox(
+            P.ROOT_LANDING_R1 - P.ROOT_LANDING_R0,
+            P.ROOT_LANDING_WIDTH,
+            P.ROOT_LANDING_TOP_Z - P.ROOT_LANDING_Z0,
+            v(
+                P.ROOT_LANDING_R0,
+                -P.ROOT_LANDING_WIDTH / 2.0,
+                P.ROOT_LANDING_Z0,
+            ),
+        )
+        root_landings.append(
+            place_plan(landing_local, angle, G.PIVOT.x, G.PIVOT.y)
+        )
+
         cavity_local = roof_prism_x(
             P.INNER_R0 - P.INNER_MALE_OVERLAP - P.ARM_KEY_CLEARANCE,
             P.INNER_R0 + 2.0,
@@ -200,7 +219,7 @@ def rotor_v2():
         )
         tunnels.append(place_plan(tunnel_local, angle, G.PIVOT.x, G.PIVOT.y))
 
-    sh = fuse_all([sh] + receiver_blocks)
+    sh = fuse_all([sh] + receiver_blocks + root_landings)
     for cut in cavities + tunnels:
         sh = sh.cut(cut)
     sh = sh.removeSplitter()
@@ -241,7 +260,7 @@ def inner_arm():
         -P.INNER_MALE_OVERLAP,
         P.INNER_MALE_EMBED,
         P.ARM_KEY_HALF_WIDTH,
-        0.0,
+        P.ARM_KEY_BOTTOM_Z,
         P.ARM_KEY_WALL_TOP_Z,
         P.ARM_KEY_APEX_Z,
     )
