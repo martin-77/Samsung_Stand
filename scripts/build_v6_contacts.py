@@ -38,6 +38,7 @@ GUIDE_LINER_X1 = V3.OUTER_VISIBLE_LENGTH - 12.0
 GUIDE_LINER_Z0_IN_GUIDE = V3.OUTER_FLOOR_THICKNESS
 GUIDE_LINER_HEIGHT = V3.OUTER_WALL_HEIGHT - GUIDE_LINER_Z0_IN_GUIDE
 GUIDE_CHANNEL_HALF_WIDTH = V3.OUTER_CHANNEL_PLACEHOLDER_WIDTH / 2.0
+GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM = 5.0
 
 
 def v(x, y, z):
@@ -168,39 +169,62 @@ def _loft_side_rail(
         )
     measured.sort(key=lambda item: item[0])
 
-    for x, _profile, _lateral in measured:
-        if x < GUIDE_LINER_X0 - 1e-6 or x > GUIDE_LINER_X1 + 1e-6:
-            raise RuntimeError(
-                f"outer measurement station projected x={x:.3f} lies "
-                f"outside liner measurement span "
-                f"{GUIDE_LINER_X0:.3f}..{GUIDE_LINER_X1:.3f}"
-            )
+    first_x = measured[0][0]
+    last_x = measured[-1][0]
+    if first_x < GUIDE_LINER_X0 - GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:
+        raise RuntimeError(
+            f"first outer station projected x={first_x:.3f} mm is more than "
+            f"{GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:.1f} mm before liner start "
+            f"x={GUIDE_LINER_X0:.3f} mm"
+        )
+    if last_x > GUIDE_LINER_X1 + GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:
+        raise RuntimeError(
+            f"last outer station projected x={last_x:.3f} mm is more than "
+            f"{GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM:.1f} mm beyond liner end "
+            f"x={GUIDE_LINER_X1:.3f} mm"
+        )
 
-    if measured[0][0] > GUIDE_LINER_X0:
-        measured.insert(
+    # Keep only physically sampled sections that lie inside the printable rail
+    # span. If the nearest measured station lies just outside an endpoint, use
+    # that exact measured profile/centerline offset at the endpoint. This is a
+    # bounded extrapolation, not an arbitrary clamp.
+    sections_src = [
+        item
+        for item in measured
+        if GUIDE_LINER_X0 <= item[0] <= GUIDE_LINER_X1
+    ]
+
+    first = measured[0]
+    if not sections_src or sections_src[0][0] > GUIDE_LINER_X0 + 1e-9:
+        sections_src.insert(
             0,
-            (
-                GUIDE_LINER_X0,
-                measured[0][1],
-                measured[0][2],
-            ),
+            (GUIDE_LINER_X0, first[1], first[2]),
+        )
+    elif first[0] < GUIDE_LINER_X0:
+        sections_src.insert(
+            0,
+            (GUIDE_LINER_X0, first[1], first[2]),
         )
 
-    if measured[-1][0] < GUIDE_LINER_X1:
-        measured.append(
-            (
-                GUIDE_LINER_X1,
-                measured[-1][1],
-                measured[-1][2],
-            )
+    last = measured[-1]
+    if sections_src[-1][0] < GUIDE_LINER_X1 - 1e-9:
+        sections_src.append(
+            (GUIDE_LINER_X1, last[1], last[2])
+        )
+    elif last[0] > GUIDE_LINER_X1:
+        sections_src.append(
+            (GUIDE_LINER_X1, last[1], last[2])
         )
 
-    for x, profile, lateral_offset in measured:
-        if x < GUIDE_LINER_X0 - 1e-6 or x > GUIDE_LINER_X1 + 1e-6:
-            raise RuntimeError(
-                f"outer measurement station x={x:.3f} lies outside liner span "
-                f"{GUIDE_LINER_X0:.3f}..{GUIDE_LINER_X1:.3f}"
-            )
+    # Remove duplicate endpoint sections while preserving measured order.
+    deduped = []
+    for item in sections_src:
+        if deduped and abs(item[0] - deduped[-1][0]) < 1e-9:
+            deduped[-1] = item
+        else:
+            deduped.append(item)
+
+    for x, profile, lateral_offset in deduped:
 
         if wall_side == "left":
             y0 = -GUIDE_CHANNEL_HALF_WIDTH
@@ -377,6 +401,9 @@ def main(measurement_path: str, out_dir: str = "build_v6_contacts"):
         },
         "design_clearances": {
             "outer_lateral_each_side_mm": GUIDE_LATERAL_CLEARANCE,
+            "outer_endpoint_extrapolation_max_mm": (
+                GUIDE_ENDPOINT_EXTRAPOLATION_MAX_MM
+            ),
             "contact_pad_compressed_mm": pad,
             "saddle_lowest_printed_contact_z_mm": (
                 SADDLE_NOMINAL_LOWEST_CONTACT_Z - pad
