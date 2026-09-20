@@ -117,7 +117,12 @@ report = {
             "across both pads and place a non-fragile test load on the board. "
             "Do not let the board contact OUTER_GUIDE, rotor, or fixed base."
         ),
+        "support_surface": (
+            "Rigid flat surrogate support under the complete adapter base; "
+            "do not use the Magnat Sounddeck for the 500 N structural proof."
+        ),
         "do_not_use_tv": True,
+        "do_not_use_sounddeck_for_500n_proof": True,
         "target_load_source": "PHYSICAL_RELEASE_GATES.md",
     },
     "part": part,
