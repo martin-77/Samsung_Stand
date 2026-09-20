@@ -219,10 +219,15 @@ def load_measurements(path: str | Path) -> MeasurementSet:
     )
     if pad_t < 0.0 or pad_t > 5.0:
         raise MeasurementError("contact_pad.compressed_thickness_mm: expected 0..5 mm")
-    if not pad_used and abs(pad_t) > 1e-9:
-        raise MeasurementError("contact_pad: thickness must be 0 when used=false")
-    if pad_used and pad_t <= 0.0:
-        raise MeasurementError("contact_pad: positive compressed thickness required when used=true")
+    if pad_used:
+        raise MeasurementError(
+            "contact_pad.used: this project is PETG-only; external contact "
+            "pads/layers are not permitted by the current design constraint"
+        )
+    if abs(pad_t) > 1e-9:
+        raise MeasurementError(
+            "contact_pad.compressed_thickness_mm must be 0 for PETG-only build"
+        )
 
     def outer_side(side: str) -> tuple[Station, Station, Station]:
         obj = outer.get(side)
