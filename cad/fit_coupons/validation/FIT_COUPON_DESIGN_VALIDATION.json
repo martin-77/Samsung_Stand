@@ -1,0 +1,23 @@
+{
+  "checks": {
+    "three_joint_families_present": true,
+    "clearance_ladder_brackets_nominal": true,
+    "base_coupon_matches_production_key": true,
+    "inner_coupon_matches_production_key": true,
+    "outer_coupon_matches_production_key": true,
+    "all_roofs_at_least_45_deg": true,
+    "coupon_axis_is_short": true
+  },
+  "roof_angles_deg": {
+    "base": 45.0,
+    "inner": 45.0,
+    "outer": 45.0
+  },
+  "clearances_mm": [
+    0.3,
+    0.4,
+    0.5
+  ],
+  "nominal_clearance_mm": 0.4,
+  "failed": []
+}
