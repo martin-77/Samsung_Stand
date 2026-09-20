@@ -122,7 +122,7 @@ jobs:
       - name: Validate installed v2 OCC assembly
         run: |
           set -euo pipefail
-          "$FREECADCMD" scripts/validate_v2_assembly.py
+          "$FREECADCMD" -c "import sys; sys.path.insert(0, 'scripts'); import validate_v2_assembly as V; V.main()"
           test -s build_v2/ASSEMBLY_VALIDATION_v2.json
 
       - name: Render installed v2 preview
