@@ -77,6 +77,18 @@ def main(path: str) -> dict[str,Any]:
         "criteria.proof_dwell_min_minutes_per_position",
         positive=True,
     )
+    single_saddle_min=number(
+        criteria.get("single_saddle_proof_load_min_n"),
+        "criteria.single_saddle_proof_load_min_n",
+        positive=True,
+    )
+    expected_single_saddle=G.DESIGN_VERTICAL_LOAD_N / 2.0
+    if single_saddle_min + 1e-9 < expected_single_saddle:
+        failures.append(
+            f"criteria.single_saddle_proof_load_min_n "
+            f"{single_saddle_min:.1f} N is below nominal one-side "
+            f"development branch load {expected_single_saddle:.1f} N"
+        )
     creep_min=number(
         criteria.get("creep_load_min_n"),
         "criteria.creep_load_min_n",
@@ -137,12 +149,21 @@ def main(path: str) -> dict[str,Any]:
         failures.append("fit_coupons.detent_variant_mm must be 1.8, 2.2 or 2.6")
 
     proof=data.get("proof_load",{})
-    for position in ("center","minus_15","plus_15"):
+    proof_cases=(
+        ("center",proof_min),
+        ("minus_15",proof_min),
+        ("plus_15",proof_min),
+        ("left_saddle_only",single_saddle_min),
+        ("right_saddle_only",single_saddle_min),
+    )
+    for position,required_load in proof_cases:
         row=proof.get(position,{})
         load=number(row.get("load_n"),f"proof_load.{position}.load_n",positive=True)
         dwell=number(row.get("duration_minutes"),f"proof_load.{position}.duration_minutes",positive=True)
-        if load+1e-9<proof_min:
-            failures.append(f"proof_load.{position}.load_n below declared criterion")
+        if load+1e-9<required_load:
+            failures.append(
+                f"proof_load.{position}.load_n below declared criterion"
+            )
         if dwell+1e-9<proof_dwell:
             failures.append(f"proof_load.{position}.duration_minutes below declared criterion")
         for key in (
@@ -231,6 +252,7 @@ def main(path: str) -> dict[str,Any]:
         "declared_criteria":{
             "proof_load_min_n":proof_min,
             "proof_dwell_min_minutes_per_position":proof_dwell,
+            "single_saddle_proof_load_min_n":single_saddle_min,
             "creep_load_min_n":creep_min,
             "creep_dwell_min_hours":creep_hours,
             "swivel_cycles_min":swivel_min,
