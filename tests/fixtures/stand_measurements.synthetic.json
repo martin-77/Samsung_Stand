@@ -5,7 +5,8 @@
     "measured_by": "synthetic-ci",
     "date": "2026-09-20",
     "caliper_resolution_mm": 0.01,
-    "notes": "Synthetic validation fixture with deliberate saddle loft variation, lateral centerline offsets, and longitudinal Z-height variation. Never use as physical manufacturing data."
+    "notes": "Synthetic validation fixture with deliberate saddle loft variation, lateral centerline offsets, and longitudinal Z-height variation. Never use as physical manufacturing data.",
+    "measurement_kind": "synthetic"
   },
   "global": {
     "stand_width_mm": 840,
