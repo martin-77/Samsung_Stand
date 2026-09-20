@@ -75,6 +75,38 @@ class GeometryBaselineTests(unittest.TestCase):
                 self.assertLessEqual(x, G.PREFERRED_PART_XY)
                 self.assertLessEqual(y, G.PREFERRED_PART_XY)
 
+    def test_v1_side_module_envelope_includes_joint_overlap(self):
+        expected = G.BASE_SIDE_WIDTH + G.JOINT_OVERLAP
+        self.assertAlmostEqual(G.PRINT_MODULES["BASE_LEFT"][0], expected)
+        self.assertAlmostEqual(G.PRINT_MODULES["BASE_RIGHT"][0], expected)
+
+    def test_joint_roof_is_support_friendly(self):
+        rise = G.JOINT_KEY_APEX_Z - G.JOINT_KEY_WALL_TOP_Z
+        run = G.JOINT_KEY_HALF_WIDTH
+        angle = math.degrees(math.atan2(rise, run))
+        self.assertGreaterEqual(angle, 45.0)
+
+    def test_swivel_bearing_fits_rear_offset_base(self):
+        radius = G.BEARING_OUTER_DIAMETER / 2.0
+        rear_margin = (G.PIVOT.y - radius) - G.BASE.ymin
+        front_margin = G.BASE.ymax - (G.PIVOT.y + radius)
+        self.assertGreaterEqual(rear_margin, 8.0)
+        self.assertGreater(front_margin, rear_margin)
+
+    def test_annular_bearing_is_primary_large_area_path(self):
+        self.assertGreaterEqual(G.BEARING_NOMINAL_AREA_MM2, 12000.0)
+        self.assertLessEqual(G.BEARING_NOMINAL_PRESSURE_MPA, 0.04)
+
+    def test_pivot_has_clearance_but_clip_captures_rotor(self):
+        self.assertGreaterEqual(
+            G.PIVOT_BORE_DIAMETER - G.PIVOT_STEM_DIAMETER,
+            1.0,
+        )
+        self.assertGreater(
+            G.PIVOT_CLIP_OUTER_DIAMETER,
+            G.PIVOT_BORE_DIAMETER + 4.0,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
