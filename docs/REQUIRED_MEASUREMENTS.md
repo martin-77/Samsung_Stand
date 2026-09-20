@@ -30,6 +30,7 @@ Target measurement station is the current support orbit at approximately
 For both left and right stand arms measure:
 
 - the cross-section center position `center_xy_mm` relative to the swivel pivot;
+- `lowest_point_height_mm` from one common flat reference plane;
 - arm width across Y-like / lateral direction;
 - arm total thickness / height;
 - underside shape;
@@ -56,10 +57,11 @@ Measure the arm at three stations per side:
 2. near the middle;
 3. near the stand tip.
 
-At every station record both the cross-section polygon and its
-`center_xy_mm` relative to the swivel pivot. This allows the contact parts to
-follow small real centerline deviations instead of assuming the reconstructed
-arm axis is exact.
+At every station record the cross-section polygon, its `center_xy_mm`
+relative to the swivel pivot, and `lowest_point_height_mm` from the same
+common flat reference plane used for the inner saddle measurements. This allows
+the contact parts to follow both plan-view centerline deviations and real
+vertical rise/fall of the arm.
 
 Also record:
 
@@ -119,6 +121,7 @@ Minimal structural form:
     "left": {
       "station_radius_mm": null,
       "center_xy_mm": [null, null],
+      "lowest_point_height_mm": null,
       "profile_points_mm": null
     },
     "right": {
@@ -128,7 +131,7 @@ Minimal structural form:
   },
   "outer_guide": {
     "left": {
-      "root": {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null},
+      "root": {"station_radius_mm": null, "center_xy_mm": [null, null], "lowest_point_height_mm": null, "profile_points_mm": null},
       "mid":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null},
       "tip":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null}
     },
