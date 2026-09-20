@@ -44,6 +44,11 @@ def passing_record():
             "end_stop_contacts_each_side_min":20,
             "rationale":"Synthetic CI criteria only; real project criteria must be chosen before test.",
         },
+        "proof_setup":{
+            "support_surface":"rigid_surrogate",
+            "sounddeck_used":False,
+            "notes":"synthetic CI",
+        },
         "measurement_gate":{
             "real_measurements_complete":True,
             "measured_contact_parts_generated":True,
@@ -65,6 +70,7 @@ def passing_record():
             "plus_15":proof(),
         },
         "sounddeck_interface":{
+            "test_load_n":164.0,
             "unloaded_base_movement_detected":False,
             "loaded_base_movement_detected":False,
             "surface_damage_or_indentation":False,
@@ -127,6 +133,29 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         report=V.main(self.write(d))
         self.assertFalse(report["ok"])
         self.assertTrue(any("whitening" in x for x in report["failed"]))
+
+    def test_structural_proof_cannot_use_real_sounddeck(self):
+        d=passing_record()
+        d["proof_setup"]["support_surface"]="sounddeck"
+        d["proof_setup"]["sounddeck_used"]=True
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("rigid_surrogate" in x for x in report["failed"]))
+        self.assertTrue(any("500 N structural proof" in x for x in report["failed"]))
+
+    def test_sounddeck_interface_load_is_limited_to_near_service_load(self):
+        d=passing_record()
+        d["sounddeck_interface"]["test_load_n"]=500.0
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("110% service-load" in x for x in report["failed"]))
+
+    def test_sounddeck_interface_load_cannot_be_below_service_load(self):
+        d=passing_record()
+        d["sounddeck_interface"]["test_load_n"]=150.0
+        report=V.main(self.write(d))
+        self.assertFalse(report["ok"])
+        self.assertTrue(any("below real TV service load" in x for x in report["failed"]))
 
     def test_anti_slip_failure_fails(self):
         d=passing_record()
