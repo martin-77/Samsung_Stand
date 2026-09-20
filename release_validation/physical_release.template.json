@@ -11,13 +11,13 @@
     "notes": ""
   },
   "criteria": {
-    "proof_load_min_n": 500.0,
+    "proof_load_min_n": 500,
     "proof_dwell_min_minutes_per_position": null,
-    "creep_load_min_n": null,
+    "creep_load_min_n": 164,
     "creep_dwell_min_hours": null,
     "swivel_cycles_min": null,
     "end_stop_contacts_each_side_min": null,
-    "rationale": ""
+    "rationale": "Set proof/dwell/cycle criteria before physical testing. Creep load must not be below the verified 16.7 kg TV+stand static load (~163.8 N)."
   },
   "measurement_gate": {
     "real_measurements_complete": false,
