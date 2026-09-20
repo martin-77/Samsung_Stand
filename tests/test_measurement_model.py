@@ -9,7 +9,12 @@ import unittest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from measurement_model import MeasurementError, load_measurements, symmetry_report
+from measurement_model import (
+    MeasurementError,
+    load_measurements,
+    lower_envelope,
+    symmetry_report,
+)
 
 
 def rect_profile(width=24.0, height=8.0):
@@ -122,6 +127,26 @@ class MeasurementModelTests(unittest.TestCase):
         d["contact_pad"]["compressed_thickness_mm"] = 1.0
         with self.assertRaises(MeasurementError):
             load_measurements(self.write_temp(d))
+
+    def test_lower_envelope_preserves_measured_kink_vertices(self):
+        d = complete_measurements()
+        d["inner_saddle"]["left"]["profile_points_mm"] = [
+            [-13.0, 1.0],
+            [-10.0, 0.0],
+            [0.0, 0.6],
+            [10.0, 0.0],
+            [13.0, 1.0],
+            [13.0, 8.8],
+            [-13.0, 8.8],
+        ]
+        ms = load_measurements(self.write_temp(d))
+        env = dict(lower_envelope(ms.inner_left.profile, samples=7))
+        self.assertIn(-10.0, env)
+        self.assertIn(0.0, env)
+        self.assertIn(10.0, env)
+        self.assertAlmostEqual(env[-10.0], 0.0, places=9)
+        self.assertAlmostEqual(env[0.0], 0.6, places=9)
+        self.assertAlmostEqual(env[10.0], 0.0, places=9)
 
     def test_outer_station_radii_must_increase(self):
         d = complete_measurements()
