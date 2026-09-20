@@ -19,6 +19,11 @@
     "end_stop_contacts_each_side_min": null,
     "rationale": "Set proof/dwell/cycle criteria before physical testing. Creep load must not be below the verified 16.7 kg TV+stand static load (~163.8 N)."
   },
+  "proof_setup": {
+    "support_surface": "rigid_surrogate",
+    "sounddeck_used": false,
+    "notes": "Perform the 500 N structural proof on a rigid flat surrogate support, not on the Magnat Sounddeck."
+  },
   "measurement_gate": {
     "real_measurements_complete": false,
     "measured_contact_parts_generated": false,
@@ -64,6 +69,7 @@
     }
   },
   "sounddeck_interface": {
+    "test_load_n": 164,
     "unloaded_base_movement_detected": null,
     "loaded_base_movement_detected": null,
     "surface_damage_or_indentation": null
