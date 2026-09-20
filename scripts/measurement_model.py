@@ -163,6 +163,7 @@ STATION_RADIUS_COORD_TOLERANCE_MM = 1.5
 class Station:
     radius: float
     center_xy: tuple[float, float]
+    lowest_point_height_mm: float
     profile: Profile
 
     @property
@@ -211,11 +212,21 @@ def _station(raw: Any, path: str) -> Station:
             positive=True,
         ),
         center_xy=center_xy,
+        lowest_point_height_mm=_require_number(
+            raw.get("lowest_point_height_mm"),
+            path + ".lowest_point_height_mm",
+        ),
         profile=parse_profile(
             raw.get("profile_points_mm"),
             path + ".profile_points_mm",
         ),
     )
+
+    if not 0.0 <= station.lowest_point_height_mm <= 100.0:
+        raise MeasurementError(
+            f"{path}.lowest_point_height_mm: expected 0..100 mm, got "
+            f"{station.lowest_point_height_mm:.3f}"
+        )
 
     radius_delta = abs(station.radius - station.coordinate_radius)
     if radius_delta > STATION_RADIUS_COORD_TOLERANCE_MM:
@@ -343,6 +354,21 @@ def validate_global_plausibility(ms: MeasurementSet) -> None:
             )
 
 
+def inner_vertical_reference_mm(ms: MeasurementSet) -> float:
+    """Common stand datum used to preserve measured pitch/roll in contact CAD."""
+    return (
+        ms.inner_left.lowest_point_height_mm
+        + ms.inner_right.lowest_point_height_mm
+    ) / 2.0
+
+
+def station_vertical_offset_mm(
+    station: Station,
+    ms: MeasurementSet,
+) -> float:
+    return station.lowest_point_height_mm - inner_vertical_reference_mm(ms)
+
+
 def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
     return {
         "tip_x_magnitude_delta_mm": abs(abs(ms.left_tip_xy[0]) - abs(ms.right_tip_xy[0])),
@@ -354,6 +380,10 @@ def symmetry_report(ms: MeasurementSet) -> dict[str, float]:
         ),
         "inner_profile_width_delta_mm": abs(ms.inner_left.profile.width - ms.inner_right.profile.width),
         "inner_profile_height_delta_mm": abs(ms.inner_left.profile.height - ms.inner_right.profile.height),
+        "inner_lowest_point_height_delta_mm": abs(
+            ms.inner_left.lowest_point_height_mm
+            - ms.inner_right.lowest_point_height_mm
+        ),
         "outer_root_width_delta_mm": abs(ms.outer_left[0].profile.width - ms.outer_right[0].profile.width),
         "outer_mid_width_delta_mm": abs(ms.outer_left[1].profile.width - ms.outer_right[1].profile.width),
         "outer_tip_width_delta_mm": abs(ms.outer_left[2].profile.width - ms.outer_right[2].profile.width),
