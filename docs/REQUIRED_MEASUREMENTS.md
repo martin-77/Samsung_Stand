@@ -22,29 +22,33 @@ Record with the original stand assembled exactly as it will be used:
 These measurements verify the reconstructed 840 mm / ~288–290 mm planform and
 the current (0, -64 mm) swivel-axis placement.
 
-## B. Inner saddle station
+## B. Inner saddle region
 
-Target measurement station is the current support orbit at approximately
-279 mm radius from the swivel axis.
+The replaceable saddle insert spans about 49 mm along each arm. One center
+cross-section is not enough to prove the complete contact surface.
 
-For both left and right stand arms measure:
+For **both left and right arms**, measure three cross-sections:
 
-- the cross-section center position `center_xy_mm` relative to the swivel pivot;
-- `lowest_point_height_mm` from one common flat reference plane;
-- arm width across Y-like / lateral direction;
-- arm total thickness / height;
-- underside shape;
-- top shape;
-- corner radii or chamfers;
-- local arm angle / twist if the cross-section is not level;
-- any rubber foot, boss, screw, rib or protrusion in the contact zone.
+1. **root** — near the inboard end of the insert;
+2. **center** — near the current support orbit at approximately 279 mm radius;
+3. **tip** — near the outboard end of the insert.
 
-Also record at least one photograph looking exactly along the arm axis so the
-cross-section can be reconstructed.
+At every root/center/tip section record:
 
-The final part affected by these values is the replaceable saddle insert.  The
-INNER_ARM itself should not need to be reworked unless the real contact station
-is materially different from the reconstructed orbit.
+- `station_radius_mm` from the swivel pivot;
+- `center_xy_mm` relative to the swivel pivot;
+- `lowest_point_height_mm` from one unchanged common flat reference plane;
+- the complete `profile_points_mm` cross-section polygon;
+- relevant radii/chamfers, ribs, bosses or protrusions.
+
+The root and tip sections should be measured close enough to the insert ends
+that only a short bounded extrapolation remains. The generator currently rejects
+a nearest measured saddle section more than 8 mm from the corresponding insert
+end.
+
+Use photographs looking along the arm axis at all three sections where possible.
+The generated saddle insert is a loft through the measured sections; the
+INNER_ARM structural part remains unchanged.
 
 ## C. Outer guide region
 
@@ -119,26 +123,86 @@ Minimal structural form:
   },
   "inner_saddle": {
     "left": {
-      "station_radius_mm": null,
-      "center_xy_mm": [null, null],
-      "lowest_point_height_mm": null,
-      "profile_points_mm": null
+      "root": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "center": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "tip": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      }
     },
     "right": {
-      "station_radius_mm": null,
-      "profile_points_mm": null
+      "root": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "center": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "tip": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      }
     }
   },
   "outer_guide": {
     "left": {
-      "root": {"station_radius_mm": null, "center_xy_mm": [null, null], "lowest_point_height_mm": null, "profile_points_mm": null},
-      "mid":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null},
-      "tip":  {"station_radius_mm": null, "center_xy_mm": [null, null], "profile_points_mm": null}
+      "root": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "mid": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "tip": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      }
     },
     "right": {
-      "root": {"station_radius_mm": null, "profile_points_mm": null},
-      "mid":  {"station_radius_mm": null, "profile_points_mm": null},
-      "tip":  {"station_radius_mm": null, "profile_points_mm": null}
+      "root": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "mid": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      },
+      "tip": {
+        "station_radius_mm": null,
+        "center_xy_mm": [null, null],
+        "lowest_point_height_mm": null,
+        "profile_points_mm": null
+      }
     }
   },
   "contact_pad": {
