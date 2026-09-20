@@ -28,6 +28,7 @@ def rect_profile(width=24.0, height=8.0):
 def complete_measurements():
     return {
         "meta": {
+            "measurement_kind": "physical",
             "model": "Samsung UE55J6250",
             "stand_part": "BN96-38964A",
             "measured_by": "test",
@@ -157,6 +158,30 @@ class MeasurementModelTests(unittest.TestCase):
         report = symmetry_report(ms)
         self.assertAlmostEqual(report["inner_profile_width_delta_mm"], 0.2, places=6)
         self.assertAlmostEqual(report["tip_y_delta_mm"], 0.0, places=6)
+
+    def test_missing_measurement_kind_is_rejected(self):
+        d = complete_measurements()
+        del d["meta"]["measurement_kind"]
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_wrong_target_model_is_rejected(self):
+        d = complete_measurements()
+        d["meta"]["model"] = "Samsung Other"
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_unsupported_stand_part_is_rejected(self):
+        d = complete_measurements()
+        d["meta"]["stand_part"] = "UNKNOWN"
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
+
+    def test_invalid_measurement_date_is_rejected(self):
+        d = complete_measurements()
+        d["meta"]["date"] = "20-09-2026"
+        with self.assertRaises(MeasurementError):
+            load_measurements(self.write_temp(d))
 
     def test_missing_profile_is_rejected(self):
         d = complete_measurements()
