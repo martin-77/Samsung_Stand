@@ -58,8 +58,20 @@ def main(path: str) -> dict[str,Any]:
     meta=data.get("meta",{})
     if meta.get("structural_version")!="v8":
         failures.append("meta.structural_version must be v8")
-    nonempty(meta.get("printer"),"meta.printer")
-    nonempty(meta.get("material"),"meta.material")
+    printer=nonempty(meta.get("printer"),"meta.printer")
+    material=nonempty(meta.get("material"),"meta.material")
+    contact_parts_version=nonempty(
+        meta.get("contact_parts_version"),
+        "meta.contact_parts_version",
+    )
+    if printer != G.PRINTER_MODEL:
+        failures.append(
+            f"meta.printer must be {G.PRINTER_MODEL!r}, got {printer!r}"
+        )
+    if material.upper() != G.PRINT_MATERIAL:
+        failures.append(
+            f"meta.material must be {G.PRINT_MATERIAL!r}, got {material!r}"
+        )
     number(meta.get("nozzle_mm"),"meta.nozzle_mm",positive=True)
     number(meta.get("layer_height_mm"),"meta.layer_height_mm",positive=True)
     nonempty(meta.get("tested_by"),"meta.tested_by")
@@ -239,6 +251,9 @@ def main(path: str) -> dict[str,Any]:
     report={
         "ok":not failures,
         "structural_version":"v8",
+        "contact_parts_version":contact_parts_version,
+        "printer":printer,
+        "material":material,
         "proof_setup":{
             "support_surface":proof_setup.get("support_surface"),
             "sounddeck_used":proof_setup.get("sounddeck_used"),
