@@ -195,7 +195,7 @@ class MeasurementModelTests(unittest.TestCase):
 
     def test_lower_envelope_preserves_measured_kink_vertices(self):
         d = complete_measurements()
-        d["inner_saddle"]["left"]["profile_points_mm"] = [
+        d["inner_saddle"]["left"]["center"]["profile_points_mm"] = [
             [-13.0, 1.0],
             [-10.0, 0.0],
             [0.0, 0.6],
