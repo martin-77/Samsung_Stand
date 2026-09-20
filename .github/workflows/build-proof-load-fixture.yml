@@ -1,0 +1,155 @@
+name: Build Proof Load Fixture
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/v2_params.py"
+      - "scripts/build_proof_load_fixture.py"
+      - "scripts/validate_proof_load_fixture.py"
+      - "scripts/validate_proof_load_mesh.py"
+      - "cad/v8/STEP/samsung_stand_v8_inner_arm.step"
+      - ".github/workflows/build-proof-load-fixture.yml"
+
+concurrency:
+  group: samsung-stand-proof-load-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-proof-load-fixture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Verify validated v8 inner arm
+        run: |
+          set -euo pipefail
+          test -s cad/v8/STEP/samsung_stand_v8_inner_arm.step
+          test -s cad/v8/validation/ASSEMBLY_VALIDATION_v8.json
+          python3 - <<'PY'
+          import json
+          p='cad/v8/validation/ASSEMBLY_VALIDATION_v8.json'
+          d=json.load(open(p,encoding='utf-8'))
+          assert not d.get('failed'),d.get('failed')
+          print('Validated v8 upstream is green')
+          PY
+
+      - name: Install runtime
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 python3-venv
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install numpy trimesh
+
+      - name: Cache FreeCAD AppImage
+        id: freecad-cache
+        uses: actions/cache@v5
+        with:
+          path: FreeCAD.AppImage
+          key: freecad-1.1.3-linux-x86_64-py311
+
+      - name: Download verified FreeCAD 1.1.3
+        if: steps.freecad-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o FreeCAD.AppImage \
+            https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-Linux-x86_64-py311.AppImage
+
+      - name: Verify and extract FreeCAD
+        run: |
+          set -euo pipefail
+          echo "3a853eb69ee595f779f2255dbf80a765926981d8ff68903cefee4dfb03a8f5ef  FreeCAD.AppImage" | sha256sum -c -
+          chmod +x FreeCAD.AppImage
+          rm -rf squashfs-root
+          ./FreeCAD.AppImage --appimage-extract >/dev/null
+          FREECADCMD=$(find squashfs-root -type f \( -name FreeCADCmd -o -name freecadcmd \) | head -n1)
+          test -n "$FREECADCMD"
+          echo "FREECADCMD=$FREECADCMD" >> "$GITHUB_ENV"
+
+      - name: Build proof-load fixture
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import build_proof_load_fixture" \
+            2>&1 | tee build_proof_load_fixture.log
+          test -s build_proof_load_fixture/PROOF_LOAD_FIXTURE_REPORT.json
+
+      - name: Validate proof-load mesh
+        run: |
+          set -euo pipefail
+          .venv/bin/python scripts/validate_proof_load_mesh.py
+          test -s build_proof_load_fixture/PROOF_LOAD_MESH_VALIDATION.json
+
+      - name: Validate installed proof-load pad
+        run: |
+          set -euo pipefail
+          "$FREECADCMD" -c "import sys; sys.path.insert(0,'scripts'); import validate_proof_load_fixture as V; V.main()"
+          test -s build_proof_load_fixture/PROOF_LOAD_ASSEMBLY_VALIDATION.json
+
+      - name: Publish proof-load fixture
+        if: github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          mkdir -p cad/proof_load_fixture/FCStd cad/proof_load_fixture/STEP cad/proof_load_fixture/STL cad/proof_load_fixture/validation
+          rm -f cad/proof_load_fixture/FCStd/* cad/proof_load_fixture/STEP/* cad/proof_load_fixture/STL/*
+
+          cp build_proof_load_fixture/proof_load_saddle_pad.FCStd cad/proof_load_fixture/FCStd/
+          cp build_proof_load_fixture/proof_load_saddle_pad.step cad/proof_load_fixture/STEP/
+          cp build_proof_load_fixture/proof_load_saddle_pad.stl cad/proof_load_fixture/STL/
+          cp build_proof_load_fixture/PROOF_LOAD_FIXTURE_REPORT.json cad/proof_load_fixture/validation/
+          cp build_proof_load_fixture/PROOF_LOAD_MESH_VALIDATION.json cad/proof_load_fixture/validation/
+          cp build_proof_load_fixture/PROOF_LOAD_ASSEMBLY_VALIDATION.json cad/proof_load_fixture/validation/
+
+          cat > cad/proof_load_fixture/README.md <<'EOF'
+          # V8 proof-load saddle pads
+
+          Print 2x proof_load_saddle_pad.
+
+          They seat in the two validated INNER_ARM saddle pockets and stand 3 mm
+          above the arm top plane. Place a rigid flat spreader board across both
+          pads so the test load enters at the real saddle stations.
+
+          Requirements:
+          - the spreader must touch only the two proof pads;
+          - use a non-fragile substitute load, never the TV;
+          - test center, -15 deg and +15 deg;
+          - follow docs/PHYSICAL_RELEASE_GATES.md for load magnitude, dwell,
+            inspection and release criteria.
+
+          These pads are test tooling, not final Samsung contact parts.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cad/proof_load_fixture
+          if git diff --cached --quiet; then
+            echo "Proof-load fixture already current"
+          else
+            git commit -m "Publish v8 proof-load saddle fixture"
+            pushed=false
+            for attempt in 1 2 3 4; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              sleep 2
+            done
+            test "$pushed" = true
+          fi
+
+      - name: Upload proof-load artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: samsung-stand-proof-load-fixture
+          path: |
+            build_proof_load_fixture/
+            build_proof_load_fixture.log
