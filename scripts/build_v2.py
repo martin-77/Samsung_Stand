@@ -335,7 +335,7 @@ def arm_lock_pin():
         3.0,
         10.0,
         6.0,
-        v(-3.0, -5.0, -1.25),
+        v(-3.0, -5.0, 0.0),
     )
     sh = fuse_all([body, head, lock_barb(-1), lock_barb(1)])
     require_single(sh, "ARM_LOCK_PIN")
