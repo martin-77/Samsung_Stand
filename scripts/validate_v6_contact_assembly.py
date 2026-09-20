@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Assembly validation for measurement-driven v6 contact parts."""
+"""Assembly validation for measurement-driven v6 contact parts.
+
+The validator checks both interfaces:
+1. generated contact parts against the validated v8 structural parts;
+2. the measured Samsung arm profiles against the generated contact parts.
+
+This prevents a geometrically valid insert from silently violating the intended
+load path or the requested fit clearance.
+"""
 
 from __future__ import annotations
 
@@ -8,7 +16,10 @@ import os
 
 import FreeCAD as App
 import Import
+import Part
 
+import build_v6_contacts as B
+import measurement_model as M
 import v2_params as V2
 import v3_params as V3
 
@@ -34,7 +45,7 @@ def load_step(path):
     ]
     App.closeDocument(doc.Name)
     if not shapes:
-        raise RuntimeError("No STEP shape: " + path)
+        raise RuntimeError("No shape in " + path)
     sh = shapes[0]
     for other in shapes[1:]:
         sh = sh.fuse(other)
@@ -49,12 +60,54 @@ def distance(a, b):
     return float(a.distToShape(b)[0])
 
 
-def main(contact_dir: str = "build_v6_contacts"):
+def profile_prism(profile: M.Profile, x_center: float, length: float, z0: float):
+    """Extrude a measured YZ cross-section along local X."""
+    x0 = x_center - length / 2.0
+    pts = [v(x0, y, z0 + z) for y, z in profile.points]
+    wire = Part.makePolygon(pts + [pts[0]])
+    face = Part.Face(wire)
+    sh = face.extrude(v(length, 0, 0)).removeSplitter()
+    if sh.isNull() or not sh.isValid() or len(sh.Solids) != 1:
+        raise RuntimeError("invalid measured profile prism")
+    return sh
+
+
+def liner_station_x(station: M.Station) -> float:
+    raw = station.radius - V3.OUTER_R0
+    return min(max(raw, B.GUIDE_LINER_X0), B.GUIDE_LINER_X1)
+
+
+def main(
+    contact_dir: str = "build_v6_contacts",
+    measurement_path: str = "tests/fixtures/stand_measurements.synthetic.json",
+):
+    ms = M.load_measurements(measurement_path)
+
     inner = load_step(os.path.join(V8_STEP, "samsung_stand_v8_inner_arm.step"))
     guide = load_step(os.path.join(V8_STEP, "samsung_stand_v8_outer_guide.step"))
 
     failures = []
-    result = {"version": "v6-contact-parts", "saddles": {}, "liners": {}}
+    result = {
+        "version": "v6-contact-parts",
+        "measurement_path": measurement_path,
+        "saddles": {},
+        "liners": {},
+        "measured_profile_fit": {
+            "saddles": {},
+            "outer_guides": {},
+        },
+    }
+
+    # ------------------------------------------------------------------
+    # Inner saddle inserts: structural seating + measured underside contact.
+    # ------------------------------------------------------------------
+    inner_profiles = {
+        "left": ms.inner_left.profile,
+        "right": ms.inner_right.profile,
+    }
+    stand_low_z_inner = (
+        V2.SADDLE_POCKET_FLOOR + V2.SADDLE_INSERT_HEIGHT
+    )
 
     for side in ("left", "right"):
         saddle = load_step(
@@ -73,20 +126,81 @@ def main(contact_dir: str = "build_v6_contacts"):
             "common_volume_mm3": round(vol, 6),
             "distance_to_inner_arm_mm": round(gap, 6),
             "installed_bbox_mm": [
-                round(bb.XMin,3), round(bb.XMax,3),
-                round(bb.YMin,3), round(bb.YMax,3),
-                round(bb.ZMin,3), round(bb.ZMax,3),
+                round(bb.XMin, 3), round(bb.XMax, 3),
+                round(bb.YMin, 3), round(bb.YMax, 3),
+                round(bb.ZMin, 3), round(bb.ZMax, 3),
             ],
         }
         result["saddles"][side] = row
 
         if vol > 0.05:
-            failures.append(f"{side} saddle penetrates INNER_ARM: {vol:.6f} mm3")
+            failures.append(
+                f"{side} saddle penetrates INNER_ARM: {vol:.6f} mm3"
+            )
         if gap > 0.05:
-            failures.append(f"{side} saddle is not seated in INNER_ARM pocket: {gap:.6f} mm")
+            failures.append(
+                f"{side} saddle is not seated in INNER_ARM pocket: "
+                f"{gap:.6f} mm"
+            )
+
+        stand = profile_prism(
+            inner_profiles[side],
+            V2.SADDLE_U,
+            min(20.0, V2.SADDLE_INSERT_LENGTH - 2.0),
+            stand_low_z_inner,
+        )
+        stand_saddle_vol = common_volume(stand, saddle)
+        stand_saddle_gap = distance(stand, saddle)
+        stand_inner_vol = common_volume(stand, inner)
+
+        result["measured_profile_fit"]["saddles"][side] = {
+            "stand_saddle_common_volume_mm3": round(
+                stand_saddle_vol, 6
+            ),
+            "stand_saddle_distance_mm": round(stand_saddle_gap, 6),
+            "stand_inner_structure_common_volume_mm3": round(
+                stand_inner_vol, 6
+            ),
+            "expected": (
+                "surface contact to saddle insert; no penetration into "
+                "insert or structural INNER_ARM"
+            ),
+        }
+
+        if stand_saddle_vol > 0.05:
+            failures.append(
+                f"{side} measured saddle profile penetrates insert: "
+                f"{stand_saddle_vol:.6f} mm3"
+            )
+        if stand_saddle_gap > 0.05:
+            failures.append(
+                f"{side} measured saddle profile is not supported by insert: "
+                f"gap {stand_saddle_gap:.6f} mm"
+            )
+        if stand_inner_vol > 0.05:
+            failures.append(
+                f"{side} measured saddle profile penetrates structural "
+                f"INNER_ARM: {stand_inner_vol:.6f} mm3"
+            )
+
+    # ------------------------------------------------------------------
+    # Outer guides: lateral-only rails + measured 0.5 mm side clearance.
+    # ------------------------------------------------------------------
+    outer_sets = {
+        "left": ms.outer_left,
+        "right": ms.outer_right,
+    }
+    stand_low_z_outer = (
+        V3.STAND_CONTACT_PLANE_GLOBAL_Z - V2.TRACK_TOP_Z
+    )
+    floor_vertical_clearance = (
+        stand_low_z_outer - V3.OUTER_FLOOR_THICKNESS
+    )
 
     for side in ("left", "right"):
         result["liners"][side] = {}
+        installed_rails = {}
+
         for wall_side in ("neg_y", "pos_y"):
             liner = load_step(
                 os.path.join(
@@ -98,6 +212,7 @@ def main(contact_dir: str = "build_v6_contacts"):
                 )
             )
             liner.translate(v(0, 0, V3.OUTER_FLOOR_THICKNESS))
+            installed_rails[wall_side] = liner
 
             vol = common_volume(liner, guide)
             gap = distance(liner, guide)
@@ -107,9 +222,9 @@ def main(contact_dir: str = "build_v6_contacts"):
                 "common_volume_mm3": round(vol, 6),
                 "distance_to_outer_guide_mm": round(gap, 6),
                 "installed_bbox_mm": [
-                    round(bb.XMin,3), round(bb.XMax,3),
-                    round(bb.YMin,3), round(bb.YMax,3),
-                    round(bb.ZMin,3), round(bb.ZMax,3),
+                    round(bb.XMin, 3), round(bb.XMax, 3),
+                    round(bb.YMin, 3), round(bb.YMax, 3),
+                    round(bb.ZMin, 3), round(bb.ZMax, 3),
                 ],
                 "top_matches_guide_wall_mm": round(
                     V3.OUTER_WALL_HEIGHT - bb.ZMax, 6
@@ -141,19 +256,97 @@ def main(contact_dir: str = "build_v6_contacts"):
                     "could create an unintended vertical floor bridge"
                 )
 
+        result["measured_profile_fit"]["outer_guides"][side] = {}
+        for station_name, station in zip(
+            ("root", "mid", "tip"),
+            outer_sets[side],
+        ):
+            x = liner_station_x(station)
+            stand = profile_prism(
+                station.profile,
+                x,
+                0.8,
+                stand_low_z_outer,
+            )
+
+            neg = installed_rails["neg_y"]
+            pos = installed_rails["pos_y"]
+
+            neg_gap = distance(stand, neg)
+            pos_gap = distance(stand, pos)
+            neg_vol = common_volume(stand, neg)
+            pos_vol = common_volume(stand, pos)
+            structural_vol = common_volume(stand, guide)
+
+            row = {
+                "liner_x_mm": round(x, 4),
+                "neg_y_clearance_mm": round(neg_gap, 6),
+                "pos_y_clearance_mm": round(pos_gap, 6),
+                "neg_y_common_volume_mm3": round(neg_vol, 6),
+                "pos_y_common_volume_mm3": round(pos_vol, 6),
+                "stand_guide_structure_common_volume_mm3": round(
+                    structural_vol, 6
+                ),
+                "vertical_clearance_above_guide_floor_mm": round(
+                    floor_vertical_clearance, 6
+                ),
+            }
+            result["measured_profile_fit"]["outer_guides"][side][
+                station_name
+            ] = row
+
+            for wall_side, measured_gap, measured_vol in (
+                ("neg_y", neg_gap, neg_vol),
+                ("pos_y", pos_gap, pos_vol),
+            ):
+                if measured_vol > 0.05:
+                    failures.append(
+                        f"{side}/{station_name}/{wall_side} measured stand "
+                        f"profile penetrates liner: {measured_vol:.6f} mm3"
+                    )
+                if abs(
+                    measured_gap - B.GUIDE_LATERAL_CLEARANCE
+                ) > 0.08:
+                    failures.append(
+                        f"{side}/{station_name}/{wall_side} clearance "
+                        f"{measured_gap:.6f} mm differs from target "
+                        f"{B.GUIDE_LATERAL_CLEARANCE:.3f} mm"
+                    )
+
+            if structural_vol > 0.05:
+                failures.append(
+                    f"{side}/{station_name} measured stand profile "
+                    f"penetrates structural OUTER_GUIDE: "
+                    f"{structural_vol:.6f} mm3"
+                )
+
+    if floor_vertical_clearance < 5.0:
+        failures.append(
+            "measured outer guide vertical floor clearance fell below "
+            f"5 mm: {floor_vertical_clearance:.3f} mm"
+        )
+
     result["outer_guide_load_path_contract"] = {
         "lateral_only": True,
         "generated_floor_bridge": False,
+        "target_lateral_clearance_mm": B.GUIDE_LATERAL_CLEARANCE,
+        "vertical_floor_clearance_mm": round(
+            floor_vertical_clearance, 6
+        ),
         "note": (
-            "Each OUTER_GUIDE uses two independent side rails. Their installed "
-            "bounding boxes must remain on opposite sides of local y=0."
+            "Each OUTER_GUIDE uses two independent side rails. Measured "
+            "root/mid/tip profiles are OCC-checked against those rails. "
+            "No V6 contact part exists underneath the Samsung arm."
         ),
     }
     result["failed"] = failures
 
     os.makedirs(contact_dir, exist_ok=True)
     with open(
-        os.path.join(contact_dir, "ASSEMBLY_VALIDATION_v6_contacts.json"),
+        os.path.join(
+            contact_dir,
+            "ASSEMBLY_VALIDATION_v6_contacts.json",
+        ),
         "w",
         encoding="utf-8",
     ) as f:
@@ -161,7 +354,9 @@ def main(contact_dir: str = "build_v6_contacts"):
 
     print(json.dumps(result, indent=2))
     if failures:
-        raise SystemExit("V6 CONTACT ASSEMBLY FAILED: " + " | ".join(failures))
+        raise SystemExit(
+            "V6 CONTACT ASSEMBLY FAILED: " + " | ".join(failures)
+        )
 
 
 if __name__ == "__main__":
@@ -169,5 +364,9 @@ if __name__ == "__main__":
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--contacts", default="build_v6_contacts")
+    ap.add_argument(
+        "--measurements",
+        default="tests/fixtures/stand_measurements.synthetic.json",
+    )
     ns = ap.parse_args()
-    main(ns.contacts)
+    main(ns.contacts, ns.measurements)
