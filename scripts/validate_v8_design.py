@@ -90,9 +90,7 @@ def main() -> int:
     base_pin_far_face_local_x = (
         -P.BASE_LOCK_PIN_AXIS_START + G.JOINT_RECEIVER_WIDTH / 2.0
     )
-    base_barb_start = (
-        P.JOINT_PIN_LENGTH - P.JOINT_PIN_SPLIT_LENGTH + 1.0
-    )
+    base_barb_start = P.JOINT_PIN_BARB_START_X
     checks["base_barb_peak_beyond_receiver"] = (
         P.JOINT_PIN_BARB_PEAK_X > base_pin_far_face_local_x + 2.0
     )
