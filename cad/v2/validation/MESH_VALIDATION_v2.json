@@ -1,0 +1,232 @@
+{
+  "version": "v2",
+  "meshes": {
+    "samsung_stand_v2_arm_lock_pin.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 1136.1999955773354,
+      "faces": 68,
+      "extents_mm": [
+        51.0,
+        10.0,
+        6.0
+      ],
+      "bounds_mm": [
+        [
+          -3.0,
+          -5.0,
+          0.0
+        ],
+        [
+          48.0,
+          5.0,
+          6.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_base_center.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 663669.2476941836,
+      "faces": 1520,
+      "extents_mm": [
+        280.0,
+        295.0,
+        24.0
+      ],
+      "bounds_mm": [
+        [
+          -140.0,
+          -147.5,
+          0.0
+        ],
+        [
+          140.0,
+          147.5,
+          24.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_base_left.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 501075.86644183914,
+      "faces": 532,
+      "extents_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bounds_mm": [
+        [
+          -340.0,
+          -147.5,
+          0.0
+        ],
+        [
+          -90.0,
+          147.5,
+          24.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_base_right.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 501075.8664418392,
+      "faces": 532,
+      "extents_mm": [
+        250.0,
+        295.0,
+        24.0
+      ],
+      "bounds_mm": [
+        [
+          90.0,
+          -147.5,
+          0.0
+        ],
+        [
+          340.0,
+          147.5,
+          24.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_inner_arm.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 98861.58333333333,
+      "faces": 144,
+      "extents_mm": [
+        275.0,
+        58.0,
+        15.0
+      ],
+      "bounds_mm": [
+        [
+          -50.0,
+          -29.0,
+          0.0
+        ],
+        [
+          225.0,
+          29.0,
+          15.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_rotor.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 211275.87319219732,
+      "faces": 988,
+      "extents_mm": [
+        170.094,
+        149.99,
+        27.0
+      ],
+      "bounds_mm": [
+        [
+          -85.047,
+          -138.99,
+          0.0
+        ],
+        [
+          85.047,
+          11.0,
+          27.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    },
+    "samsung_stand_v2_saddle_insert_blank.stl": {
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 16390.921033935563,
+      "faces": 12,
+      "extents_mm": [
+        49.4,
+        47.4,
+        7.0
+      ],
+      "bounds_mm": [
+        [
+          -24.7,
+          -23.7,
+          0.0
+        ],
+        [
+          24.7,
+          23.7,
+          7.0
+        ]
+      ],
+      "fits_core_one_l": true,
+      "positive_volume": true,
+      "ok": true
+    }
+  },
+  "left_right_base_track_symmetry": {
+    "size_delta_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "volume_delta_mm3": 0.0,
+    "relative_volume_delta": 1.1616536499113887e-16,
+    "ok": true
+  },
+  "inner_arm_gate": {
+    "actual_extents_mm": [
+      275.0,
+      58.0,
+      15.0
+    ],
+    "declared_print_envelope_mm": [
+      275.0,
+      58.0,
+      14.0
+    ],
+    "ok": true
+  },
+  "arm_lock_pin_gate": {
+    "z_range_mm": [
+      0.0,
+      6.0
+    ],
+    "ok": true
+  },
+  "saddle_insert_gate": {
+    "actual_extents_mm": [
+      49.4,
+      47.4,
+      7.0
+    ],
+    "pocket_mm": [
+      50.0,
+      48.0,
+      7.0
+    ],
+    "ok": true
+  },
+  "contact_profile_status": "blank calibration insert only; final Samsung arm contact profile requires physical arm cross-section measurement",
+  "failed": []
+}

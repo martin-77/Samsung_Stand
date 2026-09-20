@@ -1,0 +1,2192 @@
+{
+  "version": "v2",
+  "checks": {
+    "support_plane_matches_rotor_top": true,
+    "track_has_positive_height": true,
+    "inner_print_length_under_295": true,
+    "inner_print_width_under_295": true,
+    "arm_key_roof_support_friendly": true,
+    "arm_key_clearance_reasonable": true,
+    "arm_lock_tunnel_roof_support_friendly": true,
+    "arm_lock_pin_fits_tunnel": true,
+    "rotor_receiver_keeps_roof_wall": true,
+    "saddle_lies_on_inner_arm": true,
+    "saddle_centers_follow_tracks_full_sweep": true,
+    "40x40_saddle_pads_stay_on_fixed_base": true,
+    "minimum_fixed_base_margin_positive": true,
+    "glide_tracks_stay_inside_side_modules": true,
+    "blank_insert_has_fit_clearance": true
+  },
+  "details": {
+    "track_top_z_mm": 18.0,
+    "inner_arm_install_z_mm": 18.0,
+    "right_arm_angle_deg": 26.3464,
+    "left_arm_angle_deg": 153.6536,
+    "track_radial_range_mm": [
+      252.978,
+      304.978
+    ],
+    "right_track_angle_range_deg": [
+      9.346,
+      43.346
+    ],
+    "left_track_angle_range_deg": [
+      136.654,
+      170.654
+    ],
+    "inner_saddle_u_mm": 193.978,
+    "minimum_40x40_pad_margin_on_fixed_base_mm": 7.204,
+    "arm_key_roof_angle_deg": 45.0,
+    "arm_lock_tunnel_roof_angle_deg": 45.0,
+    "rotor_receiver_roof_margin_mm": 3.6,
+    "contact_profile_status": "blank replaceable insert; physical Samsung arm section still required"
+  },
+  "sweep": [
+    {
+      "swivel_deg": -15.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 138.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 11.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -14.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 139.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 11.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -14.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 139.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 12.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -13.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 140.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 12.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -13.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 140.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 13.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -12.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 141.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 13.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -12.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 141.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 14.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -11.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 142.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 14.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -11.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 142.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 15.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -10.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 143.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 15.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -10.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 143.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 16.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -9.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 144.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 16.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -9.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 144.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 17.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -8.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 145.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 17.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -8.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 145.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 18.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -7.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 146.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 18.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -7.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 146.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 19.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -6.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 147.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 19.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -6.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 147.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 20.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -5.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 148.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 20.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -5.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 148.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 21.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -4.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 149.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 21.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -4.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 149.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 22.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -3.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 150.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 22.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -3.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 150.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 23.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -2.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 151.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 23.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -2.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 151.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 24.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -1.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 152.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 24.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -1.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 152.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 25.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": -0.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 153.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 25.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 0.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 153.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 26.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 0.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 154.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 26.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 1.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 154.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 27.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 1.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 155.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 27.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 2.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 155.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 28.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 2.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 156.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 28.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 3.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 156.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 29.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 3.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 157.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 29.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 4.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 157.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 30.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 4.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 158.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 30.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 5.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 158.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 31.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 5.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 159.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 31.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 6.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 159.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 32.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 6.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 160.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 32.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 7.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 160.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 33.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 7.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 161.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 33.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 8.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 161.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 34.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 8.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 162.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 34.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 9.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 162.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 35.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 9.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 163.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 35.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 10.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 163.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 36.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 10.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 164.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 36.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 11.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 164.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 37.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 11.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 165.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 37.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 12.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 165.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 38.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 12.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 166.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 38.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 13.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 166.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 39.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 13.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 167.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 39.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 14.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 167.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 40.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 14.5,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 168.154,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 40.846,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    },
+    {
+      "swivel_deg": 15.0,
+      "supports": [
+        {
+          "side": "left",
+          "radius_mm": 278.978,
+          "angle_deg": 168.654,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        },
+        {
+          "side": "right",
+          "radius_mm": 278.978,
+          "angle_deg": 41.346,
+          "on_track": true,
+          "40x40_pad_on_fixed_base": true
+        }
+      ]
+    }
+  ],
+  "track_boundary_samples": [
+    [
+      "right",
+      249.62,
+      -22.916,
+      true
+    ],
+    [
+      "right",
+      248.983,
+      -19.217,
+      true
+    ],
+    [
+      "right",
+      248.291,
+      -15.529,
+      true
+    ],
+    [
+      "right",
+      247.545,
+      -11.851,
+      true
+    ],
+    [
+      "right",
+      246.744,
+      -8.184,
+      true
+    ],
+    [
+      "right",
+      245.889,
+      -4.53,
+      true
+    ],
+    [
+      "right",
+      244.979,
+      -0.889,
+      true
+    ],
+    [
+      "right",
+      244.016,
+      2.739,
+      true
+    ],
+    [
+      "right",
+      242.999,
+      6.351,
+      true
+    ],
+    [
+      "right",
+      241.929,
+      9.948,
+      true
+    ],
+    [
+      "right",
+      240.805,
+      13.529,
+      true
+    ],
+    [
+      "right",
+      239.629,
+      17.093,
+      true
+    ],
+    [
+      "right",
+      238.399,
+      20.639,
+      true
+    ],
+    [
+      "right",
+      237.117,
+      24.166,
+      true
+    ],
+    [
+      "right",
+      235.783,
+      27.674,
+      true
+    ],
+    [
+      "right",
+      234.398,
+      31.162,
+      true
+    ],
+    [
+      "right",
+      232.96,
+      34.628,
+      true
+    ],
+    [
+      "right",
+      231.471,
+      38.073,
+      true
+    ],
+    [
+      "right",
+      229.932,
+      41.496,
+      true
+    ],
+    [
+      "right",
+      228.341,
+      44.895,
+      true
+    ],
+    [
+      "right",
+      226.701,
+      48.271,
+      true
+    ],
+    [
+      "right",
+      225.01,
+      51.622,
+      true
+    ],
+    [
+      "right",
+      223.27,
+      54.947,
+      true
+    ],
+    [
+      "right",
+      221.481,
+      58.246,
+      true
+    ],
+    [
+      "right",
+      219.643,
+      61.518,
+      true
+    ],
+    [
+      "right",
+      217.757,
+      64.763,
+      true
+    ],
+    [
+      "right",
+      215.823,
+      67.979,
+      true
+    ],
+    [
+      "right",
+      213.841,
+      71.166,
+      true
+    ],
+    [
+      "right",
+      211.813,
+      74.323,
+      true
+    ],
+    [
+      "right",
+      209.737,
+      77.45,
+      true
+    ],
+    [
+      "right",
+      207.616,
+      80.546,
+      true
+    ],
+    [
+      "right",
+      205.449,
+      83.61,
+      true
+    ],
+    [
+      "right",
+      203.236,
+      86.642,
+      true
+    ],
+    [
+      "right",
+      200.979,
+      89.64,
+      true
+    ],
+    [
+      "right",
+      198.678,
+      92.605,
+      true
+    ],
+    [
+      "right",
+      196.333,
+      95.535,
+      true
+    ],
+    [
+      "right",
+      193.945,
+      98.43,
+      true
+    ],
+    [
+      "right",
+      191.514,
+      101.289,
+      true
+    ],
+    [
+      "right",
+      189.041,
+      104.112,
+      true
+    ],
+    [
+      "right",
+      186.526,
+      106.898,
+      true
+    ],
+    [
+      "right",
+      183.97,
+      109.646,
+      true
+    ],
+    [
+      "right",
+      300.929,
+      -14.471,
+      true
+    ],
+    [
+      "right",
+      300.162,
+      -10.012,
+      true
+    ],
+    [
+      "right",
+      299.328,
+      -5.565,
+      true
+    ],
+    [
+      "right",
+      298.428,
+      -1.131,
+      true
+    ],
+    [
+      "right",
+      297.462,
+      3.289,
+      true
+    ],
+    [
+      "right",
+      296.431,
+      7.694,
+      true
+    ],
+    [
+      "right",
+      295.335,
+      12.084,
+      true
+    ],
+    [
+      "right",
+      294.174,
+      16.457,
+      true
+    ],
+    [
+      "right",
+      292.948,
+      20.812,
+      true
+    ],
+    [
+      "right",
+      291.658,
+      25.148,
+      true
+    ],
+    [
+      "right",
+      290.303,
+      29.465,
+      true
+    ],
+    [
+      "right",
+      288.885,
+      33.762,
+      true
+    ],
+    [
+      "right",
+      287.403,
+      38.036,
+      true
+    ],
+    [
+      "right",
+      285.857,
+      42.289,
+      true
+    ],
+    [
+      "right",
+      284.249,
+      46.518,
+      true
+    ],
+    [
+      "right",
+      282.578,
+      50.722,
+      true
+    ],
+    [
+      "right",
+      280.845,
+      54.902,
+      true
+    ],
+    [
+      "right",
+      279.05,
+      59.055,
+      true
+    ],
+    [
+      "right",
+      277.194,
+      63.181,
+      true
+    ],
+    [
+      "right",
+      275.277,
+      67.279,
+      true
+    ],
+    [
+      "right",
+      273.299,
+      71.348,
+      true
+    ],
+    [
+      "right",
+      271.261,
+      75.388,
+      true
+    ],
+    [
+      "right",
+      269.164,
+      79.396,
+      true
+    ],
+    [
+      "right",
+      267.007,
+      83.374,
+      true
+    ],
+    [
+      "right",
+      264.791,
+      87.318,
+      true
+    ],
+    [
+      "right",
+      262.517,
+      91.23,
+      true
+    ],
+    [
+      "right",
+      260.186,
+      95.107,
+      true
+    ],
+    [
+      "right",
+      257.797,
+      98.949,
+      true
+    ],
+    [
+      "right",
+      255.351,
+      102.756,
+      true
+    ],
+    [
+      "right",
+      252.849,
+      106.526,
+      true
+    ],
+    [
+      "right",
+      250.292,
+      110.258,
+      true
+    ],
+    [
+      "right",
+      247.679,
+      113.952,
+      true
+    ],
+    [
+      "right",
+      245.012,
+      117.606,
+      true
+    ],
+    [
+      "right",
+      242.291,
+      121.221,
+      true
+    ],
+    [
+      "right",
+      239.516,
+      124.795,
+      true
+    ],
+    [
+      "right",
+      236.689,
+      128.327,
+      true
+    ],
+    [
+      "right",
+      233.81,
+      131.817,
+      true
+    ],
+    [
+      "right",
+      230.88,
+      135.264,
+      true
+    ],
+    [
+      "right",
+      227.898,
+      138.667,
+      true
+    ],
+    [
+      "right",
+      224.867,
+      142.026,
+      true
+    ],
+    [
+      "right",
+      221.785,
+      145.339,
+      true
+    ],
+    [
+      "left",
+      -183.97,
+      109.646,
+      true
+    ],
+    [
+      "left",
+      -186.526,
+      106.898,
+      true
+    ],
+    [
+      "left",
+      -189.041,
+      104.112,
+      true
+    ],
+    [
+      "left",
+      -191.514,
+      101.289,
+      true
+    ],
+    [
+      "left",
+      -193.945,
+      98.43,
+      true
+    ],
+    [
+      "left",
+      -196.333,
+      95.535,
+      true
+    ],
+    [
+      "left",
+      -198.678,
+      92.605,
+      true
+    ],
+    [
+      "left",
+      -200.979,
+      89.64,
+      true
+    ],
+    [
+      "left",
+      -203.236,
+      86.642,
+      true
+    ],
+    [
+      "left",
+      -205.449,
+      83.61,
+      true
+    ],
+    [
+      "left",
+      -207.616,
+      80.546,
+      true
+    ],
+    [
+      "left",
+      -209.737,
+      77.45,
+      true
+    ],
+    [
+      "left",
+      -211.813,
+      74.323,
+      true
+    ],
+    [
+      "left",
+      -213.841,
+      71.166,
+      true
+    ],
+    [
+      "left",
+      -215.823,
+      67.979,
+      true
+    ],
+    [
+      "left",
+      -217.757,
+      64.763,
+      true
+    ],
+    [
+      "left",
+      -219.643,
+      61.518,
+      true
+    ],
+    [
+      "left",
+      -221.481,
+      58.246,
+      true
+    ],
+    [
+      "left",
+      -223.27,
+      54.947,
+      true
+    ],
+    [
+      "left",
+      -225.01,
+      51.622,
+      true
+    ],
+    [
+      "left",
+      -226.701,
+      48.271,
+      true
+    ],
+    [
+      "left",
+      -228.341,
+      44.895,
+      true
+    ],
+    [
+      "left",
+      -229.932,
+      41.496,
+      true
+    ],
+    [
+      "left",
+      -231.471,
+      38.073,
+      true
+    ],
+    [
+      "left",
+      -232.96,
+      34.628,
+      true
+    ],
+    [
+      "left",
+      -234.398,
+      31.162,
+      true
+    ],
+    [
+      "left",
+      -235.783,
+      27.674,
+      true
+    ],
+    [
+      "left",
+      -237.117,
+      24.166,
+      true
+    ],
+    [
+      "left",
+      -238.399,
+      20.639,
+      true
+    ],
+    [
+      "left",
+      -239.629,
+      17.093,
+      true
+    ],
+    [
+      "left",
+      -240.805,
+      13.529,
+      true
+    ],
+    [
+      "left",
+      -241.929,
+      9.948,
+      true
+    ],
+    [
+      "left",
+      -242.999,
+      6.351,
+      true
+    ],
+    [
+      "left",
+      -244.016,
+      2.739,
+      true
+    ],
+    [
+      "left",
+      -244.979,
+      -0.889,
+      true
+    ],
+    [
+      "left",
+      -245.889,
+      -4.53,
+      true
+    ],
+    [
+      "left",
+      -246.744,
+      -8.184,
+      true
+    ],
+    [
+      "left",
+      -247.545,
+      -11.851,
+      true
+    ],
+    [
+      "left",
+      -248.291,
+      -15.529,
+      true
+    ],
+    [
+      "left",
+      -248.983,
+      -19.217,
+      true
+    ],
+    [
+      "left",
+      -249.62,
+      -22.916,
+      true
+    ],
+    [
+      "left",
+      -221.785,
+      145.339,
+      true
+    ],
+    [
+      "left",
+      -224.867,
+      142.026,
+      true
+    ],
+    [
+      "left",
+      -227.898,
+      138.667,
+      true
+    ],
+    [
+      "left",
+      -230.88,
+      135.264,
+      true
+    ],
+    [
+      "left",
+      -233.81,
+      131.817,
+      true
+    ],
+    [
+      "left",
+      -236.689,
+      128.327,
+      true
+    ],
+    [
+      "left",
+      -239.516,
+      124.795,
+      true
+    ],
+    [
+      "left",
+      -242.291,
+      121.221,
+      true
+    ],
+    [
+      "left",
+      -245.012,
+      117.606,
+      true
+    ],
+    [
+      "left",
+      -247.679,
+      113.952,
+      true
+    ],
+    [
+      "left",
+      -250.292,
+      110.258,
+      true
+    ],
+    [
+      "left",
+      -252.849,
+      106.526,
+      true
+    ],
+    [
+      "left",
+      -255.351,
+      102.756,
+      true
+    ],
+    [
+      "left",
+      -257.797,
+      98.949,
+      true
+    ],
+    [
+      "left",
+      -260.186,
+      95.107,
+      true
+    ],
+    [
+      "left",
+      -262.517,
+      91.23,
+      true
+    ],
+    [
+      "left",
+      -264.791,
+      87.318,
+      true
+    ],
+    [
+      "left",
+      -267.007,
+      83.374,
+      true
+    ],
+    [
+      "left",
+      -269.164,
+      79.396,
+      true
+    ],
+    [
+      "left",
+      -271.261,
+      75.388,
+      true
+    ],
+    [
+      "left",
+      -273.299,
+      71.348,
+      true
+    ],
+    [
+      "left",
+      -275.277,
+      67.279,
+      true
+    ],
+    [
+      "left",
+      -277.194,
+      63.181,
+      true
+    ],
+    [
+      "left",
+      -279.05,
+      59.055,
+      true
+    ],
+    [
+      "left",
+      -280.845,
+      54.902,
+      true
+    ],
+    [
+      "left",
+      -282.578,
+      50.722,
+      true
+    ],
+    [
+      "left",
+      -284.249,
+      46.518,
+      true
+    ],
+    [
+      "left",
+      -285.857,
+      42.289,
+      true
+    ],
+    [
+      "left",
+      -287.403,
+      38.036,
+      true
+    ],
+    [
+      "left",
+      -288.885,
+      33.762,
+      true
+    ],
+    [
+      "left",
+      -290.303,
+      29.465,
+      true
+    ],
+    [
+      "left",
+      -291.658,
+      25.148,
+      true
+    ],
+    [
+      "left",
+      -292.948,
+      20.812,
+      true
+    ],
+    [
+      "left",
+      -294.174,
+      16.457,
+      true
+    ],
+    [
+      "left",
+      -295.335,
+      12.084,
+      true
+    ],
+    [
+      "left",
+      -296.431,
+      7.694,
+      true
+    ],
+    [
+      "left",
+      -297.462,
+      3.289,
+      true
+    ],
+    [
+      "left",
+      -298.428,
+      -1.131,
+      true
+    ],
+    [
+      "left",
+      -299.328,
+      -5.565,
+      true
+    ],
+    [
+      "left",
+      -300.162,
+      -10.012,
+      true
+    ],
+    [
+      "left",
+      -300.929,
+      -14.471,
+      true
+    ]
+  ],
+  "failed": []
+}
