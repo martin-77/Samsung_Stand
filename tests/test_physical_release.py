@@ -149,6 +149,13 @@ class PhysicalReleaseValidationTests(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertTrue(any("swivel_cycles_completed" in x for x in report["failed"]))
 
+    def test_false_gate_helper_accepts_false_and_rejects_true(self):
+        failures=[]
+        V.require_false(False,"x",failures)
+        self.assertEqual(failures,[])
+        V.require_false(True,"x",failures)
+        self.assertEqual(failures,["x is true"])
+
 
 if __name__=="__main__":
     unittest.main()
