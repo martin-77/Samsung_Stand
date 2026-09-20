@@ -68,7 +68,9 @@ measurement validation, FreeCAD generation, watertight-mesh gates and installed
 contact-part checks against the current v8 structural STEP geometry all pass.
 The measured saddle profiles are checked for exact surface contact without solid
 penetration; OUTER_GUIDE root/mid/tip profiles are checked at 0.5 mm nominal
-lateral clearance with 9 mm vertical floor clearance. The outer contact parts
+lateral clearance and at their measured common-datum vertical positions. The
+minimum real guide-floor clearance is therefore derived from measurements rather
+than assumed to be 9 mm. The outer contact parts
 are four independent side rails with no generated floor bridge.
 Production v6 contact parts remain intentionally unpublished until
 `measurements/stand_measurements.json` contains complete physical measurements.
