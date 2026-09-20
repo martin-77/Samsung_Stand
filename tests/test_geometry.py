@@ -93,6 +93,15 @@ class GeometryBaselineTests(unittest.TestCase):
         self.assertGreaterEqual(rear_margin, 8.0)
         self.assertGreater(front_margin, rear_margin)
 
+    def test_verified_service_load_is_below_development_proof_load(self):
+        self.assertAlmostEqual(G.TV_WITH_STAND_MASS_KG, 16.7, places=6)
+        self.assertGreater(G.SERVICE_VERTICAL_LOAD_N, 160.0)
+        self.assertLess(G.SERVICE_VERTICAL_LOAD_N, 170.0)
+        self.assertGreater(
+            G.DESIGN_VERTICAL_LOAD_N / G.SERVICE_VERTICAL_LOAD_N,
+            3.0,
+        )
+
     def test_annular_bearing_is_primary_large_area_path(self):
         self.assertGreaterEqual(G.BEARING_NOMINAL_AREA_MM2, 12000.0)
         self.assertLessEqual(G.BEARING_NOMINAL_PRESSURE_MPA, 0.04)
